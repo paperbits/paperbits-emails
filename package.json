@@ -1,0 +1,21 @@
+{
+    "name": "@paperbits/emails",
+    "version": "0.1.0",
+    "description": "Paperbits components for building email templates.",
+    "author": "Vienna LLC",
+    "license": "Commercial",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/paperbits/paperbits-emails.git"
+    },
+    "keywords": [
+        "paperbits"
+    ],
+    "bugs": {
+        "url": "https://github.com/paperbits/paperbits-emails/issues"
+    },
+    "dependencies": {
+    },
+    "devDependencies": {
+    }
+}
