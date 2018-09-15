@@ -1,0 +1,27 @@
+<div class="flex-container flex-container-column fit">
+    <fieldset class="flex-item flex-item-grow form" data-bind="scrollable: {}">
+
+        <div class="form-group">
+            <label class="form-label">Title</label>
+            <div class="input-group">
+                <input type="text" class="form-control" data-bind="textInput: emailItem.title, validationElement: emailItem.title" placeholder="e.g. Confirm subscription"
+                    maxlength="256" />
+                <button class="btn btn-danger input-group-btn" type="button" data-bind="validationMessageToggle: emailItem.title">!</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">
+                Description
+            </label>
+            <textarea class="form-control" data-bind="textInput: emailItem.description" maxlength="256"></textarea>
+        </div>
+    </fieldset>
+
+    <div class="flex-item btn-group">
+        <button class="btn" data-bind="click: deleteEmail">
+            <i class="paperbits-icon paperbits-simple-remove"></i>
+            Delete email
+        </button>
+    </div>
+</div>

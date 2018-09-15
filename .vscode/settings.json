@@ -1,0 +1,41 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "files.exclude": {
+        "bower_components/": true,
+        "node_modules/": true,
+        "dist/**": true,
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/*.js": {
+            "when": "$(basename).ts"
+        },
+        ".*/": true,
+        "**/*.vsdx": true
+    },
+    "search.exclude": {
+        "bower_components/": true,
+        "node_modules/": true,
+        "dist/**": true,
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/*.js": {
+            "when": "$(basename).ts"
+        },
+        ".*/": true,
+        "**/*.vsdx": true
+    },
+    "editor.tabSize": 4,
+    "editor.detectIndentation": false,
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "csscomb.preset": {
+        "always-semicolon": true,
+        "lines-between-rulesets": 1,
+        "space-before-colon": 0,
+        "space-after-colon": 1,
+        "block-indent": 4,
+        "tab-size": 4,
+        "space-before-closing-brace": "\n"
+    },
+    "csscomb.formatOnSave": true,
+    "csscomb.useLatestCore": true
+}
