@@ -9,7 +9,7 @@ import * as ko from "knockout";
 import template from "./columnEditor.html";
 import { IViewManager } from "@paperbits/common/ui";
 import { IWidgetEditor } from "@paperbits/common/widgets/IWidgetEditor";
-import { Component } from "@paperbits/core/ko/component";
+import { Component } from "@paperbits/core/ko/decorators";
 import { ColumnModel } from "../columnModel";
 
 @Component({
@@ -18,8 +18,6 @@ import { ColumnModel } from "../columnModel";
     injectable: "columnEditor"
 })
 export class ColumnEditor implements IWidgetEditor {
-    private readonly viewManager: IViewManager;
-
     private column: ColumnModel;
     private applyChangesCallback: () => void;
     private readonly verticalAlignment: KnockoutObservable<string>;
@@ -28,8 +26,9 @@ export class ColumnEditor implements IWidgetEditor {
     public readonly alignment: KnockoutObservable<string>;
     public readonly order: KnockoutObservable<number>;
 
-    constructor(viewManager: IViewManager) {
-        this.viewManager = viewManager;
+    constructor(
+        private readonly viewManager: IViewManager
+    ) {
         this.setWidgetModel = this.setWidgetModel.bind(this);
 
         this.alignment = ko.observable<string>();
@@ -160,9 +159,5 @@ export class ColumnEditor implements IWidgetEditor {
     public alignMiddle(): void {
         this.verticalAlignment("center");
         this.align();
-    }
-
-    public closeEditor(): void {
-        this.viewManager.closeWidgetEditor();
     }
 }

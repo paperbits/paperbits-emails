@@ -12,7 +12,7 @@ import { IViewManager } from "@paperbits/common/ui";
 import { IFileService } from "@paperbits/common/files";
 import { Keys } from "@paperbits/common/keyboard";
 import { IBlockService } from "@paperbits/common/blocks";
-import { Component } from "@paperbits/core/ko/component";
+import { Component } from "@paperbits/core/ko/decorators";
 import { EmailItem } from "./emailItem";
 import { EmailService } from "../../../emailService";
 
@@ -73,7 +73,7 @@ export class EmailsWorkshop {
 
     public selectEmail(emailItem: EmailItem): void {
         this.selectedEmail(emailItem);
-        this.viewManager.setDocument({ src: "/theme/email.html", componentName: "email-document" });
+        this.viewManager.setDocument({ src: "/email.html", componentName: "email-document" });
         this.viewManager.openViewAsWorkshop("Email", "email-details-workshop", {
             emailItem: emailItem,
             onDeleteCallback: () => {

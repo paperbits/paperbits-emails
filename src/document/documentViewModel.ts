@@ -8,8 +8,7 @@
 import * as ko from "knockout";
 import template from "./document.html";
 import { IRouteHandler } from "@paperbits/common/routing";
-import { IViewManager } from "@paperbits/common/ui";
-import { Component } from "@paperbits/core/ko/component";
+import { Component } from "@paperbits/core/ko/decorators";
 import { LayoutModelBinder } from "../layout";
 import { LayoutViewModelBinder } from "../layout/ko";
 import { LayoutViewModel } from "../layout/ko/layoutViewModel";
@@ -26,8 +25,7 @@ export class DocumentViewModel {
     constructor(
         private readonly emailLayoutModelBinder: LayoutModelBinder,
         private readonly emailLayoutViewModelBinder: LayoutViewModelBinder,
-        private readonly routeHandler: IRouteHandler,
-        private readonly viewManager: IViewManager
+        private readonly routeHandler: IRouteHandler
     ) {
         // rebinding...
         this.refreshContent = this.refreshContent.bind(this);
@@ -43,19 +41,12 @@ export class DocumentViewModel {
     }
 
     private async refreshContent(): Promise<void> {
-        this.viewManager.setShutter();
-
         this.layoutModel(null);
 
-        const layoutMode = this.viewManager.journeyName() === "Emails";
-        const readonly = false; // !layoutMode;
         const layoutModel = await this.emailLayoutModelBinder.getLayoutModel();
-        const layoutViewModel = this.emailLayoutViewModelBinder.modelToViewModel(layoutModel, readonly);
+        const layoutViewModel = this.emailLayoutViewModelBinder.modelToViewModel(layoutModel);
 
         this.layoutModel(layoutViewModel);
-
-        this.disableTracking(!layoutMode);
-        this.viewManager.removeShutter();
     }
 
     private async onRouteChange(): Promise<void> {

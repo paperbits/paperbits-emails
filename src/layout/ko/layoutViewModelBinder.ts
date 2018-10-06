@@ -8,6 +8,7 @@
 import { LayoutViewModel } from "./layoutViewModel";
 import { LayoutModel } from "../layoutModel";
 import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelector";
+import { IWidgetBinding } from "@paperbits/common/editing";
 
 export class LayoutViewModelBinder {
     private readonly viewModelBinderSelector: ViewModelBinderSelector;
@@ -16,7 +17,7 @@ export class LayoutViewModelBinder {
         this.viewModelBinderSelector = viewModelBinderSelector;
     }
 
-    public modelToViewModel(model: LayoutModel, readonly: boolean, viewModel?: LayoutViewModel): LayoutViewModel {
+    public modelToViewModel(model: LayoutModel, viewModel?: LayoutViewModel): LayoutViewModel {
         if (!viewModel) {
             viewModel = new LayoutViewModel();
         }
@@ -29,20 +30,22 @@ export class LayoutViewModelBinder {
                     return null;
                 }
 
-                return widgetViewModelBinder.modelToViewModel(widgetModel, readonly);
+                return widgetViewModelBinder.modelToViewModel(widgetModel);
             })
             .filter(x => x !== null);
 
         viewModel.widgets(sectionViewModels);
 
-        viewModel["widgetBinding"] = {
-            readonly: readonly,
+        const binding: IWidgetBinding = {
+            name: "email-layout",
             model: model,
             provides: ["static"],
             applyChanges: () => {
-                this.modelToViewModel(model, readonly, viewModel);
+                this.modelToViewModel(model, viewModel);
             }
         };
+
+        viewModel["widgetBinding"] = binding;
 
         return viewModel;
     }

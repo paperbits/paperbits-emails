@@ -8,31 +8,18 @@
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
 import { EmailsWorkshop } from "./workshops/emails/ko/emails";
 import { EmailDetailsWorkshop, EmailSelector } from "./workshops/emails/ko";
-import { EmailService } from "./emailService";
-import { IViewManager } from "@paperbits/common/ui";
-import { IRouteHandler } from "@paperbits/common/routing";
 import { RowEditorModule } from "./row/ko/rowEditor.module";
 import { ColumnEditorModule } from "./column/ko/columnEditor.module";
 import { SectionEditorModule } from "./section/ko/sectionEditor.module";
+import { EmailGridBindingHandler } from "./layout/ko/bindingHandlers.emailGrid";
 
 
 export class EmailsEditModule implements IInjectorModule {
     public register(injector: IInjector): void {
         injector.bind("emailsWorkshop", EmailsWorkshop);
-
-        injector.bindComponent("emailDetailsWorkshop", (ctx: IInjector, params) => {
-            const emailService = ctx.resolve<EmailService>("emailService");
-            const routeHandler = ctx.resolve<IRouteHandler>("routeHandler");
-            const viewManager = ctx.resolve<IViewManager>("viewManager");
-
-            return new EmailDetailsWorkshop(emailService, routeHandler, viewManager, params);
-        });
-
-        injector.bindComponent("emailSelector", (ctx: IInjector, params: {}) => {
-            const emailService = ctx.resolve<EmailService>("emailService");
-            return new EmailSelector(emailService, params["onSelect"]);
-        });
-
+        injector.bind("emailDetailsWorkshop", EmailDetailsWorkshop);
+        injector.bind("emailSelector", EmailSelector);
+        injector.bindSingleton("emailGridBindingHandler", EmailGridBindingHandler);
         injector.bindModule(new RowEditorModule());
         injector.bindModule(new ColumnEditorModule());
         injector.bindModule(new SectionEditorModule());

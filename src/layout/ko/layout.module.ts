@@ -11,7 +11,6 @@ import { LayoutViewModel } from "./layoutViewModel";
 import { LayoutModelBinder } from "../layoutModelBinder";
 import { LayoutViewModelBinder } from "./layoutViewModelBinder";
 import { IModelBinder } from "@paperbits/common/editing";
-import { GridBindingHandler } from "./bindingHandlers.emailGrid";
 
 export class LayoutModule implements IInjectorModule {
     public register(injector: IInjector): void {        
@@ -19,7 +18,6 @@ export class LayoutModule implements IInjectorModule {
         injector.bind("emailLayoutModelBinder", LayoutModelBinder);
         injector.bind("emailLayoutViewModelBinder", LayoutViewModelBinder);
 
-        injector.bind("emailGridBindingHandler", GridBindingHandler);
 
         
         const modelBinders = injector.resolve<IModelBinder[]>("modelBinders");

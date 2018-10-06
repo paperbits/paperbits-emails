@@ -11,13 +11,18 @@ import { LayoutModelBinder } from "../../layout/layoutModelBinder";
 import { GridHelper } from "@paperbits/common/editing";
 import { IEventManager } from "@paperbits/common/events";
 import { GridEditor } from "@paperbits/core/grid/ko/gridEditor";
+import { IWidgetService } from "@paperbits/common/widgets";
 
-export class GridBindingHandler {
-    constructor(viewManager: IViewManager, eventManager: IEventManager, emailLayoutModelBinder: LayoutModelBinder) {
+export class EmailGridBindingHandler {
+    constructor(
+        viewManager: IViewManager,
+        eventManager: IEventManager,
+        emailLayoutModelBinder: LayoutModelBinder,
+        widgetService: IWidgetService,
+        gridEditor: GridEditor
+    ) {
         ko.bindingHandlers["email-grid"] = {
             init(gridElement: HTMLElement) {
-                const gridEditor = new GridEditor(<any>viewManager, gridElement.ownerDocument);
-
                 // TODO: Replace active observer with some reactive logic.
                 const observer = new MutationObserver(mutations => {
                     if (viewManager.mode === ViewManagerMode.dragging) {
@@ -40,24 +45,24 @@ export class GridBindingHandler {
                     observer.disconnect();
                 });
 
-                gridEditor.attach();
+                gridEditor.attach(gridElement.ownerDocument);
             }
         };
 
         ko.bindingHandlers["layoutsection"] = {
             init(sourceElement: HTMLElement) {
-                GridBindingHandler.attachSectionDragEvents(sourceElement, viewManager, eventManager);
+                EmailGridBindingHandler.attachSectionDragEvents(sourceElement, viewManager, eventManager, widgetService);
             }
         }
 
         ko.bindingHandlers["layoutcolumn"] = {
             init(sourceElement: HTMLElement) {
-                GridBindingHandler.attachColumnDragEvents(sourceElement, viewManager, eventManager);
+                EmailGridBindingHandler.attachColumnDragEvents(sourceElement, viewManager, eventManager, widgetService);
             }
         }
     }
 
-    public static attachSectionDragEvents(sourceElement: HTMLElement, viewManager: IViewManager, eventManager: IEventManager): void {
+    public static attachSectionDragEvents(sourceElement: HTMLElement, viewManager: IViewManager, eventManager: IEventManager, widgetService: IWidgetService): void {
         const onDragStart = (item): HTMLElement => {
             const placeholderWidth = sourceElement.clientWidth - 1 + "px";
             const placeholderHeight = sourceElement.clientHeight - 1 + "px";
@@ -101,8 +106,9 @@ export class GridBindingHandler {
 
             parentBinding.applyChanges();
 
-            if (acceptorBinding) {
-                acceptorBinding.onDragDrop(dragSession);
+            if (acceptorBinding && acceptorBinding.handler) {
+                const widgetHandler = widgetService.getWidgetHandler(acceptorBinding.handler);
+                widgetHandler.onDragDrop(dragSession);
             }
 
             eventManager.dispatchEvent("virtualDragEnd");
@@ -117,7 +123,7 @@ export class GridBindingHandler {
         });
     }
 
-    public static attachRowDragEvents(sourceElement: HTMLElement, viewManager: IViewManager, eventManager: IEventManager): void {
+    public static attachRowDragEvents(sourceElement: HTMLElement, viewManager: IViewManager, eventManager: IEventManager, widgetService: IWidgetService): void {
         const onDragStart = (): HTMLElement => {
             const placeholderWidth = sourceElement.clientWidth - 1 + "px";
             const placeholderHeight = sourceElement.clientHeight - 1 + "px";
@@ -162,8 +168,9 @@ export class GridBindingHandler {
 
             parentBinding.applyChanges();
 
-            if (acceptorBinding) {
-                acceptorBinding.onDragDrop(dragSession);
+            if (acceptorBinding && acceptorBinding.handler) {
+                const widgetHandler = widgetService.getWidgetHandler(acceptorBinding.handler);
+                widgetHandler.onDragDrop(dragSession);
             }
 
             eventManager.dispatchEvent("virtualDragEnd");
@@ -178,7 +185,7 @@ export class GridBindingHandler {
         });
     }
 
-    public static attachColumnDragEvents(sourceElement: HTMLElement, viewManager: IViewManager, eventManager: IEventManager): void {
+    public static attachColumnDragEvents(sourceElement: HTMLElement, viewManager: IViewManager, eventManager: IEventManager, widgetService: IWidgetService): void {
         const onDragStart = (): HTMLElement => {
             const placeholderWidth = sourceElement.clientWidth - 1 + "px";
             const placeholderHeight = sourceElement.clientHeight - 1 + "px";
@@ -223,8 +230,9 @@ export class GridBindingHandler {
 
             parentBinding.applyChanges();
 
-            if (acceptorBinding) {
-                acceptorBinding.onDragDrop(dragSession);
+            if (acceptorBinding && acceptorBinding.handler) {
+                const widgetHandler = widgetService.getWidgetHandler(acceptorBinding.handler);
+                widgetHandler.onDragDrop(dragSession);
             }
 
             eventManager.dispatchEvent("virtualDragEnd");
@@ -239,7 +247,7 @@ export class GridBindingHandler {
         });
     }
 
-    public static attachWidgetDragEvents(sourceElement: HTMLElement, viewManager: IViewManager, eventManager: IEventManager): void {
+    public static attachWidgetDragEvents(sourceElement: HTMLElement, viewManager: IViewManager, eventManager: IEventManager, widgetService: IWidgetService): void {
         const onDragStart = (item): HTMLElement => {
             if (viewManager.mode === ViewManagerMode.configure) {
                 return;
@@ -288,8 +296,9 @@ export class GridBindingHandler {
 
             parentBinding.applyChanges();
 
-            if (acceptorBinding) {
-                acceptorBinding.onDragDrop(dragSession);
+            if (acceptorBinding && acceptorBinding.handler) {
+                const widgetHandler = widgetService.getWidgetHandler(acceptorBinding.handler);
+                widgetHandler.onDragDrop(dragSession);
             }
 
             eventManager.dispatchEvent("virtualDragEnd");

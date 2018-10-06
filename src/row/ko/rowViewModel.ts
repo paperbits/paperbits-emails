@@ -7,7 +7,7 @@
 
 import * as ko from "knockout";
 import template from "./row.html";
-import { Component } from "@paperbits/core/ko/component";
+import { Component } from "@paperbits/core/ko/decorators/component.decorator";
 import { WidgetViewModel } from "@paperbits/core/ko/widgetViewModel";
 
 @Component({

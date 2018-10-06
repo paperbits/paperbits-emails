@@ -8,10 +8,10 @@
 import * as ko from "knockout";
 import template from "./emailSelector.html";
 import { IResourceSelector } from "@paperbits/common/ui";
-import { EmailItem, AnchorItem } from "./emailItem";
+import { EmailItem } from "./emailItem";
 import { EmailContract } from "../../../emailContract";
 import { EmailService } from "../../../emailService";
-import { Component } from "@paperbits/core/ko/component";
+import { Component, Event, Param } from "@paperbits/core/ko/decorators";
 
 @Component({
     selector: "email-selector",
@@ -19,20 +19,18 @@ import { Component } from "@paperbits/core/ko/component";
     injectable: "emailSelector"
 })
 export class EmailSelector implements IResourceSelector<EmailContract> {
-    private readonly emailService: EmailService;
-
     public readonly searchPattern: KnockoutObservable<string>;
     public readonly emails: KnockoutObservableArray<EmailItem>;
     public readonly working: KnockoutObservable<boolean>;
 
+    @Param()
     public selectedEmailTemplate: KnockoutObservable<EmailItem>;
-    public onResourceSelected: (selection: EmailContract) => void;
 
-    constructor(emailService: EmailService, onSelect: (email: EmailContract) => void) {
-        this.emailService = emailService;
+    @Event()
+    public onSelect: (email: EmailContract) => void;
 
+    constructor(private readonly emailService: EmailService) {
         this.selectEmail = this.selectEmail.bind(this);
-        this.onResourceSelected = onSelect;
 
         this.emails = ko.observableArray<EmailItem>();
         this.selectedEmailTemplate = ko.observable<EmailItem>();
@@ -63,8 +61,8 @@ export class EmailSelector implements IResourceSelector<EmailContract> {
     public async selectEmail(email: EmailItem): Promise<void> {
         this.selectedEmailTemplate(email);
 
-        if (this.onResourceSelected) {
-            this.onResourceSelected(email.toContract());
+        if (this.onSelect) {
+            this.onSelect(email.toContract());
         }
     }
 }

@@ -9,7 +9,7 @@ import template from "./emailDetails.html";
 import { EmailService } from "../../../emailService";
 import { IRouteHandler } from "@paperbits/common/routing";
 import { IViewManager } from "@paperbits/common/ui";
-import { Component } from "@paperbits/core/ko/component";
+import { Component, Param, Event, OnMounted } from "@paperbits/core/ko/decorators";
 import { EmailItem } from "./emailItem";
 
 @Component({
@@ -18,25 +18,25 @@ import { EmailItem } from "./emailItem";
     injectable: "emailDetailsWorkshop"
 })
 export class EmailDetailsWorkshop {
-    private readonly onDeleteCallback: () => void;
-
+    @Param()
     public emailItem: EmailItem;
+
+    @Event()
+    public onDeleteCallback: () => void;
 
     constructor(
         private readonly emailService: EmailService,
         private readonly routeHandler: IRouteHandler,
-        private readonly viewManager: IViewManager,
-        params
+        private readonly viewManager: IViewManager
     ) {
-
-        // initialization...
-        this.emailItem = params.emailItem;
-        this.onDeleteCallback = params.onDeleteCallback;
-
         // rebinding...
+        this.onMounted = this.onMounted.bind(this);
         this.deleteEmail = this.deleteEmail.bind(this);
         this.updateEmail = this.updateEmail.bind(this);
+    }
 
+    @OnMounted()
+    public async onMounted(): Promise<void> {
         this.emailItem.title
             .extend({ required: true, onlyValid: true })
             .subscribe(this.updateEmail);
