@@ -8,8 +8,19 @@
 import { StyleInliner } from "./inline-css";
 import * as extend from "extend";
 
+export interface InlinerOptions {
+    baseUrl?: string;
+    extraCss?: string;
+    removeHtmlSelectors?: boolean;
+    applyTableAttributes?: boolean;
+    preserveMediaQueries?: boolean;
+    applyWidthAttributes?: boolean;
+    applyLinkTags?: boolean;
+    codeBlocks?: any;
+    removeLinkTags?: boolean;
+}
 
-export async function process(html: string, options): Promise<string> {
+export async function process(html: string, options: InlinerOptions): Promise<string> {
     const opt = extend(true, {
         extraCss: "",
         applyStyleTags: true,
@@ -35,31 +46,14 @@ export async function process(html: string, options): Promise<string> {
     return await inlineContent(html, opt);
 }
 
-export function inlineContent(html: string, options): Promise<string> {
-    return new Promise((resolve, reject) => {
-        let content;
+export async function inlineContent(html: string, options: InlinerOptions): Promise<string> {
+    if (!options.baseUrl) {
+        throw new Error("options.url is required");
+    }
 
-        if (!options.url) {
-            reject("options.url is required");
-        }
+    const result = await StyleInliner.extractCss(html, options);
+    const extraCss = result.css + "\n" + options.extraCss;
+    const content = StyleInliner.inlineCss(result.html, extraCss, options);
 
-        StyleInliner.extractCss(html, options, (err, html, css) => {
-            let extraCss;
-
-            if (err) {
-                return reject(err);
-            }
-
-            extraCss = css + "\n" + options.extraCss;
-
-            try {
-                content = StyleInliner.inlineCss(html, extraCss, options);
-            }
-            catch (e) {
-                return reject(e);
-            }
-
-            resolve(content);
-        });
-    });
+    return content;
 }

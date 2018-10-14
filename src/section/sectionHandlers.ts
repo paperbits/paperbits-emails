@@ -1,6 +1,6 @@
 import { IContextualEditor, IView, IViewManager } from "@paperbits/common/ui";
 import { DragSession } from "@paperbits/common/ui/draggables";
-import { GridHelper } from "@paperbits/common/editing";
+import { WidgetContext } from "@paperbits/common/editing";
 import { SectionModel } from "./sectionModel";
 import { RowModel } from "../row/rowModel";
 
@@ -24,41 +24,27 @@ export class SectionHandlers {
         dragSession.targetBinding.applyChanges();
     }
 
-    public getContextualEditor(element: HTMLElement, half: string, placeholderElement?: HTMLElement, placeholderHalf?: string): IContextualEditor {
+    public getContextualEditor(context: WidgetContext): IContextualEditor {
         const sectionContextualEditor: IContextualEditor = {
-            element: element,
             color: "#2b87da",
             hoverCommand: {
-                position: half,
+                position: context.half,
                 tooltip: "Add section",
                 color: "#2b87da",
                 component: {
                     name: "email-section-layout-selector",
                     params: {
                         onSelect: (newSectionModel: SectionModel) => {
-                            let sectionElement = element;
-                            let sectionHalf = half;
+                            const sectionHalf = context.half;
 
-                            if (!sectionElement) {
-                                sectionElement = placeholderElement;
-                            }
-
-                            if (!sectionHalf) {
-                                sectionHalf = placeholderHalf;
-                            }
-
-                            const mainElement = GridHelper.getParentElementWithModel(sectionElement);
-                            const mainModel = GridHelper.getModel(mainElement);
-                            const mainWidgetModel = GridHelper.getWidgetBinding(mainElement);
-                            const sectionModel = <SectionModel>GridHelper.getModel(sectionElement);
-                            let index = mainModel.widgets.indexOf(sectionModel);
+                            let index = context.parentModel.widgets.indexOf(context.model);
 
                             if (sectionHalf === "bottom") {
                                 index++;
                             }
 
-                            mainModel.widgets.splice(index, 0, newSectionModel);
-                            mainWidgetModel.applyChanges();
+                            context.parentModel.widgets.splice(index, 0, newSectionModel);
+                            context.parentBinding.applyChanges();
 
                             this.viewManager.clearContextualEditors();
                         }
@@ -69,13 +55,8 @@ export class SectionHandlers {
                 tooltip: "Delete section",
                 color: "#2b87da",
                 callback: () => {
-                    const mainElement = GridHelper.getParentElementWithModel(element);
-                    const mainModel = GridHelper.getModel(mainElement);
-                    const mainWidgetModel = GridHelper.getWidgetBinding(mainElement);
-                    const sectionModel = GridHelper.getModel(element);
-
-                    mainModel.widgets.remove(sectionModel);
-                    mainWidgetModel.applyChanges();
+                    context.parentModel.widgets.remove(context.model);
+                    context.parentBinding.applyChanges();
 
                     this.viewManager.clearContextualEditors();
                 }
@@ -85,10 +66,7 @@ export class SectionHandlers {
                 iconClass: "paperbits-edit-72",
                 position: "top right",
                 color: "#2b87da",
-                callback: () => {
-                    const binding = GridHelper.getWidgetBinding(element);
-                    this.viewManager.openWidgetEditor(binding);
-                }
+                callback: () => this.viewManager.openWidgetEditor(context.binding)
             },
             {
                 tooltip: "Add to library",
@@ -99,7 +77,7 @@ export class SectionHandlers {
                     const view: IView = {
                         component: {
                             name: "add-block-dialog",
-                            params: GridHelper.getModel(element)
+                            params: context.model
                         },
                         resize: "vertically horizontally"
                     };
@@ -109,9 +87,8 @@ export class SectionHandlers {
             }]
         };
 
-        const attachedModel = <SectionModel>GridHelper.getModel(element);
 
-        if (attachedModel.widgets.length === 0) {
+        if (context.model.widgets.length === 0) {
             sectionContextualEditor.hoverCommand = {
                 position: "center",
                 tooltip: "Add row",
@@ -120,11 +97,8 @@ export class SectionHandlers {
                     name: "email-row-layout-selector",
                     params: {
                         onSelect: (newRowModel: RowModel) => {
-                            const sectionModel = GridHelper.getModel(element);
-                            const sectionBinding = GridHelper.getWidgetBinding(element);
-
-                            sectionModel.widgets.push(newRowModel);
-                            sectionBinding.applyChanges();
+                            context.model.widgets.push(newRowModel);
+                            context.binding.applyChanges();
 
                             this.viewManager.clearContextualEditors();
                         }

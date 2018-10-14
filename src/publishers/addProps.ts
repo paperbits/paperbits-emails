@@ -10,24 +10,24 @@ import { cssProperty } from "./cssProperty";
 
 const importantSelector = cssSelector("<!important>", [2, 0, 0, 0]);
 
-function getProperty(style, name, selector) {
-    const value = style[name];
-    const sel = style._importants[name] ? importantSelector : selector;
+function getProperty(styles, name, selector) {
+    const value = styles[name];
+    const sel = styles._importants[name] ? importantSelector : selector;
 
     return cssProperty(name, value, sel);
 }
 
 // go through the properties
-export function addProps(el, style, selector) {
+export function addProps(el, styles, selector): void {
     let i,
         name,
         prop,
         existing,
         winner;
 
-    for (i = 0; i < style.length; i++) {
-        name = style[i];
-        prop = getProperty(style, name, selector);
+    for (i = 0; i < styles.length; i++) {
+        name = styles[i];
+        prop = getProperty(styles, name, selector);
         existing = el.styleProps[name];
 
         if (existing) {
@@ -41,4 +41,4 @@ export function addProps(el, style, selector) {
             el.styleProps[name] = prop;
         }
     }
-};
+}

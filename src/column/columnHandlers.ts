@@ -1,7 +1,7 @@
-import { IWidgetHandler, GridHelper } from "@paperbits/common/editing";
+import { IWidgetHandler, WidgetContext } from "@paperbits/common/editing";
 import { DragSession } from "@paperbits/common/ui/draggables";
 import { IContextualEditor, IViewManager } from "@paperbits/common/ui";
-import { ColumnModel } from "./columnModel";
+import { WidgetModel } from "@paperbits/common/widgets";
 
 
 export class ColumnHandlers implements IWidgetHandler {
@@ -19,9 +19,8 @@ export class ColumnHandlers implements IWidgetHandler {
         dragSession.targetBinding.applyChanges();
     }
 
-    public getContextualEditor(element: HTMLElement): IContextualEditor {
+    public getContextualEditor(context: WidgetContext): IContextualEditor {
         const columnContextualEditor: IContextualEditor = {
-            element: element,
             color: "#4c5866",
             hoverCommand: null,
             deleteCommand: null,
@@ -30,16 +29,11 @@ export class ColumnHandlers implements IWidgetHandler {
                 iconClass: "paperbits-edit-72",
                 position: "top right",
                 color: "#4c5866",
-                callback: () => {
-                    const binding = GridHelper.getWidgetBinding(element);
-                    this.viewManager.openWidgetEditor(binding);
-                }
+                callback: () => this.viewManager.openWidgetEditor(context.binding)
             }]
         };
 
-        const attachedModel = <ColumnModel>GridHelper.getModel(element);
-
-        if (attachedModel.widgets.length === 0) {
+        if (context.model.widgets.length === 0) {
             columnContextualEditor.hoverCommand = {
                 color: "#607d8b",
                 position: "center",
@@ -47,23 +41,10 @@ export class ColumnHandlers implements IWidgetHandler {
                 component: {
                     name: "widget-selector",
                     params: {
-                        onRequest: () => {
-                            const parentElement = GridHelper.getParentElementWithModel(element);
-                            const bindings = GridHelper.getParentWidgetBindings(parentElement);
-                            const provided = bindings
-                                .filter(x => !!x.provides)
-                                .map(x => x.provides)
-                                .reduce((acc, val) => acc.concat(val));
-
-                            return provided;
-                        },
-                        onSelect: (widgetModel: any) => {
-                            const columnModel = <ColumnModel>GridHelper.getModel(element);
-                            const columnWidgetBinding = GridHelper.getWidgetBinding(element);
-
-                            columnModel.widgets.push(widgetModel);
-                            columnWidgetBinding.applyChanges();
-
+                        onRequest: () => context.providers,
+                        onSelect: (widget: WidgetModel) => {
+                            context.model.widgets.push(widget);
+                            context.binding.applyChanges();
                             this.viewManager.clearContextualEditors();
                         }
                     }

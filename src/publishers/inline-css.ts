@@ -10,7 +10,6 @@ import * as cheerio from "cheerio";
 import * as flatten from "flatten";
 import * as pick from "object.pick";
 import * as extend from "extend";
-import * as Batch from "batch";
 import * as url from "url";
 import * as fs from "fs";
 import { pseudoCheck } from "./pseudoCheck";
@@ -18,6 +17,8 @@ import { handleRule } from "./handleRule";
 import { setWidthAttrs } from "./setWidthAttrs";
 import { removeClassId } from "./removeClassId";
 import { mediaQueryText } from "./mediaquery";
+import { InlinerOptions } from "./inlineContent";
+import { CssExtractionResult } from "./cssExtractionResult";
 
 
 
@@ -67,13 +68,13 @@ export class StyleInliner {
         }
     }
 
-    public static inlineCss(html: string, css?, options?) {
+    public static inlineCss(html: string, css?: string, options?: InlinerOptions) {
         const opts = options || {};
         let rules;
         let editedElements = [];
         const codeBlockLookup = [];
 
-        const encodeCodeBlocks = (_html: string) => {
+        const encodeCodeBlocks = (_html: string): string => {
             let __html = _html;
             const blocks = opts.codeBlocks;
 
@@ -88,7 +89,7 @@ export class StyleInliner {
             return __html;
         };
 
-        const decodeCodeBlocks = (_html) => {
+        const decodeCodeBlocks = (_html: string): string => {
             let index, re;
             let __html = _html;
 
@@ -99,15 +100,16 @@ export class StyleInliner {
             return __html;
         };
 
-        const encodeEntities = (_html) => {
+        const encodeEntities = (_html: string): string => {
             return encodeCodeBlocks(_html);
         };
 
-        const decodeEntities = (_html) => {
+        const decodeEntities = (_html: string): string => {
             return decodeCodeBlocks(_html);
         };
 
 
+        // Taking listed set of options from opts object.
         const $ = cheerio.load(encodeEntities(html), pick(opts, [
             "xmlMode",
             "decodeEntities",
@@ -119,37 +121,37 @@ export class StyleInliner {
 
         try {
             rules = parseCSS(css);
+
+            rules.forEach((rule) => {
+                let el;
+                let ignoredPseudos;
+
+                ignoredPseudos = pseudoCheck(rule);
+
+                if (ignoredPseudos) {
+                    return false;
+                }
+
+                try {
+                    el = handleRule(rule, $);
+
+                    editedElements.push(el);
+                }
+                catch (err) {
+                    // skip invalid selector
+                    return false;
+                }
+            });
         }
         catch (err) {
             throw new Error(err);
         }
 
-        rules.forEach((rule) => {
-            let el;
-            let ignoredPseudos;
-
-            ignoredPseudos = pseudoCheck(rule);
-
-            if (ignoredPseudos) {
-                return false;
-            }
-
-            try {
-                el = handleRule(rule, $);
-
-                editedElements.push(el);
-            }
-            catch (err) {
-                // skip invalid selector
-                return false;
-            }
-        });
-
         // flatten array if nested
         editedElements = flatten(editedElements);
 
         editedElements.forEach((el) => {
-            this.setStyleAttrs(el, $);
+            this.setStyleAttrs(el, $, options);
 
             if (opts.applyWidthAttributes) {
                 setWidthAttrs(el, $);
@@ -166,6 +168,8 @@ export class StyleInliner {
             });
         }
 
+        
+
         return decodeEntities($.html());
     }
 
@@ -175,7 +179,7 @@ export class StyleInliner {
         });
     }
 
-    public static setStyleAttrs(el, $): void {
+    public static setStyleAttrs(el, $, options: InlinerOptions): void {
         let i;
         let style = [];
 
@@ -191,8 +195,7 @@ export class StyleInliner {
 
             const regex = /url\(["'](.*)\"\)/gm;
             const matches = regex.exec(styleProp.value);
-
-            const baseUrl = "https://paperbits.io/images";
+            const baseUrl = options.baseUrl;
 
             if (matches && matches.length === 2) {
                 let url = matches[1];
@@ -211,8 +214,8 @@ export class StyleInliner {
 
         // sorting will arrange styles like padding: before padding-bottom: which will preserve the expected styling
         style = style.sort((a, b) => {
-            const aProp = a.split(":")[0],
-                bProp = b.split(":")[0];
+            const aProp = a.split(":")[0];
+            const bProp = b.split(":")[0];
 
             return (aProp > bProp ? 1 : aProp < bProp ? -1 : 0);
         });
@@ -220,61 +223,62 @@ export class StyleInliner {
         $(el).attr("style", style.join(" "));
     }
 
-    public static extractCss(html: string, options, callback) {
-        const batch = new Batch();
+    public static async extractCss(html: string, options: InlinerOptions): Promise<CssExtractionResult> {
         const data = StyleInliner.getStylesheetList(html, options);
-
-        batch.push((cb) => {
-            StyleInliner.getStylesData(data.html, options, cb);
-        });
+        const stylesData = StyleInliner.getStylesData(data.html, options);
+        const promises = [];
 
         data.hrefs.forEach((stylesheetHref) => {
-            batch.push((cb) => {
-                StyleInliner.getHrefContent(stylesheetHref, options.url, cb);
-            });
+            promises.push(StyleInliner.getHrefContent(stylesheetHref, options.baseUrl));
         });
 
-        batch.end((err, results) => {
-            let stylesData,
-                css;
+        const results = await Promise.all(promises);
 
-            if (err) {
-                return callback(err);
-            }
+        results.forEach((content) => {
+            stylesData.css.push(content);
+        });
 
-            stylesData = results.shift();
+        const css = stylesData.css.join("\n");
 
-            results.forEach((content) => {
-                stylesData.css.push(content);
+        return {
+            css: css,
+            html: stylesData.html
+        };
+    }
+
+    public static readFileAsString(filepath: string): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            fs.readFile(filepath, "utf8", (error, content) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+
+                resolve(content);
             });
-
-            css = stylesData.css.join("\n");
-
-            return callback(null, stylesData.html, css);
         });
     }
 
-    public static getHrefContent(destHref, sourceHref, callback) {
-        let resolvedUrl,
-            parsedUrl,
-            toUrl = destHref;
+    public static async getHrefContent(destHref: string, sourceHref: string): Promise<string> {
+        let toUrl = destHref;
 
         if (url.parse(sourceHref).protocol === "file:" && destHref[0] === "/") {
             toUrl = destHref.slice(1);
         }
 
-        resolvedUrl = url.resolve(sourceHref, toUrl);
-        parsedUrl = url.parse(resolvedUrl);
+        const resolvedUrl = url.resolve(sourceHref, toUrl);
+        const parsedUrl = url.parse(resolvedUrl);
 
         if (parsedUrl.protocol === "file:") {
-            fs.readFile(decodeURIComponent(parsedUrl.pathname), "utf8", callback);
+            return await this.readFileAsString(decodeURIComponent(parsedUrl.pathname));
         }
         else {
             // getRemoteContent(resolvedUrl, callback);
+            throw new Error("Remote files not supported.");
         }
     }
 
-    public static getStylesheetList(sourceHtml: string, options) {
+    public static getStylesheetList(sourceHtml: string, options: InlinerOptions) {
         const results: any = {};
         const codeBlocks = {
             EJS: { start: "<%", end: "%>" },
@@ -309,13 +313,9 @@ export class StyleInliner {
             return html;
         };
 
-        const encodeEntities = (html: string): string => {
-            return encodeCodeBlocks(html);
-        };
+        const encodeEntities = (html: string): string => encodeCodeBlocks(html);
+        const decodeEntities = (html: string): string => decodeCodeBlocks(html);
 
-        const decodeEntities = (html: string): string => {
-            return decodeCodeBlocks(html);
-        };
 
         const $ = cheerio.load(encodeEntities(sourceHtml),
             extend({ decodeEntities: false },
@@ -348,7 +348,7 @@ export class StyleInliner {
         return results;
     }
 
-    public static getStylesData(html, options, callback) {
+    public static getStylesData(html, options): any {
         const results: any = {};
         const codeBlocks = {
             EJS: { start: "<%", end: "%>" },
@@ -359,7 +359,7 @@ export class StyleInliner {
 
         const encodeCodeBlocks = (_html) => {
             let __html = _html;
-            let blocks = extend(codeBlocks, options.codeBlocks);
+            const blocks = extend(codeBlocks, options.codeBlocks);
 
             Object.keys(blocks).forEach((key) => {
                 const re = new RegExp(blocks[key].start + "([\\S\\s]*?)" + blocks[key].end, "g");
@@ -416,10 +416,11 @@ export class StyleInliner {
             }
 
             styleDataList = element.childNodes;
+
             if (styleDataList.length !== 1) {
-                callback(new Error("empty style element"));
-                return;
+                throw new Error("empty style element");
             }
+
             styleData = styleDataList[0].data;
 
             if (options.applyStyleTags) {
@@ -431,6 +432,7 @@ export class StyleInliner {
                     mediaQueries = mediaQueryText(element.childNodes[0].nodeValue);
                     element.childNodes[0].nodeValue = mediaQueries;
                 }
+
                 if (!mediaQueries) {
                     $(element).remove();
                 }
@@ -439,7 +441,7 @@ export class StyleInliner {
 
         results.html = decodeEntities($.html());
 
-        callback(null, results);
+        return results;
     }
 }
 

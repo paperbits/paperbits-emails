@@ -28,7 +28,7 @@ function getSpecificity(text) {
  * @api public
  */
 
-export function cssSelector(text, spec?) {
+export function cssSelector(text, spec?): any {
     let _spec = spec;
 
     return {

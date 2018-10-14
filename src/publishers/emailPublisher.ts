@@ -6,8 +6,8 @@
  */
 
 import * as ko from "knockout";
-import { process } from "./inlineContent";
 import * as Utils from "@paperbits/common/utils";
+import { process } from "./inlineContent";
 import { IPublisher } from "@paperbits/common/publishing";
 import { EmailService } from "../emailService";
 import { EmailContract } from "../emailContract";
@@ -63,10 +63,11 @@ export class EmailPublisher implements IPublisher {
 
             setTimeout(() => {
                 const links = element.querySelectorAll("[href]");
+                const linkElements: HTMLAnchorElement[] = Array.prototype.slice.call(links);
 
                 // TODO: Move into inlining code!
-                Array.prototype.slice.call(links).forEach(link => {
-                    const baseUrl = "https://paperbits.io/images"
+                linkElements.forEach(link => {
+                    const baseUrl = "https://paperbits.io/"
 
                     if (!link.href.startsWith("http://") && !link.href.startsWith("https://") && !link.href.startsWith("mailto:")) {
                         if (!link.href.startsWith("/")) {
@@ -91,7 +92,7 @@ export class EmailPublisher implements IPublisher {
         await buildContentPromise;
 
         htmlContent = await process(htmlContent, {
-            url: "https://paperbits.io/",
+            baseUrl: "https://paperbits.io/",
             removeHtmlSelectors: true,
             applyTableAttributes: true,
             preserveMediaQueries: true,
