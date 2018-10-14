@@ -15,8 +15,8 @@
         "url": "https://github.com/paperbits/paperbits-emails/issues"
     },
     "dependencies": {
-        "@paperbits/core": "0.1.16",
-        "@paperbits/common": "0.1.16",
+        "@paperbits/core": "0.1.17",
+        "@paperbits/common": "0.1.17",
         "@paperbits/publishing": "0.1.14",
         "knockout": "^3.5.0-beta",
         "knockout.validation": "^2.0.3",
