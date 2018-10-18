@@ -15,10 +15,10 @@ import { SectionEditor } from "./sectionEditor";
 export class SectionEditorModule implements IInjectorModule {
     public register(injector: IInjector): void {
         injector.bind("emailSectionLayoutSelector", SectionLayoutSelector);
-        injector.bind("sectionEditor", SectionEditor);
-        injector.bind("sectionHandler", SectionHandlers);
+        injector.bind("emailSectionEditor", SectionEditor);
+        injector.bind("emailSectionHandler", SectionHandlers);
 
         const widgetHandlers: IWidgetHandler[] = injector.resolve("widgetHandlers");
-        widgetHandlers.push(injector.resolve<SectionHandlers>("sectionHandler"));
+        widgetHandlers.push(injector.resolve<SectionHandlers>("emailSectionHandler"));
     }
 }
