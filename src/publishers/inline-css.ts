@@ -229,7 +229,7 @@ export class StyleInliner {
         const promises = [];
 
         data.hrefs.forEach((stylesheetHref) => {
-            promises.push(StyleInliner.getHrefContent(stylesheetHref, options.baseUrl));
+            promises.push(StyleInliner.getHrefContent(stylesheetHref));
         });
 
         const results = await Promise.all(promises);
@@ -259,23 +259,8 @@ export class StyleInliner {
         });
     }
 
-    public static async getHrefContent(destHref: string, sourceHref: string): Promise<string> {
-        let toUrl = destHref;
-
-        if (url.parse(sourceHref).protocol === "file:" && destHref[0] === "/") {
-            toUrl = destHref.slice(1);
-        }
-
-        const resolvedUrl = url.resolve(sourceHref, toUrl);
-        const parsedUrl = url.parse(resolvedUrl);
-
-        if (parsedUrl.protocol === "file:") {
-            return await this.readFileAsString(decodeURIComponent(parsedUrl.pathname));
-        }
-        else {
-            // getRemoteContent(resolvedUrl, callback);
-            throw new Error("Remote files not supported.");
-        }
+    public static async getHrefContent(href: string): Promise<string> {
+        return await this.readFileAsString(decodeURIComponent(href));
     }
 
     public static getStylesheetList(sourceHtml: string, options: InlinerOptions) {

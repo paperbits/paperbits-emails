@@ -15,6 +15,7 @@ import { IBlockService } from "@paperbits/common/blocks";
 import { Component } from "@paperbits/core/ko/decorators";
 import { EmailItem } from "./emailItem";
 import { EmailService } from "../../../emailService";
+import { LayoutViewModelBinder } from "../../../layout/ko";
 
 const templateBlockKey = "blocks/8730d297-af39-8166-83b6-9439addca789";
 
@@ -31,12 +32,14 @@ export class EmailsWorkshop {
     public readonly working: KnockoutObservable<boolean>;
     public readonly selectedEmail: KnockoutObservable<EmailItem>;
 
+
     constructor(
         private readonly emailService: EmailService,
         private readonly fileService: IFileService,
         private readonly routeHandler: IRouteHandler,
         private readonly blockService: IBlockService,
-        private readonly viewManager: IViewManager
+        private readonly viewManager: IViewManager,
+        private readonly emailLayoutViewModelBinder: LayoutViewModelBinder,
     ) {
         // rebinding...
         this.searchEmails = this.searchEmails.bind(this);
@@ -73,7 +76,7 @@ export class EmailsWorkshop {
 
     public selectEmail(emailItem: EmailItem): void {
         this.selectedEmail(emailItem);
-        this.viewManager.setDocument({ src: "/email.html", componentName: "email-document" });
+        this.viewManager.setDocument({ src: "/email.html", getLayoutViewModel: this.emailLayoutViewModelBinder.getLayoutViewModel });
         this.viewManager.openViewAsWorkshop("Email", "email-details-workshop", {
             emailItem: emailItem,
             onDeleteCallback: () => {

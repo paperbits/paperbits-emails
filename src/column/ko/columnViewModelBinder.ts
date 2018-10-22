@@ -12,9 +12,13 @@ import { ColumnModel } from "../columnModel";
 import { PlaceholderViewModel } from "@paperbits/core/placeholder/ko";
 import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelector";
 import { ColumnHandlers } from "../columnHandlers";
+import { IEventManager } from "@paperbits/common/events";
 
 export class ColumnViewModelBinder implements IViewModelBinder<ColumnModel, ColumnViewModel> {
-    constructor(private readonly viewModelBinderSelector: ViewModelBinderSelector) { }
+    constructor(
+        private readonly viewModelBinderSelector: ViewModelBinderSelector,
+        private readonly eventManager: IEventManager
+    ) { }
 
     public modelToViewModel(model: ColumnModel, columnViewModel?: ColumnViewModel): ColumnViewModel {
         if (!columnViewModel) {
@@ -80,7 +84,10 @@ export class ColumnViewModelBinder implements IViewModelBinder<ColumnModel, Colu
             model: model,
             editor: "email-column-editor",
             handler: ColumnHandlers,
-            applyChanges: () => this.modelToViewModel(model, columnViewModel)
+            applyChanges: () => {
+                this.modelToViewModel(model, columnViewModel);
+                this.eventManager.dispatchEvent("onContentUpdate");
+            }
         };
 
         columnViewModel["widgetBinding"] = binding;

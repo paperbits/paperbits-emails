@@ -5,11 +5,9 @@
  * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
  */
 
-import { IRouteHandler } from "@paperbits/common/routing";
 import { IFileService } from "@paperbits/common/files";
 import { ModelBinderSelector } from "@paperbits/common/widgets";
 import { LayoutModel } from "./layoutModel";
-import { ILayoutService, LayoutContract } from "@paperbits/common/layouts";
 import { Contract } from "@paperbits/common";
 import { EmailService } from "../emailService";
 import { EmailContract } from "../emailContract";
@@ -68,23 +66,5 @@ export class LayoutModelBinder {
         });
 
         return layoutConfig;
-    }
-
-    public async setConfig(layout: LayoutContract, config: Contract): Promise<void> {
-        const file = await this.fileService.getFileByKey(layout.contentKey);
-
-        Object.assign(file, config);
-
-        await this.fileService.updateFile(file);
-    }
-
-    public async updateContent(layoutModel: LayoutModel): Promise<void> {
-        const emailContract = await this.emailService.getEmailTemplateByKey("emailTemplates/c17ea920-cc6b-b3b5-6da4-ef8d19b758ff");
-        const file = await this.fileService.getFileByKey(emailContract.contentKey);
-        const config = this.modelToContract(layoutModel);
-
-        Object.assign(file, config);
-
-        await this.fileService.updateFile(file);
     }
 }

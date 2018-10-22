@@ -11,7 +11,6 @@ import { EmailDetailsWorkshop, EmailSelector } from "./workshops/emails/ko";
 import { RowEditorModule } from "./row/ko/rowEditor.module";
 import { ColumnEditorModule } from "./column/ko/columnEditor.module";
 import { SectionEditorModule } from "./section/ko/sectionEditor.module";
-import { EmailGridBindingHandler } from "./layout/ko/bindingHandlers.emailGrid";
 
 
 export class EmailsEditModule implements IInjectorModule {
@@ -19,7 +18,6 @@ export class EmailsEditModule implements IInjectorModule {
         injector.bind("emailsWorkshop", EmailsWorkshop);
         injector.bind("emailDetailsWorkshop", EmailDetailsWorkshop);
         injector.bind("emailSelector", EmailSelector);
-        injector.bindSingleton("emailGridBindingHandler", EmailGridBindingHandler);
         injector.bindModule(new RowEditorModule());
         injector.bindModule(new ColumnEditorModule());
         injector.bindModule(new SectionEditorModule());

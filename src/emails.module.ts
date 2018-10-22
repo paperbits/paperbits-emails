@@ -11,8 +11,6 @@ import { LayoutModule } from "./layout/ko/layout.module";
 import { ColumnModule } from "./column/ko/column.module";
 import { RowModule } from "./row/ko/row.module";
 import { SectionModule } from "./section/ko/section.module";
-import { DocumentViewModel } from "./document/documentViewModel";
-import { EmailPublisher } from "./publishers/emailPublisher";
 
 export class EmailsModule implements IInjectorModule {
     public register(injector: IInjector): void {
@@ -22,6 +20,5 @@ export class EmailsModule implements IInjectorModule {
         injector.bindModule(new ColumnModule());
         injector.bindModule(new RowModule());
         injector.bindModule(new SectionModule());
-        injector.bind("emailDocument", DocumentViewModel);
     }
 }

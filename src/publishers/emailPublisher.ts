@@ -12,18 +12,14 @@ import { IPublisher } from "@paperbits/common/publishing";
 import { EmailService } from "../emailService";
 import { EmailContract } from "../emailContract";
 import { IBlobStorage } from "@paperbits/common/persistence";
-import { LayoutModelBinder } from "../layout";
 import { LayoutViewModelBinder } from "../layout/ko";
 import { createDocument } from "@paperbits/core/ko/knockout-rendring";
-import { ISettingsProvider } from "@paperbits/common/configuration";
 
 export class EmailPublisher implements IPublisher {
     constructor(
         private readonly emailService: EmailService,
         private readonly outputBlobStorage: IBlobStorage,
-        private readonly emailLayoutModelBinder: LayoutModelBinder,
-        private readonly emailLayoutViewModelBinder: LayoutViewModelBinder,
-        private readonly settingsProvider: ISettingsProvider
+        private readonly emailLayoutViewModelBinder: LayoutViewModelBinder
     ) {
         this.publish = this.publish.bind(this);
         this.renderEmailTemplate = this.renderEmailTemplate.bind(this);
@@ -32,37 +28,17 @@ export class EmailPublisher implements IPublisher {
     private async renderEmailTemplate(emailTemplate: EmailContract, stylesString: string): Promise<{ name, bytes }> {
         console.log(`Publishing email template ${emailTemplate.title}...`);
 
-        const template = <string>await this.settingsProvider.getSetting("emailTemplate");
-        const templateDocument = createDocument(template);
+        const templateDocument = createDocument();
+        const layoutViewModel = await this.emailLayoutViewModelBinder.getLayoutViewModel();
+        ko.applyBindingsToNode(templateDocument.body, { widget: layoutViewModel });
 
         const resourceUri = `email-templates/${Utils.slugify(emailTemplate.title)}.html`;
 
         let htmlContent: string;
 
         const buildContentPromise = new Promise<void>(async (resolve, reject) => {
-            const layoutModel = await this.emailLayoutModelBinder.getLayoutModel(emailTemplate.key);
-            const viewModel = await this.emailLayoutViewModelBinder.modelToViewModel(layoutModel);
-
-            const element = templateDocument.createElement("div");
-            element.innerHTML = `
-            <style>${stylesString}</style>
-            <table border="0" cellspacing="0" cellpadding="0" align="center">
-    <tbody>
-        <tr>
-            <td>
-                <!-- ko foreach: { data: widgets, as: 'widget'  } -->
-                <!-- ko widget: widget -->
-                <!-- /ko -->
-                <!-- /ko -->
-            </td>
-        </tr>
-    </tbody>
-</table>`;
-
-            ko.applyBindings(viewModel, element);
-
             setTimeout(() => {
-                const links = element.querySelectorAll("[href]");
+                const links = templateDocument.body.querySelectorAll("[href]");
                 const linkElements: HTMLAnchorElement[] = Array.prototype.slice.call(links);
 
                 // TODO: Move into inlining code!
@@ -81,10 +57,14 @@ export class EmailPublisher implements IPublisher {
                 const regexpComment = /\<![ \r\n\t]*(--([^\-]|[\r\n]|-[^\-])*--[ \r\n\t]*)\>/gm;
                 const regexpDataBind = /\s?data-bind="([\S\s]*?)"/gm;
 
-                // htmlContent = templateDocument.documentElement.outerHTML;
-                htmlContent = element.innerHTML;
+                const styleElement: HTMLStyleElement = templateDocument.createElement("style");
+                styleElement.innerHTML = stylesString;
+                templateDocument.body.appendChild(styleElement);
+
+                htmlContent = templateDocument.documentElement.outerHTML;
                 htmlContent = htmlContent.replace(regexpComment, "");
                 htmlContent = htmlContent.replace(regexpDataBind, "");
+
                 resolve();
             }, 10);
         });
