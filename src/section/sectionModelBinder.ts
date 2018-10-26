@@ -10,7 +10,7 @@ import { SectionModel } from "./sectionModel";
 import { IModelBinder } from "@paperbits/common/editing";
 import { BackgroundModelBinder } from "@paperbits/common/widgets/background";
 import { Contract } from "@paperbits/common";
-import { ModelBinderSelector } from "@paperbits/common/widgets";
+import { ModelBinderSelector, WidgetModel } from "@paperbits/common/widgets";
 
 export class SectionModelBinder implements IModelBinder {
     public canHandleWidgetType(widgetType: string): boolean {
@@ -31,21 +31,11 @@ export class SectionModelBinder implements IModelBinder {
     public async contractToModel(sectionContract: SectionContract): Promise<SectionModel> {
         const sectionModel = new SectionModel();
 
-        if (!sectionContract.nodes) {
-            sectionContract.nodes = [];
-        }
-
-        if (sectionContract.layout) {
-            sectionModel.container = sectionContract.layout;
-        }
-
-        if (sectionContract.padding) {
-            sectionModel.padding = sectionContract.padding;
-        }
-
-        if (sectionContract.snapping) {
-            sectionModel.snap = sectionContract.snapping;
-        }
+        sectionContract.nodes = sectionContract.nodes || [];
+        sectionModel.container = sectionContract.layout;
+        sectionModel.padding = sectionContract.padding;
+        sectionModel.snap = sectionContract.snapping;
+        sectionModel.height = sectionContract.height;
 
         if (sectionContract.background) {
             sectionModel.background = await this.backgroundModelBinder.contractToModel(sectionContract.background);
@@ -56,7 +46,7 @@ export class SectionModelBinder implements IModelBinder {
             return await modelBinder.contractToModel(node);
         });
 
-        sectionModel.widgets = await Promise.all<any>(modelPromises);
+        sectionModel.widgets = await Promise.all<WidgetModel>(modelPromises);
 
         return sectionModel;
     }
@@ -68,7 +58,8 @@ export class SectionModelBinder implements IModelBinder {
             nodes: [],
             layout: sectionModel.container,
             padding: sectionModel.padding,
-            snapping: sectionModel.snap
+            snapping: sectionModel.snap,
+            height: sectionModel.height
         };
 
         if (sectionModel.background) {
@@ -82,7 +73,7 @@ export class SectionModelBinder implements IModelBinder {
                 sectionContract.background.picture = {
                     sourcePermalinkKey: sectionModel.background.sourceKey,
                     repeat: sectionModel.background.repeat
-                }
+                };
             }
         }
 
