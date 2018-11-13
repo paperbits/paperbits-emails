@@ -9,15 +9,11 @@ import * as ko from "knockout";
 import template from "./emails.html";
 import { IRouteHandler } from "@paperbits/common/routing";
 import { IViewManager } from "@paperbits/common/ui";
-import { IFileService } from "@paperbits/common/files";
 import { Keys } from "@paperbits/common/keyboard";
-import { IBlockService } from "@paperbits/common/blocks";
 import { Component } from "@paperbits/core/ko/decorators";
 import { EmailItem } from "./emailItem";
 import { EmailService } from "../../../emailService";
 import { LayoutViewModelBinder } from "../../../layout/ko";
-
-const templateBlockKey = "blocks/8730d297-af39-8166-83b6-9439addca789";
 
 @Component({
     selector: "emails",
@@ -35,9 +31,7 @@ export class EmailsWorkshop {
 
     constructor(
         private readonly emailService: EmailService,
-        private readonly fileService: IFileService,
         private readonly routeHandler: IRouteHandler,
-        private readonly blockService: IBlockService,
         private readonly viewManager: IViewManager,
         private readonly emailLayoutViewModelBinder: LayoutViewModelBinder,
     ) {
@@ -89,21 +83,6 @@ export class EmailsWorkshop {
         this.working(true);
 
         const email = await this.emailService.createEmailTemplate("New email", "");
-        const contentTemplate = await this.blockService.getBlockByKey(templateBlockKey);
-
-        const template = {
-            object: "block",
-            nodes: [contentTemplate.content],
-            type: "email"
-        };
-
-        const content = await this.fileService.createFile(template);
-        email.contentKey = content.key;
-
-        await this.emailService.updateEmailTemplate(email);
-
-        // this.routeHandler.navigateTo(permalink.uri);
-
         const emailItem = new EmailItem(email);
 
         this.emails.push(emailItem);

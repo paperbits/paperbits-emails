@@ -5,7 +5,6 @@
  * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
  */
 
-import { IFileService } from "@paperbits/common/files";
 import { ModelBinderSelector } from "@paperbits/common/widgets";
 import { LayoutModel } from "./layoutModel";
 import { Contract } from "@paperbits/common";
@@ -15,7 +14,6 @@ import { EmailContract } from "../emailContract";
 export class LayoutModelBinder {
     constructor(
         private readonly emailService: EmailService,
-        private readonly fileService: IFileService,
         private readonly modelBinderSelector: ModelBinderSelector) {
 
         // rebinding...
@@ -41,9 +39,9 @@ export class LayoutModelBinder {
         layoutModel.title = emailContract.title;
         layoutModel.description = emailContract.description;
 
-        const emailContentNode = await this.fileService.getFileByKey(emailContract.contentKey);
+        const layoutContent = await this.emailService.getEmailTemplateContent(emailContract.key);
 
-        const modelPromises = emailContentNode.nodes.map(async (nodeContract) => {
+        const modelPromises = layoutContent.nodes.map(async (nodeContract) => {
             const modelBinder = this.modelBinderSelector.getModelBinderByNodeType(nodeContract.type);
             return await modelBinder.contractToModel(nodeContract);
         });

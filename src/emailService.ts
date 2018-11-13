@@ -7,13 +7,19 @@
 
 import * as Utils from "@paperbits/common/utils";
 import { IObjectStorage } from "@paperbits/common/persistence";
+import { IBlockService } from "@paperbits/common/blocks";
+import { Contract } from "@paperbits/common";
 import { EmailContract } from "./emailContract";
 
 const emailTemplatesPath = "emailTemplates";
+const documentsPath = "files";
+const templateBlockKey = "blocks/8730d297-af39-8166-83b6-9439addca789";
 
 export class EmailService {
     constructor(
-        private readonly objectStorage: IObjectStorage) { }
+        private readonly objectStorage: IObjectStorage,
+        private readonly blockService: IBlockService
+    ) { }
 
     private async searchByTags(tags: string[], tagValue: string, startAtSearch: boolean): Promise<EmailContract[]> {
         return this.objectStorage.searchObjects<EmailContract>(emailTemplatesPath, tags, tagValue, startAtSearch);
@@ -35,20 +41,37 @@ export class EmailService {
     }
 
     public async createEmailTemplate(title: string, description: string): Promise<EmailContract> {
-        const key = `${emailTemplatesPath}/${Utils.guid()}`;
+        const identifier = Utils.guid();
+        const emailTemplateKey = `${emailTemplatesPath}/${identifier}`;
+        const documentKey = `${documentsPath}/${identifier}`;
 
         const emailTemplate: EmailContract = {
-            key: key,
+            key: emailTemplateKey,
             title: title,
-            description: description
+            description: description,
+            contentKey: documentKey
         };
 
-        await this.objectStorage.addObject(key, emailTemplate);
+        await this.objectStorage.addObject(emailTemplateKey, emailTemplate);
+
+        const contentTemplate = await this.blockService.getBlockByKey(templateBlockKey);
+
+        await this.objectStorage.addObject(documentKey, { nodes: [contentTemplate.content] });
 
         return emailTemplate;
     }
 
     public async updateEmailTemplate(emailTemplate: EmailContract): Promise<void> {
         await this.objectStorage.updateObject<EmailContract>(emailTemplate.key, emailTemplate);
+    }
+
+    public async getEmailTemplateContent(templateKey: string): Promise<Contract> {
+        const template = await this.getEmailTemplateByKey(templateKey);
+        return await this.objectStorage.getObject(template.contentKey);
+    }
+
+    public async updateEmailTemplateContent(templateKey: string, document: Contract): Promise<void> {
+        const template = await this.getEmailTemplateByKey(templateKey);
+        this.objectStorage.updateObject(template.contentKey, document);
     }
 }

@@ -10,8 +10,6 @@ import { LayoutModel } from "../layoutModel";
 import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelector";
 import { IWidgetBinding } from "@paperbits/common/editing";
 import { IEventManager } from "@paperbits/common/events";
-import { IRouteHandler } from "@paperbits/common/routing";
-import { IFileService } from "@paperbits/common/files";
 import { ModelBinderSelector } from "@paperbits/common/widgets";
 import { EmailService } from "../../emailService";
 import { LayoutModelBinder } from "../../layout";
@@ -21,9 +19,7 @@ export class LayoutViewModelBinder {
     constructor(
         private readonly viewModelBinderSelector: ViewModelBinderSelector,
         private readonly eventManager: IEventManager,
-        private readonly fileService: IFileService,
         private readonly emailService: EmailService,
-        private readonly routeHandler: IRouteHandler,
         private readonly modelBinderSelector: ModelBinderSelector,
         private readonly emailLayoutModelBinder: LayoutModelBinder,
     ) { 
@@ -34,8 +30,8 @@ export class LayoutViewModelBinder {
         let savingTimeout;
 
         const updateContent = async (): Promise<void> => {
-            const emailContract = await this.emailService.getEmailTemplateByKey("emailTemplates/c17ea920-cc6b-b3b5-6da4-ef8d19b758ff");
-            const file = await this.fileService.getFileByKey(emailContract.contentKey);
+            const emailTemplateKey = "emailTemplates/c17ea920-cc6b-b3b5-6da4-ef8d19b758ff";
+            const emailContent = await this.emailService.getEmailTemplateContent(emailTemplateKey);
 
             const contentContract = {
                 nodes: []
@@ -46,9 +42,9 @@ export class LayoutViewModelBinder {
                 contentContract.nodes.push(modelBinder.modelToContract(section));
             });
 
-            Object.assign(file, contentContract);
+            Object.assign(emailContent, contentContract);
 
-            await this.fileService.updateFile(file);
+            await this.emailService.updateEmailTemplateContent(emailTemplateKey, emailContent);
             console.log("EMAIL");
         };
 
