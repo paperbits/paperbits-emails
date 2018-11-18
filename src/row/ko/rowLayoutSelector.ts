@@ -7,7 +7,7 @@
 
 import template from "./rowLayoutSelector.html";
 import { IResourceSelector } from "@paperbits/common/ui/IResourceSelector";
-import { Component, Event } from "@paperbits/core/ko/decorators";
+import { Component, Event } from "@paperbits/common/ko/decorators";
 import { ColumnModel } from "../../column/columnModel";
 import { RowModel } from "../rowModel";
 

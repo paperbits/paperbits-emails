@@ -7,7 +7,7 @@
 
 import * as ko from "knockout";
 import template from "./column.html";
-import { Component } from "@paperbits/core/ko/decorators";
+import { Component } from "@paperbits/common/ko/decorators";
 
 @Component({
     selector: "email-column",

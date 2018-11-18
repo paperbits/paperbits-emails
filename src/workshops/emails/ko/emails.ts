@@ -10,7 +10,7 @@ import template from "./emails.html";
 import { IRouteHandler } from "@paperbits/common/routing";
 import { IViewManager } from "@paperbits/common/ui";
 import { Keys } from "@paperbits/common/keyboard";
-import { Component } from "@paperbits/core/ko/decorators";
+import { Component } from "@paperbits/common/ko/decorators";
 import { EmailItem } from "./emailItem";
 import { EmailService } from "../../../emailService";
 import { LayoutViewModelBinder } from "../../../layout/ko";

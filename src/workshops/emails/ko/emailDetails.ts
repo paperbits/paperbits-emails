@@ -9,7 +9,7 @@ import template from "./emailDetails.html";
 import { EmailService } from "../../../emailService";
 import { IRouteHandler } from "@paperbits/common/routing";
 import { IViewManager } from "@paperbits/common/ui";
-import { Component, Param, Event, OnMounted } from "@paperbits/core/ko/decorators";
+import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { EmailItem } from "./emailItem";
 
 @Component({

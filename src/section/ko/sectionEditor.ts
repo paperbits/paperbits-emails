@@ -10,7 +10,7 @@ import template from "./sectionEditor.html";
 import { MediaContract } from "@paperbits/common/media/mediaContract";
 import { IWidgetEditor } from "@paperbits/common/widgets/IWidgetEditor";
 import { BackgroundModel } from "@paperbits/common/widgets/background/backgroundModel";
-import { Component } from "@paperbits/core/ko/decorators/component.decorator";
+import { Component } from "@paperbits/common/ko/decorators";
 import { SectionModel } from "../sectionModel";
 
 @Component({

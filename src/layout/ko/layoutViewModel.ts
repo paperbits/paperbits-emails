@@ -7,7 +7,7 @@
 
 import * as ko from "knockout";
 import template from "./layout.html";
-import { Component } from "@paperbits/core/ko/decorators/component.decorator";
+import { Component } from "@paperbits/common/ko/decorators";
 
 @Component({
     selector: "email-layout",

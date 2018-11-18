@@ -11,7 +11,7 @@ import { IResourceSelector } from "@paperbits/common/ui";
 import { EmailItem } from "./emailItem";
 import { EmailContract } from "../../../emailContract";
 import { EmailService } from "../../../emailService";
-import { Component, Event, Param } from "@paperbits/core/ko/decorators";
+import { Component, Event, Param } from "@paperbits/common/ko/decorators";
 
 @Component({
     selector: "email-selector",
