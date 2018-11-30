@@ -16,13 +16,7 @@ import { IModelBinder } from "@paperbits/common/editing";
 export class RowModule implements IInjectorModule {
     public register(injector: IInjector): void {
         injector.bind("emailRow", RowViewModel);
-        injector.bind("emailRowModelBinder", RowModelBinder);
-        injector.bind("emailRowViewModelBinder", RowViewModelBinder);
-
-        const modelBinders = injector.resolve<IModelBinder[]>("modelBinders");
-        modelBinders.push(injector.resolve("emailRowModelBinder"));
-       
-        const viewModelBinders = injector.resolve<IViewModelBinder<any, any>[]>("viewModelBinders");
-        viewModelBinders.push(injector.resolve("emailRowViewModelBinder"));
+        injector.bindToCollection("modelBinders", RowModelBinder);
+        injector.bindToCollection("viewModelBinders", RowViewModelBinder);
     }
 }

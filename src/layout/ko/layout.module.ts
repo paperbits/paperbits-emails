@@ -15,15 +15,7 @@ import { IModelBinder } from "@paperbits/common/editing";
 export class LayoutModule implements IInjectorModule {
     public register(injector: IInjector): void {        
         injector.bind("emailLayoutWidget", LayoutViewModel);
-        injector.bind("emailLayoutModelBinder", LayoutModelBinder);
-        injector.bind("emailLayoutViewModelBinder", LayoutViewModelBinder);
-
-
-        
-        const modelBinders = injector.resolve<IModelBinder[]>("modelBinders");
-        modelBinders.push(injector.resolve("emailLayoutModelBinder"));
-        
-        const viewModelBinders = injector.resolve<IViewModelBinder<any, any>[]>("viewModelBinders");
-        viewModelBinders.push(injector.resolve("emailLayoutViewModelBinder"));
+        injector.bindToCollection("modelBinders", LayoutModelBinder, "emailLayoutModelBinder");
+        injector.bindToCollection("viewModelBinders", LayoutViewModelBinder, "emailLayoutViewModelBinder");
     }
 }
