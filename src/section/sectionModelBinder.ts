@@ -71,7 +71,7 @@ export class SectionModelBinder implements IModelBinder {
 
             if (sectionModel.background.sourceType === "picture") {
                 sectionContract.background.picture = {
-                    sourcePermalinkKey: sectionModel.background.sourceKey,
+                    sourceKey: sectionModel.background.sourceKey,
                     repeat: sectionModel.background.repeat
                 };
             }

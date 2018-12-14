@@ -99,7 +99,7 @@ export class SectionEditor implements IWidgetEditor {
 
     public onMediaSelected(media: MediaContract): void {
         this.section.background = this.section.background || {};
-        this.section.background.sourceKey = media.permalinkKey;
+        this.section.background.sourceKey = media.key;
         this.section.background.sourceUrl = media.downloadUrl;
         this.section.background.sourceType = "picture";
 
