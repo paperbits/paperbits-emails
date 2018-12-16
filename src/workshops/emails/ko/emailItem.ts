@@ -12,18 +12,9 @@ export class AnchorItem {
     public hasFocus: KnockoutObservable<boolean>;
     public title: string;
     public shortTitle: string;
-    public permalinkKey: string;
-    public emailPermalinkKey: string;
 
     constructor() {
         this.hasFocus = ko.observable<boolean>(false);
-    }
-
-    public toContract(): any {
-        return {
-            title: this.title,
-            permalinkKey: this.permalinkKey
-        }
     }
 }
 
