@@ -75,6 +75,7 @@ export class SectionHandlers {
                 color: "#2b87da",
                 callback: () => {
                     const view: IView = {
+                        heading: "Add to library",
                         component: {
                             name: "add-block-dialog",
                             params: context.model
