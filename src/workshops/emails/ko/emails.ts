@@ -70,7 +70,7 @@ export class EmailsWorkshop {
 
     public selectEmail(emailItem: EmailItem): void {
         this.selectedEmail(emailItem);
-        this.viewManager.setDocument({ src: "/email.html", getLayoutViewModel: this.emailLayoutViewModelBinder.getLayoutViewModel });
+        this.viewManager.setHost({ name: "email-host" });
         this.viewManager.openViewAsWorkshop("Email", "email-details-workshop", {
             emailItem: emailItem,
             onDeleteCallback: () => {
