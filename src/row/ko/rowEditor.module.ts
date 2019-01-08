@@ -13,9 +13,6 @@ import { RowHandlers } from "../rowHandlers";
 export class RowEditorModule implements IInjectorModule {
     public register(injector: IInjector): void {
         injector.bind("emailRowLayoutSelector", RowLayoutSelector);
-        injector.bind("emailRowHandler", RowHandlers);
-
-        const widgetHandlers: IWidgetHandler[] = injector.resolve("widgetHandlers");
-        widgetHandlers.push(injector.resolve<RowHandlers>("emailRowHandler"));
+        injector.bindToCollection<IWidgetHandler>("widgetHandlers", RowHandlers, "emailRowHandler");
     }
 }

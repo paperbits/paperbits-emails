@@ -13,9 +13,6 @@ import { ColumnEditor } from "./columnEditor";
 export class ColumnEditorModule implements IInjectorModule {
     public register(injector: IInjector): void {        
         injector.bind("emailColumnEditor", ColumnEditor);
-        injector.bind("emailColumnHandler", ColumnHandlers);
-
-        const widgetHandlers: IWidgetHandler[] = injector.resolve("widgetHandlers");
-        widgetHandlers.push(injector.resolve<ColumnHandlers>("emailColumnHandler"));
+        injector.bindToCollection<IWidgetHandler>("widgetHandlers", ColumnHandlers, "emailColumnHandler");
     }
 }
