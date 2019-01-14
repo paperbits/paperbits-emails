@@ -1,3 +1,4 @@
+import { Bag } from "@paperbits/common/bag";
 /**
  * @license
  * Copyright Paperbits. All Rights Reserved.
@@ -21,8 +22,9 @@ export class EmailService {
         private readonly blockService: IBlockService
     ) { }
 
-    private async searchByTags(tags: string[], tagValue: string, startAtSearch: boolean): Promise<EmailContract[]> {
-        return this.objectStorage.searchObjects<EmailContract>(emailTemplatesPath, tags, tagValue, startAtSearch);
+    private async searchByProperties(properties: string[], value: string): Promise<EmailContract[]> {
+        const result = await this.objectStorage.searchObjects<Bag<EmailContract>>(emailTemplatesPath, properties, value);
+        return Object.keys(result).map(key => result[key]);
     }
 
     public async getEmailTemplateByKey(key: string): Promise<EmailContract> {
@@ -30,7 +32,7 @@ export class EmailService {
     }
 
     public search(pattern: string): Promise<EmailContract[]> {
-        return this.searchByTags(["title"], pattern, true);
+        return this.searchByProperties(["title"], pattern);
     }
 
     public async deleteEmailTemplate(emailTemplate: EmailContract): Promise<void> {
