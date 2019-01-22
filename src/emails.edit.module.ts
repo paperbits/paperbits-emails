@@ -6,6 +6,7 @@
  */
 
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
+import { EmailsModule } from "./emails.module";
 import { EmailsWorkshop } from "./workshops/emails/ko/emails";
 import { EmailDetailsWorkshop, EmailSelector } from "./workshops/emails/ko";
 import { RowEditorModule } from "./row/ko/rowEditor.module";
@@ -15,6 +16,7 @@ import { SectionEditorModule } from "./section/ko/sectionEditor.module";
 
 export class EmailsEditModule implements IInjectorModule {
     public register(injector: IInjector): void {
+        injector.bindModule(new EmailsModule());
         injector.bind("emailsWorkshop", EmailsWorkshop);
         injector.bind("emailDetailsWorkshop", EmailDetailsWorkshop);
         injector.bind("emailSelector", EmailSelector);
