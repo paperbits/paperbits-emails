@@ -30,7 +30,7 @@ export class EmailPublisher implements IPublisher {
 
         const templateDocument = createDocument();
         const layoutViewModel = await this.emailLayoutViewModelBinder.getLayoutViewModel();
-        ko.applyBindingsToNode(templateDocument.body, { widget: layoutViewModel });
+        ko.applyBindingsToNode(templateDocument.body, { widget: layoutViewModel }, null);
 
         const resourceUri = `email-templates/${Utils.slugify(emailTemplate.title)}.html`;
 
