@@ -19,12 +19,12 @@ import { Component, Event, Param } from "@paperbits/common/ko/decorators";
     injectable: "emailSelector"
 })
 export class EmailSelector implements IResourceSelector<EmailContract> {
-    public readonly searchPattern: KnockoutObservable<string>;
-    public readonly emails: KnockoutObservableArray<EmailItem>;
-    public readonly working: KnockoutObservable<boolean>;
+    public readonly searchPattern: ko.Observable<string>;
+    public readonly emails: ko.ObservableArray<EmailItem>;
+    public readonly working: ko.Observable<boolean>;
 
     @Param()
-    public selectedEmailTemplate: KnockoutObservable<EmailItem>;
+    public selectedEmailTemplate: ko.Observable<EmailItem>;
 
     @Event()
     public onSelect: (email: EmailContract) => void;

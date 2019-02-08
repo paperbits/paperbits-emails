@@ -38,7 +38,7 @@ export class EmailDetailsWorkshop {
     @OnMounted()
     public async onMounted(): Promise<void> {
         this.emailItem.title
-            .extend({ required: true, onlyValid: true })
+            .extend(<any>{ required: true, onlyValid: true })
             .subscribe(this.updateEmail);
 
         this.emailItem.description

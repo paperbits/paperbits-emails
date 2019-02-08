@@ -25,26 +25,26 @@ import { Component } from "@paperbits/common/ko/decorators";
         ko.applyBindingsToNode(element, {
             layoutcolumn: {},
             css: viewModel.css
-        });
+        }, null);
     }
 })
 export class ColumnViewModel {
-    public widgets: KnockoutObservableArray<Object>;
-    public css: KnockoutComputed<string>;
-    public sizeSm: KnockoutObservable<number>;
-    public sizeMd: KnockoutObservable<number>;
-    public sizeLg: KnockoutObservable<number>;
-    public sizeXl: KnockoutObservable<number>;
-    public alignmentXs: KnockoutObservable<string>;
-    public alignmentSm: KnockoutObservable<string>;
-    public alignmentMd: KnockoutObservable<string>;
-    public alignmentLg: KnockoutObservable<string>;
-    public alignmentXl: KnockoutObservable<string>;
-    public orderXs: KnockoutObservable<number>;
-    public orderSm: KnockoutObservable<number>;
-    public orderMd: KnockoutObservable<number>;
-    public orderLg: KnockoutObservable<number>;
-    public orderXl: KnockoutObservable<number>;
+    public widgets: ko.ObservableArray<Object>;
+    public css: ko.Computed<string>;
+    public sizeSm: ko.Observable<number>;
+    public sizeMd: ko.Observable<number>;
+    public sizeLg: ko.Observable<number>;
+    public sizeXl: ko.Observable<number>;
+    public alignmentXs: ko.Observable<string>;
+    public alignmentSm: ko.Observable<string>;
+    public alignmentMd: ko.Observable<string>;
+    public alignmentLg: ko.Observable<string>;
+    public alignmentXl: ko.Observable<string>;
+    public orderXs: ko.Observable<number>;
+    public orderSm: ko.Observable<number>;
+    public orderMd: ko.Observable<number>;
+    public orderLg: ko.Observable<number>;
+    public orderXl: ko.Observable<number>;
 
     constructor() {
         this.widgets = ko.observableArray<Object>();

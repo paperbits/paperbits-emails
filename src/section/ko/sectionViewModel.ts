@@ -16,10 +16,10 @@ import { WidgetViewModel } from "@paperbits/core/ko/widgetViewModel";
     template: template
 })
 export class SectionViewModel implements WidgetViewModel {
-    public widgets: KnockoutObservableArray<WidgetViewModel>;
-    public container: KnockoutObservable<string>;
-    public snapTo: KnockoutObservable<string>;
-    public background: KnockoutObservable<BackgroundModel>;
+    public widgets: ko.ObservableArray<WidgetViewModel>;
+    public container: ko.Observable<string>;
+    public snapTo: ko.Observable<string>;
+    public background: ko.Observable<BackgroundModel>;
 
     constructor() {
         this.widgets = ko.observableArray<WidgetViewModel>();

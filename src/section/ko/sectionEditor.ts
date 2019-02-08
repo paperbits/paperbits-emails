@@ -22,16 +22,16 @@ export class SectionEditor implements IWidgetEditor {
     private section: SectionModel;
     private applyChangesCallback: () => void;
 
-    public readonly layout: KnockoutObservable<string>;
-    public readonly padding: KnockoutObservable<string>;
-    public readonly snap: KnockoutObservable<string>;
-    public readonly backgroundSize: KnockoutObservable<string>;
-    public readonly backgroundPosition: KnockoutObservable<string>;
-    public readonly backgroundColorKey: KnockoutObservable<string>;
-    public readonly backgroundRepeat: KnockoutObservable<string>;
-    public readonly backgroundHasPicture: KnockoutComputed<boolean>;
-    public readonly backgroundHasColor: KnockoutComputed<boolean>;
-    public readonly background: KnockoutObservable<BackgroundModel>;
+    public readonly layout: ko.Observable<string>;
+    public readonly padding: ko.Observable<string>;
+    public readonly snap: ko.Observable<string>;
+    public readonly backgroundSize: ko.Observable<string>;
+    public readonly backgroundPosition: ko.Observable<string>;
+    public readonly backgroundColorKey: ko.Observable<string>;
+    public readonly backgroundRepeat: ko.Observable<string>;
+    public readonly backgroundHasPicture: ko.Computed<boolean>;
+    public readonly backgroundHasColor: ko.Computed<boolean>;
+    public readonly background: ko.Observable<BackgroundModel>;
 
     constructor() {
         this.setWidgetModel = this.setWidgetModel.bind(this);

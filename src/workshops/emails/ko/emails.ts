@@ -23,10 +23,10 @@ import { LayoutViewModelBinder } from "../../../layout/ko";
 export class EmailsWorkshop {
     private searchTimeout: any;
 
-    public readonly searchPattern: KnockoutObservable<string>;
-    public readonly emails: KnockoutObservableArray<EmailItem>;
-    public readonly working: KnockoutObservable<boolean>;
-    public readonly selectedEmail: KnockoutObservable<EmailItem>;
+    public readonly searchPattern: ko.Observable<string>;
+    public readonly emails: ko.ObservableArray<EmailItem>;
+    public readonly working: ko.Observable<boolean>;
+    public readonly selectedEmail: ko.Observable<EmailItem>;
 
 
     constructor(
