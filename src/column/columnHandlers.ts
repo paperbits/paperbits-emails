@@ -1,6 +1,6 @@
 import { IWidgetHandler, WidgetContext } from "@paperbits/common/editing";
 import { DragSession } from "@paperbits/common/ui/draggables";
-import { IContextualEditor, IViewManager } from "@paperbits/common/ui";
+import { IContextCommandSet, IViewManager } from "@paperbits/common/ui";
 import { WidgetModel } from "@paperbits/common/widgets";
 
 
@@ -19,8 +19,8 @@ export class ColumnHandlers implements IWidgetHandler {
         dragSession.targetBinding.applyChanges();
     }
 
-    public getContextualEditor(context: WidgetContext): IContextualEditor {
-        const columnContextualEditor: IContextualEditor = {
+    public getContextualEditor(context: WidgetContext): IContextCommandSet {
+        const columnContextualEditor: IContextCommandSet = {
             color: "#4c5866",
             hoverCommand: null,
             deleteCommand: null,
