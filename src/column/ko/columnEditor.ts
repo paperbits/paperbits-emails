@@ -8,8 +8,7 @@
 import * as ko from "knockout";
 import template from "./columnEditor.html";
 import { IViewManager } from "@paperbits/common/ui";
-import { IWidgetEditor } from "@paperbits/common/widgets";
-import { Component } from "@paperbits/common/ko/decorators";
+import { Component, OnMounted, Param, Event } from "@paperbits/common/ko/decorators";
 import { ColumnModel } from "../columnModel";
 
 @Component({
@@ -17,73 +16,53 @@ import { ColumnModel } from "../columnModel";
     template: template,
     injectable: "columnEditor"
 })
-export class ColumnEditor implements IWidgetEditor {
-    private column: ColumnModel;
-    private applyChangesCallback: () => void;
-    private readonly verticalAlignment: ko.Observable<string>;
-    private readonly horizontalAlignment: ko.Observable<string>;
-
+export class ColumnEditor {
+    public readonly verticalAlignment: ko.Observable<string>;
+    public readonly horizontalAlignment: ko.Observable<string>;
     public readonly alignment: ko.Observable<string>;
     public readonly order: ko.Observable<number>;
 
     constructor(
         private readonly viewManager: IViewManager
     ) {
-        this.setWidgetModel = this.setWidgetModel.bind(this);
-
         this.alignment = ko.observable<string>();
-        this.alignment.subscribe(this.onChange.bind(this));
-
         this.verticalAlignment = ko.observable<string>();
         this.horizontalAlignment = ko.observable<string>();
-
         this.order = ko.observable<number>();
-        this.order.subscribe(this.onChange.bind(this));
-
-        this.alignLeft.bind(this);
-        this.alignRight.bind(this);
-        this.alignCenter.bind(this);
-        this.alignTop.bind(this);
-        this.alignBottom.bind(this);
-        this.alignMiddle.bind(this);
     }
 
     /**
      * Collecting changes from the editor UI and invoking callback method.
      */
-    private onChange(): void {
-        if (!this.applyChangesCallback) {
-            return;
-        }
-
+    private applyChanges(): void {
         const viewport = this.viewManager.getViewport();
 
         switch (viewport) {
             case "xl":
-                this.column.alignmentXl = this.alignment();
+                this.model.alignmentXl = this.alignment();
                 break;
 
             case "lg":
-                this.column.alignmentLg = this.alignment();
+                this.model.alignmentLg = this.alignment();
                 break;
 
             case "md":
-                this.column.alignmentMd = this.alignment();
+                this.model.alignmentMd = this.alignment();
                 break;
 
             case "sm":
-                this.column.alignmentSm = this.alignment();
+                this.model.alignmentSm = this.alignment();
                 break;
 
             case "xs":
-                this.column.alignmentXs = this.alignment();
+                this.model.alignmentXs = this.alignment();
                 break;
 
             default:
                 throw new Error("Unknown viewport");
         }
 
-        this.applyChangesCallback();
+        this.onChange(this.model);
     }
 
     public alignContent(alignment: string): void {
@@ -116,19 +95,25 @@ export class ColumnEditor implements IWidgetEditor {
         }
     }
 
-    public setWidgetModel(column: ColumnModel, applyChangesCallback?: () => void): void {
-        this.column = column;
+    @Param()
+    public model: ColumnModel;
 
+    @Event()
+    public onChange: (model: ColumnModel) => void;
+
+    @OnMounted()
+    public initialize(): void {
         const viewport = this.viewManager.getViewport();
 
-        const alignment = this.determineAlignment(viewport, column);
+        const alignment = this.determineAlignment(viewport, this.model);
         this.alignment(alignment);
 
         const directions = this.alignment().split(" ");
         this.verticalAlignment(directions[0]);
         this.horizontalAlignment(directions[1]);
 
-        this.applyChangesCallback = applyChangesCallback;
+        this.alignment.subscribe(this.applyChanges);
+        this.order.subscribe(this.applyChanges);
     }
 
     public alignLeft(): void {
