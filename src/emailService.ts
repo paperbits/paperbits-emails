@@ -45,20 +45,20 @@ export class EmailService {
     public async createEmailTemplate(title: string, description: string): Promise<EmailContract> {
         const identifier = Utils.guid();
         const emailTemplateKey = `${emailTemplatesPath}/${identifier}`;
-        const documentKey = `${documentsPath}/${identifier}`;
+        const contentKey = `${documentsPath}/${identifier}`;
 
         const emailTemplate: EmailContract = {
             key: emailTemplateKey,
             title: title,
             description: description,
-            contentKey: documentKey
+            contentKey: contentKey
         };
 
         await this.objectStorage.addObject(emailTemplateKey, emailTemplate);
 
-        const contentTemplate = await this.blockService.getBlockByKey(templateBlockKey);
+        const template = await this.blockService.getBlockContent(templateBlockKey);
 
-        await this.objectStorage.addObject(documentKey, { nodes: [contentTemplate.content] });
+        await this.objectStorage.addObject(contentKey, template);
 
         return emailTemplate;
     }
