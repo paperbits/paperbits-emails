@@ -2,7 +2,7 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at style-guidehttps://paperbits.io/license/mit.
  */
 
 import { LayoutViewModel } from "./layoutViewModel";
@@ -22,15 +22,14 @@ export class LayoutViewModelBinder {
         private readonly emailService: EmailService,
         private readonly modelBinderSelector: ModelBinderSelector,
         private readonly emailLayoutModelBinder: LayoutModelBinder,
-    ) { 
+    ) {
         this.getLayoutViewModel = this.getLayoutViewModel.bind(this);
     }
 
-    public createBinding(model: LayoutModel, viewModel: LayoutViewModel): void {
+    public createBinding(model: LayoutModel, viewModel: LayoutViewModel, emailTemplateKey: string): void {
         let savingTimeout;
 
         const updateContent = async (): Promise<void> => {
-            const emailTemplateKey = "emailTemplates/c17ea920-cc6b-b3b5-6da4-ef8d19b758ff";
             const emailContent = await this.emailService.getEmailTemplateContent(emailTemplateKey);
 
             const contentContract = {
@@ -45,7 +44,6 @@ export class LayoutViewModelBinder {
             Object.assign(emailContent, contentContract);
 
             await this.emailService.updateEmailTemplateContent(emailTemplateKey, emailContent);
-            console.log("EMAIL");
         };
 
         const scheduleUpdate = async (): Promise<void> => {
@@ -91,9 +89,7 @@ export class LayoutViewModelBinder {
 
         viewModel.widgets(sectionViewModels);
 
-        if (!viewModel["widgetBinding"]) {
-            this.createBinding(model, viewModel);
-        }
+
 
         return viewModel;
     }
@@ -102,12 +98,14 @@ export class LayoutViewModelBinder {
         return model instanceof LayoutModel;
     }
 
-    public async getLayoutViewModel(): Promise<any> {
-        const emailTemplateContract = await this.emailService.getEmailTemplateByKey("emailTemplates/c17ea920-cc6b-b3b5-6da4-ef8d19b758ff");
-        // const emailTemplate = await this.emailService.getEmailTemplateByKey(emailTemplateKey || "emailTemplates/c17ea920-cc6b-b3b5-6da4-ef8d19b758ff");
-
+    public async getLayoutViewModel(emailTemplateKey: string): Promise<any> {
+        const emailTemplateContract = await this.emailService.getEmailTemplateByKey(emailTemplateKey);
         const layoutModel = await this.emailLayoutModelBinder.contractToModel(emailTemplateContract);
         const layoutViewModel = this.modelToViewModel(layoutModel);
+
+        if (!layoutViewModel["widgetBinding"]) {
+            this.createBinding(layoutModel, layoutViewModel, emailTemplateKey);
+        }
 
         return layoutViewModel;
     }

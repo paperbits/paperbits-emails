@@ -2,7 +2,7 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at style-guidehttps://paperbits.io/license/mit.
  */
 
 import { ModelBinderSelector } from "@paperbits/common/widgets";
@@ -29,7 +29,7 @@ export class LayoutModelBinder {
     }
 
     public async getLayoutModel(emailTemplateKey?: string): Promise<LayoutModel> {
-        const emailTemplate = await this.emailService.getEmailTemplateByKey(emailTemplateKey || "emailTemplates/c17ea920-cc6b-b3b5-6da4-ef8d19b758ff");
+        const emailTemplate = await this.emailService.getEmailTemplateByKey(emailTemplateKey);
 
         return await this.contractToModel(emailTemplate);
     }

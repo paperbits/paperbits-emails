@@ -2,7 +2,7 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at style-guidehttps://paperbits.io/license/mit.
  */
 
 import { SectionContract } from "./sectionContract";
@@ -14,7 +14,7 @@ import { ModelBinderSelector, WidgetModel } from "@paperbits/common/widgets";
 
 export class SectionModelBinder implements IModelBinder {
     public canHandleWidgetType(widgetType: string): boolean {
-        return widgetType === "email-section";
+        return widgetType === "email-layout-section";
     }
 
     public canHandleModel(model: Object): boolean {
@@ -53,7 +53,7 @@ export class SectionModelBinder implements IModelBinder {
 
     public modelToContract(sectionModel: SectionModel): Contract {
         const sectionContract: SectionContract = {
-            type: "email-section",
+            type: "email-layout-section",
             object: "block",
             nodes: [],
             layout: sectionModel.container,

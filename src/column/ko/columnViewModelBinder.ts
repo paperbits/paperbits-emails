@@ -2,9 +2,10 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at style-guidehttps://paperbits.io/license/mit.
  */
 
+import * as Utils from "@paperbits/common/utils";
 import { ColumnViewModel } from "./columnViewModel";
 import { IViewModelBinder } from "@paperbits/common/widgets";
 import { IWidgetBinding } from "@paperbits/common/editing";
@@ -38,53 +39,27 @@ export class ColumnViewModelBinder implements IViewModelBinder<ColumnModel, Colu
         }
 
         columnViewModel.widgets(widgetViewModels);
-        columnViewModel.sizeSm(model.sizeSm);
-        columnViewModel.sizeMd(model.sizeMd);
-        columnViewModel.sizeLg(model.sizeLg);
-        columnViewModel.sizeXl(model.sizeXl);
 
-        if (model.alignmentXs) {
-            columnViewModel.alignmentXs(model.alignmentXs);
-        }
-        else {
-            columnViewModel.alignmentXs("center center");
+        if (model.size) {
+            columnViewModel.size(model.size);
         }
 
-        if (model.alignmentSm) {
-            columnViewModel.alignmentSm(model.alignmentSm);
-        }
-        else {
-            columnViewModel.alignmentSm("center center");
+        if (model.alignment) {
+            columnViewModel.alignment(model.alignment);
         }
 
-        if (model.alignmentMd) {
-            columnViewModel.alignmentMd(model.alignmentMd);
-        }
-        else {
-            columnViewModel.alignmentMd("center center");
-        }
+        // columnViewModel.styles(styles); TODO: Enable when all CSS switched to styling system
 
-        if (model.alignmentLg) {
-            columnViewModel.alignmentLg(model.alignmentLg);
-        }
-        else {
-            columnViewModel.alignmentLg("center center");
-        }
-
-        if (model.alignmentXl) {
-            columnViewModel.alignmentXl(model.alignmentXl);
-        }
-        else {
-            columnViewModel.alignmentXl("center center");
-        }
 
         const binding: IWidgetBinding = {
-            name: "email-column",
+            name: "column",
             displayName: "Column",
+            flow: "inline",
             model: model,
-            editor: "email-column-editor",
+            editor: "email-layout-column-editor",
             handler: ColumnHandlers,
-            applyChanges: () => {
+            applyChanges: (changes) => {
+                Object.assign(model, changes);
                 this.modelToViewModel(model, columnViewModel);
                 this.eventManager.dispatchEvent("onContentUpdate");
             }

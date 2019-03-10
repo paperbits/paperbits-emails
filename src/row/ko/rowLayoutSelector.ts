@@ -2,7 +2,7 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at style-guidehttps://paperbits.io/license/mit.
  */
 
 import template from "./rowLayoutSelector.html";
@@ -11,7 +11,7 @@ import { Component, Event } from "@paperbits/common/ko/decorators";
 import { ColumnModel } from "../../column/columnModel";
 import { RowModel } from "../rowModel";
 
-export interface columnSizeCfg {
+export interface ColumnSizeCfg {
     xs?: number;
     sm?: number;
     md?: number;
@@ -26,36 +26,25 @@ export interface columnSizeCfg {
     injectable: "emailRowLayoutSelector"
 })
 export class RowLayoutSelector implements IResourceSelector<RowModel> {
-    public readonly rowConfigs: columnSizeCfg[][] = [
+    public readonly rowConfigs: ColumnSizeCfg[][] = [
         [{ xs: 12 }],
-        [{ xs: 12, md: 6 }, { xs: 12, md: 6 }],
-        [{ xs: 12, md: 4 }, { xs: 12, md: 4 }, { xs: 12, md: 4 }],
-        [{ xs: 12, md: 3 }, { xs: 12, md: 3 }, { xs: 12, md: 3 }, { xs: 12, md: 3 }],
-        [{ xs: 12, md: 8 }, { xs: 12, md: 4 }], [{ xs: 12, md: 4 }, { xs: 12, md: 8 }],
-        [{ xs: 12, md: 3 }, { xs: 12, md: 9 }], [{ xs: 12, md: 9 }, { xs: 12, md: 3 }],
-        [{ xs: 12, md: 6 }, { xs: 12, md: 3 }, { xs: 12, md: 3 }],
-        [{ xs: 12, md: 3 }, { xs: 12, md: 3 }, { xs: 12, md: 6 }],
-        [{ xs: 12, md: 3 }, { xs: 12, md: 6 }, { xs: 12, md: 3 }]
+        [{ xs: 6 }, { xs: 6 }],
+        [{ xs: 4 }, { xs: 4 }, { xs: 4 }]
     ];
 
     @Event()
     public onSelect: (rowModel: RowModel) => void;
 
-
     constructor() {
         this.selectRowLayout = this.selectRowLayout.bind(this);
     }
 
-    public selectRowLayout(columnSizeCfgs: columnSizeCfg[]): void {
+    public selectRowLayout(columnSizeCfgs: ColumnSizeCfg[]): void {
         const rowModel = new RowModel();
 
         columnSizeCfgs.forEach(size => {
             const column = new ColumnModel();
-            column.sizeXs = size.xs;
-            column.sizeSm = size.sm;
-            column.sizeMd = size.md;
-            column.sizeLg = size.lg;
-            column.sizeXl = size.xl;
+            column.size = size.xs.toString();
             rowModel.widgets.push(column);
         });
 

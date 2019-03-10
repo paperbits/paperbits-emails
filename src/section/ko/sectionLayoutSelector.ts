@@ -2,7 +2,7 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at style-guidehttps://paperbits.io/license/mit.
  */
 
 import template from "./sectionLayoutSelector.html";
@@ -13,7 +13,7 @@ import { Component, Event } from "@paperbits/common/ko/decorators";
 import { SectionModel } from "../sectionModel";
 
 @Component({
-    selector: "email-section-layout-selector",
+    selector: "email-layout-section-layout-selector",
     template: template,
     injectable: "emailSectionLayoutSelector"
 })

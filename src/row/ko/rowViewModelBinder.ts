@@ -2,7 +2,7 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file https://paperbits.io/license/mit.
  */
 
 import { RowViewModel } from "./rowViewModel";
@@ -48,7 +48,7 @@ export class RowViewModelBinder implements IViewModelBinder<RowModel, RowViewMod
         viewModel.justifyLg(model.justifyLg);
 
         const binding: IWidgetBinding = {
-            name: "email-row",
+            name: "email-layout-row",
             displayName: "Row",
             model: model,
             handler: RowHandlers,

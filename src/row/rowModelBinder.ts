@@ -2,7 +2,7 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at style-guidehttps://paperbits.io/license/mit.
  */
 
 import { Contract } from "@paperbits/common";
@@ -16,7 +16,7 @@ export class RowModelBinder {
     }
 
     public canHandleWidgetType(widgetType: string): boolean {
-        return widgetType === "email-row";
+        return widgetType === "email-layout-row";
     }
 
     public canHandleModel(model: Object): boolean {
@@ -66,7 +66,7 @@ export class RowModelBinder {
 
     public modelToContract(rowModel: RowModel): Contract {
         const rowConfig: RowContract = {
-            type: "email-row",
+            type: "email-layout-row",
             object: "block",
             nodes: []
         };

@@ -20,7 +20,7 @@ export class RowHandlers implements IWidgetHandler {
 
             case "widget":
                 const columnToInsert = new ColumnModel();
-                columnToInsert.sizeMd = 3;
+                columnToInsert.size = "3";
                 columnToInsert.widgets.push(dragSession.sourceModel);
                 dragSession.targetBinding.model.widgets.splice(dragSession.insertIndex, 0, columnToInsert);
                 break;

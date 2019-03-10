@@ -32,7 +32,7 @@ export class SectionHandlers {
                 tooltip: "Add section",
                 color: "#2b87da",
                 component: {
-                    name: "email-section-layout-selector",
+                    name: "email-layout-section-layout-selector",
                     params: {
                         onSelect: (newSectionModel: SectionModel) => {
                             const sectionHalf = context.half;
@@ -95,7 +95,7 @@ export class SectionHandlers {
                 tooltip: "Add row",
                 color: "#29c4a9",
                 component: {
-                    name: "email-row-layout-selector",
+                    name: "email-layout-row-layout-selector",
                     params: {
                         onSelect: (newRowModel: RowModel) => {
                             context.model.widgets.push(newRowModel);

@@ -2,7 +2,7 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at style-guidehttps://paperbits.io/license/mit.
  */
 
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
@@ -11,6 +11,7 @@ import { LayoutModule } from "./layout/ko/layout.module";
 import { ColumnModule } from "./column/ko/column.module";
 import { RowModule } from "./row/ko/row.module";
 import { SectionModule } from "./section/ko/section.module";
+import "./ko/bindingHandler.tableCell";
 
 export class EmailsModule implements IInjectorModule {
     public register(injector: IInjector): void {

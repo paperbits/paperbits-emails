@@ -2,13 +2,13 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at style-guidehttps://paperbits.io/license/mit.
  */
-
+import * as Utils from "@paperbits/common/utils";
 import { ColumnModel } from "./columnModel";
 import { ColumnContract } from "./columnContract";
 import { ModelBinderSelector } from "@paperbits/common/widgets";
-import { IModelBinder } from "@paperbits/common/editing/IModelBinder";
+import { IModelBinder } from "@paperbits/common/editing";
 import { Contract } from "@paperbits/common";
 
 export class ColumnModelBinder implements IModelBinder {
@@ -17,7 +17,7 @@ export class ColumnModelBinder implements IModelBinder {
     }
 
     public canHandleWidgetType(widgetType: string): boolean {
-        return widgetType === "email-column";
+        return widgetType === "email-layout-column";
     }
 
     public canHandleModel(model: Object): boolean {
@@ -28,19 +28,11 @@ export class ColumnModelBinder implements IModelBinder {
         const columnModel = new ColumnModel();
 
         if (contract.size) {
-            columnModel.sizeXs = Number.parseInt(contract.size.xs);
-            columnModel.sizeSm = Number.parseInt(contract.size.sm);
-            columnModel.sizeMd = Number.parseInt(contract.size.md);
-            columnModel.sizeLg = Number.parseInt(contract.size.lg);
-            columnModel.sizeXl = Number.parseInt(contract.size.xl);
+            columnModel.size = contract.size;
         }
 
         if (contract.alignment) {
-            columnModel.alignmentXs = contract.alignment.xs;
-            columnModel.alignmentSm = contract.alignment.sm;
-            columnModel.alignmentMd = contract.alignment.md;
-            columnModel.alignmentLg = contract.alignment.lg;
-            columnModel.alignmentXl = contract.alignment.xl;
+            columnModel.alignment = contract.alignment;
         }
 
         if (!contract.nodes) {
@@ -49,7 +41,7 @@ export class ColumnModelBinder implements IModelBinder {
 
         const modelPromises = contract.nodes.map(async (node) => {
             const modelBinder = this.modelBinderSelector.getModelBinderByNodeType(node.type);
-            return await modelBinder.contractToModel(node);
+            return modelBinder.contractToModel(node);
         });
 
         columnModel.widgets = await Promise.all<any>(modelPromises);
@@ -57,53 +49,18 @@ export class ColumnModelBinder implements IModelBinder {
         return columnModel;
     }
 
-    public modelToContract(columnModel: ColumnModel): Contract {
+    public modelToContract(model: ColumnModel): Contract {
         const contract: ColumnContract = {
-            type: "email-column",
+            type: "email-layout-column",
             object: "block",
             nodes: []
         };
 
-        contract.size = {};
-        contract.alignment = {};
+        contract.size = model.size;
+        contract.alignment = model.alignment;
+      
 
-        if (columnModel.sizeSm) {
-            contract.size.sm = columnModel.sizeSm.toString();
-        }
-
-        if (columnModel.sizeMd) {
-            contract.size.md = columnModel.sizeMd.toString();
-        }
-
-        if (columnModel.sizeLg) {
-            contract.size.lg = columnModel.sizeLg.toString();
-        }
-
-        if (columnModel.sizeXl) {
-            contract.size.xl = columnModel.sizeXl.toString();
-        }
-
-        if (columnModel.alignmentXs) {
-            contract.alignment.xs = columnModel.alignmentXs;
-        }
-
-        if (columnModel.alignmentSm) {
-            contract.alignment.sm = columnModel.alignmentSm;
-        }
-
-        if (columnModel.alignmentMd) {
-            contract.alignment.md = columnModel.alignmentMd;
-        }
-
-        if (columnModel.alignmentLg) {
-            contract.alignment.lg = columnModel.alignmentLg;
-        }
-
-        if (columnModel.alignmentXl) {
-            contract.alignment.xl = columnModel.alignmentXl;
-        }
-
-        columnModel.widgets.forEach(widgetModel => {
+        model.widgets.forEach(widgetModel => {
             const modelBinder = this.modelBinderSelector.getModelBinderByModel(widgetModel);
             contract.nodes.push(modelBinder.modelToContract(widgetModel));
         });

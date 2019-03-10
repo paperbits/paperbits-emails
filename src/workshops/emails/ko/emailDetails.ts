@@ -2,15 +2,17 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at style-guidehttps://paperbits.io/license/mit.
  */
 
 import template from "./emailDetails.html";
 import { EmailService } from "../../../emailService";
 import { IRouteHandler } from "@paperbits/common/routing";
+import { IEventManager } from "@paperbits/common/events";
 import { IViewManager } from "@paperbits/common/ui";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { EmailItem } from "./emailItem";
+
 
 @Component({
     selector: "email-details-workshop",
@@ -27,6 +29,7 @@ export class EmailDetailsWorkshop {
     constructor(
         private readonly emailService: EmailService,
         private readonly routeHandler: IRouteHandler,
+        private readonly eventManager: IEventManager,
         private readonly viewManager: IViewManager
     ) {
         // rebinding...
@@ -43,6 +46,8 @@ export class EmailDetailsWorkshop {
 
         this.emailItem.description
             .subscribe(this.updateEmail);
+
+        this.eventManager.dispatchEvent("onEmailTemplateSelect", this.emailItem.key);
     }
 
     private async updateEmail(): Promise<void> {

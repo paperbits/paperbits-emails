@@ -2,7 +2,7 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at style-guidehttps://paperbits.io/license/mit.
  */
 
 import * as ko from "knockout";
@@ -11,7 +11,7 @@ import { Component } from "@paperbits/common/ko/decorators";
 import { WidgetViewModel } from "@paperbits/core/ko/widgetViewModel";
 
 @Component({
-    selector: "email-row",
+    selector: "email-layout-row",
     template: template
 })
 export class RowViewModel implements WidgetViewModel {

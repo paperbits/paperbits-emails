@@ -2,7 +2,7 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at style-guidehttps://paperbits.io/license/mit.
  */
 
 import * as ko from "knockout";
@@ -13,7 +13,7 @@ import { Component, OnMounted, Param, Event } from "@paperbits/common/ko/decorat
 import { SectionModel } from "../sectionModel";
 
 @Component({
-    selector: "email-section-editor",
+    selector: "email-layout-section-editor",
     template: template,
     injectable: "sectionEditor"
 })

@@ -2,7 +2,7 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at style-guidehttps://paperbits.io/license/mit.
  */
 
 import { SectionViewModel } from "./sectionViewModel";
@@ -48,7 +48,7 @@ export class SectionViewModelBinder implements IViewModelBinder<SectionModel, Se
 
             model: model,
             flow: "block",
-            editor: "email-section-editor",
+            editor: "email-layout-section-editor",
             handler: SectionHandlers,
             applyChanges: () => {
                 this.modelToViewModel(model, viewModel);
