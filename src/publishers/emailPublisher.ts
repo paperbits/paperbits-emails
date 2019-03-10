@@ -2,7 +2,7 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at style-guidehttps://paperbits.io/license/mit.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license/commercial.
  */
 
 import * as ko from "knockout";
@@ -83,7 +83,7 @@ export class EmailPublisher implements IPublisher {
         const layoutViewModel = await this.emailLayoutViewModelBinder.getLayoutViewModel(emailTemplate.key);
         ko.applyBindingsToNode(templateDocument.body, { widget: layoutViewModel }, null);
 
-        const resourceUri = `email-templates/${Utils.slugify(emailTemplate.title)}.html`;
+        const resourceUri = `${Utils.slugify(emailTemplate.title)}.html`;
 
         let htmlContent: string;
 

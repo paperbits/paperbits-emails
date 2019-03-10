@@ -17,6 +17,7 @@
     "dependencies": {
         "@paperbits/core": "0.1.78",
         "@paperbits/common": "0.1.78",
+        "@paperbits/styles": "0.1.78",
         "knockout": "^3.5.0-beta",
         "knockout.validation": "^2.0.3",
         "inline-css": "^2.4.0",
