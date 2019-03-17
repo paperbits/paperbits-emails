@@ -20,8 +20,8 @@ export class LayoutModelBinder {
         this.contractToModel = this.contractToModel.bind(this);
     }
 
-    public canHandleWidgetType(widgetType: string): boolean {
-        return widgetType === "email-layout";
+    public canHandleContract(contract: Contract): boolean {
+        return contract.type === "email-layout";
     }
 
     public canHandleModel(model: Object): boolean {
@@ -41,9 +41,9 @@ export class LayoutModelBinder {
 
         const layoutContent = await this.emailService.getEmailTemplateContent(emailContract.key);
 
-        const modelPromises = layoutContent.nodes.map(async (nodeContract) => {
-            const modelBinder = this.modelBinderSelector.getModelBinderByNodeType(nodeContract.type);
-            return await modelBinder.contractToModel(nodeContract);
+        const modelPromises = layoutContent.nodes.map(async (contract: Contract) => {
+            const modelBinder = this.modelBinderSelector.getModelBinderByContract(contract);
+            return await modelBinder.contractToModel(contract);
         });
 
         const widgetModels = await Promise.all<any>(modelPromises);
@@ -54,7 +54,6 @@ export class LayoutModelBinder {
 
     public modelToContract(layoutModel: LayoutModel): Contract {
         const layoutConfig: Contract = {
-            object: "block",
             type: "email-layout",
             nodes: []
         };

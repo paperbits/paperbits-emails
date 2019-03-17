@@ -16,8 +16,8 @@ export class ColumnModelBinder implements IModelBinder {
         this.contractToModel = this.contractToModel.bind(this);
     }
 
-    public canHandleWidgetType(widgetType: string): boolean {
-        return widgetType === "email-layout-column";
+    public canHandleContract(contract: Contract): boolean {
+        return contract.type === "email-layout-column";
     }
 
     public canHandleModel(model: Object): boolean {
@@ -39,9 +39,9 @@ export class ColumnModelBinder implements IModelBinder {
             contract.nodes = [];
         }
 
-        const modelPromises = contract.nodes.map(async (node) => {
-            const modelBinder = this.modelBinderSelector.getModelBinderByNodeType(node.type);
-            return modelBinder.contractToModel(node);
+        const modelPromises = contract.nodes.map(async (contract: Contract) => {
+            const modelBinder = this.modelBinderSelector.getModelBinderByContract(contract);
+            return modelBinder.contractToModel(contract);
         });
 
         columnModel.widgets = await Promise.all<any>(modelPromises);
@@ -52,7 +52,6 @@ export class ColumnModelBinder implements IModelBinder {
     public modelToContract(model: ColumnModel): Contract {
         const contract: ColumnContract = {
             type: "email-layout-column",
-            object: "block",
             nodes: []
         };
 
