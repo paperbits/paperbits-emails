@@ -136,7 +136,7 @@ export class EmailPublisher implements IPublisher {
 
         for (const emailTemplate of emailTemplates) {
             const result = await this.renderEmailTemplate(emailTemplate, stylesString + " " + css, permalinkBaseUrl, mediaBaseUrl);
-            await this.outputBlobStorage.uploadBlob(`email-templates\\${result.name}`, result.bytes);
+            await this.outputBlobStorage.uploadBlob(`/email-templates/${result.name}`, result.bytes);
         }
     }
 }
