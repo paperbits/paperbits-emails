@@ -17,6 +17,7 @@ export class ColumnHandlers implements IWidgetHandler {
         }
 
         dragSession.targetBinding.applyChanges();
+        dragSession.sourceParentBinding.applyChanges();
     }
 
     public getContextualEditor(context: WidgetContext): IContextCommandSet {
