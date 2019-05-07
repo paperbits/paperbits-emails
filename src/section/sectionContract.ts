@@ -25,4 +25,6 @@ export interface SectionContract extends Contract {
      * Possible values: top, bottom.
      */
     snapping: string;
+
+    padding: string;
 }
