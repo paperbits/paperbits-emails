@@ -1,8 +1,8 @@
-import { IWorkshopSection, IViewManager } from "@paperbits/common/ui";
+import { IToolButton, IViewManager } from "@paperbits/common/ui";
 
-export class EmailsWorkshopSection implements IWorkshopSection {
-    public iconClass = "paperbits-icon paperbits-at-sign";
-    public title = "Email templates";
+export class EmailsWorkshopSection implements IToolButton {
+    public iconClass: string = "paperbits-icon paperbits-at-sign";
+    public title: string = "Email templates";
 
     constructor(private readonly viewManager: IViewManager) { }
 
