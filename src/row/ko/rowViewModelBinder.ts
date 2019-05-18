@@ -6,7 +6,7 @@
  */
 
 import { RowViewModel } from "./rowViewModel";
-import { IViewModelBinder } from "@paperbits/common/widgets/IViewModelBinder";
+import { ViewModelBinder } from "@paperbits/common/widgets/IViewModelBinder";
 import { IWidgetBinding } from "@paperbits/common/editing";
 import { RowModel } from "../rowModel";
 import { PlaceholderViewModel } from "@paperbits/core/placeholder/ko";
@@ -14,7 +14,7 @@ import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelec
 import { RowHandlers } from "../rowHandlers";
 import { IEventManager } from "@paperbits/common/events";
 
-export class RowViewModelBinder implements IViewModelBinder<RowModel, RowViewModel> {
+export class RowViewModelBinder implements ViewModelBinder<RowModel, RowViewModel> {
     constructor(
         private readonly viewModelBinderSelector: ViewModelBinderSelector,
         private readonly eventManager: IEventManager

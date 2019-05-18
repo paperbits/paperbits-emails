@@ -7,7 +7,7 @@
 
 import * as Utils from "@paperbits/common/utils";
 import { ColumnViewModel } from "./columnViewModel";
-import { IViewModelBinder } from "@paperbits/common/widgets";
+import { ViewModelBinder } from "@paperbits/common/widgets";
 import { IWidgetBinding } from "@paperbits/common/editing";
 import { ColumnModel } from "../columnModel";
 import { PlaceholderViewModel } from "@paperbits/core/placeholder/ko";
@@ -15,7 +15,7 @@ import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelec
 import { ColumnHandlers } from "../columnHandlers";
 import { IEventManager } from "@paperbits/common/events";
 
-export class ColumnViewModelBinder implements IViewModelBinder<ColumnModel, ColumnViewModel> {
+export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, ColumnViewModel> {
     constructor(
         private readonly viewModelBinderSelector: ViewModelBinderSelector,
         private readonly eventManager: IEventManager

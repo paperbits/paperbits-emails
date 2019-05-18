@@ -6,7 +6,7 @@
  */
 
 import { SectionViewModel } from "./sectionViewModel";
-import { IViewModelBinder } from "@paperbits/common/widgets";
+import { ViewModelBinder } from "@paperbits/common/widgets";
 import { IWidgetBinding } from "@paperbits/common/editing";
 import { PlaceholderViewModel } from "@paperbits/core/placeholder/ko";
 import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelector";
@@ -14,7 +14,7 @@ import { SectionHandlers } from "../sectionHandlers";
 import { SectionModel } from "../sectionModel";
 import { IEventManager } from "@paperbits/common/events";
 
-export class SectionViewModelBinder implements IViewModelBinder<SectionModel, SectionViewModel> {
+export class SectionViewModelBinder implements ViewModelBinder<SectionModel, SectionViewModel> {
     constructor(
         private readonly viewModelBinderSelector: ViewModelBinderSelector,
         private readonly eventManager: IEventManager

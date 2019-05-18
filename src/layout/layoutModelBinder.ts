@@ -7,7 +7,7 @@
 
 import { ModelBinderSelector } from "@paperbits/common/widgets";
 import { LayoutModel } from "./layoutModel";
-import { Contract } from "@paperbits/common";
+import { Contract, Bag } from "@paperbits/common";
 import { EmailService } from "../emailService";
 import { EmailContract } from "../emailContract";
 
@@ -34,7 +34,7 @@ export class LayoutModelBinder {
         return await this.contractToModel(emailTemplate);
     }
 
-    public async contractToModel(emailContract: EmailContract): Promise<LayoutModel> {
+    public async contractToModel(emailContract: EmailContract, bindingContext?: Bag<any>): Promise<LayoutModel> {
         const layoutModel = new LayoutModel();
         layoutModel.title = emailContract.title;
         layoutModel.description = emailContract.description;
@@ -43,7 +43,7 @@ export class LayoutModelBinder {
 
         const modelPromises = layoutContent.nodes.map(async (contract: Contract) => {
             const modelBinder = this.modelBinderSelector.getModelBinderByContract(contract);
-            return await modelBinder.contractToModel(contract);
+            return await modelBinder.contractToModel(contract, bindingContext);
         });
 
         const widgetModels = await Promise.all<any>(modelPromises);

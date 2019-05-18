@@ -5,7 +5,7 @@
  * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license/commercial.
  */
 
-import { Contract } from "@paperbits/common";
+import { Contract, Bag } from "@paperbits/common";
 import { RowContract } from "./rowContract";
 import { RowModel } from "./rowModel";
 import { ModelBinderSelector } from "@paperbits/common/widgets";
@@ -23,7 +23,7 @@ export class RowModelBinder {
         return model instanceof RowModel;
     }
 
-    public async contractToModel(contract: RowContract): Promise<RowModel> {
+    public async contractToModel(contract: RowContract, bindingContext?: Bag<any>): Promise<RowModel> {
         const rowModel = new RowModel();
 
         if (contract.align) {
@@ -56,7 +56,7 @@ export class RowModelBinder {
 
         const modelPromises = contract.nodes.map(async (contract: Contract) => {
             const modelBinder = this.modelBinderSelector.getModelBinderByContract(contract);
-            return await modelBinder.contractToModel(contract);
+            return await modelBinder.contractToModel(contract, bindingContext);
         });
 
         rowModel.widgets = await Promise.all<any>(modelPromises);
