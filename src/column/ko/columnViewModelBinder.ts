@@ -14,42 +14,46 @@ import { PlaceholderViewModel } from "@paperbits/core/placeholder/ko";
 import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelector";
 import { ColumnHandlers } from "../columnHandlers";
 import { IEventManager } from "@paperbits/common/events";
+import { IStyleCompiler } from "@paperbits/common/styles";
 
 export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, ColumnViewModel> {
     constructor(
         private readonly viewModelBinderSelector: ViewModelBinderSelector,
-        private readonly eventManager: IEventManager
+        private readonly eventManager: IEventManager,
+        private readonly styleCompiler: IStyleCompiler
     ) { }
 
-    public modelToViewModel(model: ColumnModel, columnViewModel?: ColumnViewModel): ColumnViewModel {
-        if (!columnViewModel) {
-            columnViewModel = new ColumnViewModel();
+    public async modelToViewModel(model: ColumnModel, viewModel?: ColumnViewModel): Promise<ColumnViewModel> {
+        if (!viewModel) {
+            viewModel = new ColumnViewModel();
         }
 
-        const widgetViewModels = model.widgets
-            .map(widgetModel => {
-                const widgetViewModelBinder = this.viewModelBinderSelector.getViewModelBinderByModel(widgetModel);
-                const widgetViewModel = widgetViewModelBinder.modelToViewModel(widgetModel);
+        const viewModels = [];
 
-                return widgetViewModel;
-            });
+        for (const widgetModel of model.widgets) {
+            const widgetViewModelBinder = this.viewModelBinderSelector.getViewModelBinderByModel(widgetModel);
+            const widgetViewModel = await widgetViewModelBinder.modelToViewModel(widgetModel);
 
-        if (widgetViewModels.length === 0) {
-            widgetViewModels.push(new PlaceholderViewModel("Column"));
+            viewModels.push(widgetViewModel);
         }
 
-        columnViewModel.widgets(widgetViewModels);
+        if (viewModels.length === 0) {
+            viewModels.push(new PlaceholderViewModel("Column"));
+        }
+
+        viewModel.widgets(viewModels);
 
         if (model.size) {
-            columnViewModel.size(model.size);
+            viewModel.size(model.size);
         }
 
         if (model.alignment) {
-            columnViewModel.alignment(model.alignment);
+            viewModel.alignment(model.alignment);
         }
 
-        // columnViewModel.styles(styles); TODO: Enable when all CSS switched to styling system
-
+        // if (model.styles) {
+        //     viewModel.styles(await this.styleCompiler.getClassNamesByStyleConfigAsync2(model.styles));
+        // }
 
         const binding: IWidgetBinding = {
             name: "column",
@@ -60,14 +64,14 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
             handler: ColumnHandlers,
             applyChanges: (changes) => {
                 Object.assign(model, changes);
-                this.modelToViewModel(model, columnViewModel);
+                this.modelToViewModel(model, viewModel);
                 this.eventManager.dispatchEvent("onContentUpdate");
             }
         };
 
-        columnViewModel["widgetBinding"] = binding;
+        viewModel["widgetBinding"] = binding;
 
-        return columnViewModel;
+        return viewModel;
     }
 
     public canHandleModel(model: ColumnModel): boolean {

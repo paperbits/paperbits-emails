@@ -20,18 +20,19 @@ export class RowViewModelBinder implements ViewModelBinder<RowModel, RowViewMode
         private readonly eventManager: IEventManager
     ) { }
 
-    public modelToViewModel(model: RowModel, viewModel?: RowViewModel): RowViewModel {
+    public async modelToViewModel(model: RowModel, viewModel?: RowViewModel): Promise<RowViewModel> {
         if (!viewModel) {
             viewModel = new RowViewModel();
         }
 
-        const viewModels = model.widgets
-            .map(widgetModel => {
-                const viewModelBinder = this.viewModelBinderSelector.getViewModelBinderByModel(widgetModel);
-                const viewModel = viewModelBinder.modelToViewModel(widgetModel);
+        const viewModels = [];
 
-                return viewModel;
-            });
+        for (const widgetModel of model.widgets) {
+            const widgetViewModelBinder = this.viewModelBinderSelector.getViewModelBinderByModel(widgetModel);
+            const widgetViewModel = await widgetViewModelBinder.modelToViewModel(widgetModel);
+
+            viewModels.push(widgetViewModel);
+        }
 
         if (viewModels.length === 0) {
             viewModels.push(<any>new PlaceholderViewModel("Row"));

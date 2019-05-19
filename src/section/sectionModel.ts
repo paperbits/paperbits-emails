@@ -7,6 +7,7 @@
 
 import { WidgetModel } from "@paperbits/common/widgets";
 import { BackgroundModel } from "@paperbits/common/widgets/background";
+import { StyleContract } from "@paperbits/common/styles/styleConfig";
 
 export class SectionModel {
     public widgets: WidgetModel[];
@@ -15,6 +16,7 @@ export class SectionModel {
     public snap: string;
     public height: string;
     public background: BackgroundModel;
+    public styles: StyleContract;
 
     constructor() {
         this.container = "container";
