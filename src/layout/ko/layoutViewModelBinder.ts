@@ -55,7 +55,6 @@ export class LayoutViewModelBinder {
             name: "email-layout",
             model: model,
             provides: ["static"],
-            // handler: LayoutHandlers,
             applyChanges: () => {
                 this.modelToViewModel(model, viewModel);
                 this.eventManager.dispatchEvent("onContentUpdate");
@@ -70,26 +69,21 @@ export class LayoutViewModelBinder {
         viewModel["widgetBinding"] = binding;
     }
 
-    public modelToViewModel(model: LayoutModel, viewModel?: LayoutViewModel): LayoutViewModel {
+    public async modelToViewModel(model: LayoutModel, viewModel?: LayoutViewModel): Promise<LayoutViewModel> {
         if (!viewModel) {
             viewModel = new LayoutViewModel();
         }
 
-        const sectionViewModels = model.widgets
-            .map(widgetModel => {
-                const widgetViewModelBinder = this.viewModelBinderSelector.getViewModelBinderByModel(widgetModel);
+        const viewModels = [];
 
-                if (!widgetViewModelBinder) {
-                    return null;
-                }
+        for (const widgetModel of model.widgets) {
+            const widgetViewModelBinder = this.viewModelBinderSelector.getViewModelBinderByModel(widgetModel);
+            const widgetViewModel = await widgetViewModelBinder.modelToViewModel(widgetModel);
 
-                return widgetViewModelBinder.modelToViewModel(widgetModel);
-            })
-            .filter(x => x !== null);
+            viewModels.push(widgetViewModel);
+        }
 
-        viewModel.widgets(sectionViewModels);
-
-
+        viewModel.widgets(viewModels);
 
         return viewModel;
     }
@@ -101,7 +95,7 @@ export class LayoutViewModelBinder {
     public async getLayoutViewModel(emailTemplateKey: string): Promise<any> {
         const emailTemplateContract = await this.emailService.getEmailTemplateByKey(emailTemplateKey);
         const layoutModel = await this.emailLayoutModelBinder.contractToModel(emailTemplateContract);
-        const layoutViewModel = this.modelToViewModel(layoutModel);
+        const layoutViewModel = await this.modelToViewModel(layoutModel);
 
         if (!layoutViewModel["widgetBinding"]) {
             this.createBinding(layoutModel, layoutViewModel, emailTemplateKey);

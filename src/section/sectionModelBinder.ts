@@ -9,7 +9,7 @@ import { SectionContract } from "./sectionContract";
 import { SectionModel } from "./sectionModel";
 import { IModelBinder } from "@paperbits/common/editing";
 import { BackgroundModelBinder } from "@paperbits/common/widgets/background";
-import { Contract } from "@paperbits/common";
+import { Contract, Bag } from "@paperbits/common";
 import { ModelBinderSelector, WidgetModel } from "@paperbits/common/widgets";
 
 export class SectionModelBinder implements IModelBinder {
@@ -28,7 +28,7 @@ export class SectionModelBinder implements IModelBinder {
         this.contractToModel = this.contractToModel.bind(this);
     }
 
-    public async contractToModel(sectionContract: SectionContract): Promise<SectionModel> {
+    public async contractToModel(sectionContract: SectionContract, bindingContext?: Bag<any>): Promise<SectionModel> {
         const sectionModel = new SectionModel();
 
         sectionContract.nodes = sectionContract.nodes || [];
@@ -43,7 +43,7 @@ export class SectionModelBinder implements IModelBinder {
 
         const modelPromises = sectionContract.nodes.map(async (contract: Contract) => {
             const modelBinder: IModelBinder = this.modelBinderSelector.getModelBinderByContract(contract);
-            return await modelBinder.contractToModel(contract);
+            return await modelBinder.contractToModel(contract, bindingContext);
         });
 
         sectionModel.widgets = await Promise.all<WidgetModel>(modelPromises);

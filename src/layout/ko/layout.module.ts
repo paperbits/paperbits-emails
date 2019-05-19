@@ -6,7 +6,7 @@
  */
 
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
-import { IViewModelBinder } from "@paperbits/common/widgets";
+import { ViewModelBinder } from "@paperbits/common/widgets";
 import { LayoutViewModel } from "./layoutViewModel";
 import { LayoutModelBinder } from "../layoutModelBinder";
 import { LayoutViewModelBinder } from "./layoutViewModelBinder";

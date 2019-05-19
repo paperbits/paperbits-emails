@@ -6,7 +6,7 @@
  */
 
 import { RowViewModel } from "./rowViewModel";
-import { IViewModelBinder } from "@paperbits/common/widgets/IViewModelBinder";
+import { ViewModelBinder } from "@paperbits/common/widgets/IViewModelBinder";
 import { IWidgetBinding } from "@paperbits/common/editing";
 import { RowModel } from "../rowModel";
 import { PlaceholderViewModel } from "@paperbits/core/placeholder/ko";
@@ -14,24 +14,25 @@ import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelec
 import { RowHandlers } from "../rowHandlers";
 import { IEventManager } from "@paperbits/common/events";
 
-export class RowViewModelBinder implements IViewModelBinder<RowModel, RowViewModel> {
+export class RowViewModelBinder implements ViewModelBinder<RowModel, RowViewModel> {
     constructor(
         private readonly viewModelBinderSelector: ViewModelBinderSelector,
         private readonly eventManager: IEventManager
     ) { }
 
-    public modelToViewModel(model: RowModel, viewModel?: RowViewModel): RowViewModel {
+    public async modelToViewModel(model: RowModel, viewModel?: RowViewModel): Promise<RowViewModel> {
         if (!viewModel) {
             viewModel = new RowViewModel();
         }
 
-        const viewModels = model.widgets
-            .map(widgetModel => {
-                const viewModelBinder = this.viewModelBinderSelector.getViewModelBinderByModel(widgetModel);
-                const viewModel = viewModelBinder.modelToViewModel(widgetModel);
+        const viewModels = [];
 
-                return viewModel;
-            });
+        for (const widgetModel of model.widgets) {
+            const widgetViewModelBinder = this.viewModelBinderSelector.getViewModelBinderByModel(widgetModel);
+            const widgetViewModel = await widgetViewModelBinder.modelToViewModel(widgetModel);
+
+            viewModels.push(widgetViewModel);
+        }
 
         if (viewModels.length === 0) {
             viewModels.push(<any>new PlaceholderViewModel("Row"));
