@@ -15,6 +15,7 @@ import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelec
 import { ColumnHandlers } from "../columnHandlers";
 import { IEventManager } from "@paperbits/common/events";
 import { IStyleCompiler } from "@paperbits/common/styles";
+import { Bag } from "@paperbits/common";
 
 export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, ColumnViewModel> {
     constructor(
@@ -23,7 +24,7 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
         private readonly styleCompiler: IStyleCompiler
     ) { }
 
-    public async modelToViewModel(model: ColumnModel, viewModel?: ColumnViewModel): Promise<ColumnViewModel> {
+    public async modelToViewModel(model: ColumnModel, viewModel?: ColumnViewModel, bindingContext?: Bag<any>): Promise<ColumnViewModel> {
         if (!viewModel) {
             viewModel = new ColumnViewModel();
         }
@@ -32,7 +33,7 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
 
         for (const widgetModel of model.widgets) {
             const widgetViewModelBinder = this.viewModelBinderSelector.getViewModelBinderByModel(widgetModel);
-            const widgetViewModel = await widgetViewModelBinder.modelToViewModel(widgetModel);
+            const widgetViewModel = await widgetViewModelBinder.modelToViewModel(widgetModel, null, bindingContext);
 
             viewModels.push(widgetViewModel);
         }

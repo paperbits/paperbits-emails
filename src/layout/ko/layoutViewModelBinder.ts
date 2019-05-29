@@ -13,6 +13,7 @@ import { IEventManager } from "@paperbits/common/events";
 import { ModelBinderSelector } from "@paperbits/common/widgets";
 import { EmailService } from "../../emailService";
 import { LayoutModelBinder } from "../../layout";
+import { Bag } from "@paperbits/common";
 // import { EmailContract } from "../emailContract";
 
 export class LayoutViewModelBinder {
@@ -69,7 +70,7 @@ export class LayoutViewModelBinder {
         viewModel["widgetBinding"] = binding;
     }
 
-    public async modelToViewModel(model: LayoutModel, viewModel?: LayoutViewModel): Promise<LayoutViewModel> {
+    public async modelToViewModel(model: LayoutModel, viewModel?: LayoutViewModel, bindingContext?: Bag<any>): Promise<LayoutViewModel> {
         if (!viewModel) {
             viewModel = new LayoutViewModel();
         }
@@ -78,7 +79,7 @@ export class LayoutViewModelBinder {
 
         for (const widgetModel of model.widgets) {
             const widgetViewModelBinder = this.viewModelBinderSelector.getViewModelBinderByModel(widgetModel);
-            const widgetViewModel = await widgetViewModelBinder.modelToViewModel(widgetModel);
+            const widgetViewModel = await widgetViewModelBinder.modelToViewModel(widgetModel, null, bindingContext);
 
             viewModels.push(widgetViewModel);
         }
