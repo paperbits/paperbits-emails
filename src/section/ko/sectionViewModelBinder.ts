@@ -53,6 +53,7 @@ export class SectionViewModelBinder implements ViewModelBinder<SectionModel, Sec
         const binding: IWidgetBinding = {
             name: "section",
             displayName: "Section",
+            readonly: bindingContext ? bindingContext.readonly : false,
             model: model,
             flow: "block",
             editor: "email-layout-section-editor",

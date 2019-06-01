@@ -27,7 +27,7 @@ export class LayoutViewModelBinder {
         this.getLayoutViewModel = this.getLayoutViewModel.bind(this);
     }
 
-    public createBinding(model: LayoutModel, viewModel: LayoutViewModel, emailTemplateKey: string): void {
+    public createBinding(model: LayoutModel, viewModel: LayoutViewModel, emailTemplateKey: string, bindingContext?: Bag<any>): void {
         let savingTimeout;
 
         const updateContent = async (): Promise<void> => {
@@ -54,6 +54,7 @@ export class LayoutViewModelBinder {
 
         const binding: IWidgetBinding = {
             name: "email-layout",
+            readonly: bindingContext ? bindingContext.readonly : false,
             model: model,
             provides: ["static"],
             applyChanges: () => {
@@ -93,13 +94,13 @@ export class LayoutViewModelBinder {
         return model instanceof LayoutModel;
     }
 
-    public async getLayoutViewModel(emailTemplateKey: string): Promise<any> {
+    public async getLayoutViewModel(emailTemplateKey: string, bindingContext?: Bag<any>): Promise<any> {
         const emailTemplateContract = await this.emailService.getEmailTemplateByKey(emailTemplateKey);
         const layoutModel = await this.emailLayoutModelBinder.contractToModel(emailTemplateContract);
         const layoutViewModel = await this.modelToViewModel(layoutModel);
 
         if (!layoutViewModel["widgetBinding"]) {
-            this.createBinding(layoutModel, layoutViewModel, emailTemplateKey);
+            this.createBinding(layoutModel, layoutViewModel, emailTemplateKey, bindingContext);
         }
 
         return layoutViewModel;
