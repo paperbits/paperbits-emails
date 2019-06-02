@@ -52,8 +52,9 @@ export class LayoutViewModelBinder {
             savingTimeout = setTimeout(updateContent, 600);
         };
 
-        const binding: IWidgetBinding = {
+        const binding: IWidgetBinding<LayoutModel> = {
             name: "email-layout",
+            displayName: "Layout",
             readonly: bindingContext ? bindingContext.readonly : false,
             model: model,
             provides: ["static"],
