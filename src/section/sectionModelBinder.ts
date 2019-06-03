@@ -12,7 +12,7 @@ import { BackgroundModelBinder } from "@paperbits/common/widgets/background";
 import { Contract, Bag } from "@paperbits/common";
 import { ModelBinderSelector, WidgetModel } from "@paperbits/common/widgets";
 
-export class SectionModelBinder implements IModelBinder {
+export class SectionModelBinder implements IModelBinder<SectionModel> {
     public canHandleContract(contract: Contract): boolean {
         return contract.type === "email-layout-section";
     }
@@ -42,7 +42,7 @@ export class SectionModelBinder implements IModelBinder {
         }
 
         const modelPromises = sectionContract.nodes.map(async (contract: Contract) => {
-            const modelBinder: IModelBinder = this.modelBinderSelector.getModelBinderByContract(contract);
+            const modelBinder = this.modelBinderSelector.getModelBinderByContract<any>(contract);
             return await modelBinder.contractToModel(contract, bindingContext);
         });
 

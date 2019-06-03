@@ -56,9 +56,10 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
         //     viewModel.styles(await this.styleCompiler.getClassNamesByStyleConfigAsync2(model.styles));
         // }
 
-        const binding: IWidgetBinding = {
+        const binding: IWidgetBinding<ColumnModel> = {
             name: "column",
             displayName: "Column",
+            readonly: bindingContext ? bindingContext.readonly : false,
             flow: "inline",
             model: model,
             editor: "email-layout-column-editor",

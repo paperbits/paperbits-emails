@@ -49,9 +49,10 @@ export class RowViewModelBinder implements ViewModelBinder<RowModel, RowViewMode
         viewModel.justifyMd(model.justifyMd);
         viewModel.justifyLg(model.justifyLg);
 
-        const binding: IWidgetBinding = {
+        const binding: IWidgetBinding<RowModel> = {
             name: "email-layout-row",
             displayName: "Row",
+            readonly: bindingContext ? bindingContext.readonly : false,
             model: model,
             handler: RowHandlers,
             applyChanges: () => {
