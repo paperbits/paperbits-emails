@@ -7,7 +7,7 @@
 
 import * as ko from "knockout";
 import template from "./emails.html";
-import { RouteHandler } from "@paperbits/common/routing";
+import { Router } from "@paperbits/common/routing";
 import { IViewManager } from "@paperbits/common/ui";
 import { Keys } from "@paperbits/common/keyboard";
 import { Component } from "@paperbits/common/ko/decorators";
@@ -31,7 +31,7 @@ export class EmailsWorkshop {
 
     constructor(
         private readonly emailService: EmailService,
-        private readonly routeHandler: RouteHandler,
+        private readonly router: Router,
         private readonly viewManager: IViewManager,
         private readonly emailLayoutViewModelBinder: LayoutViewModelBinder,
     ) {
@@ -97,7 +97,7 @@ export class EmailsWorkshop {
         await this.emailService.deleteEmailTemplate(this.selectedEmail().toContract());
         await this.searchEmails();
 
-        this.routeHandler.navigateTo("/");
+        this.router.navigateTo("/");
     }
 
     public onKeyDown(item: EmailItem, event: KeyboardEvent): boolean {

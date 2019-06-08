@@ -63,7 +63,7 @@ export class LayoutViewModelBinder {
                 this.eventManager.dispatchEvent("onContentUpdate");
             },
             onCreate: () => {
-                // const metadata = this.routeHandler.getCurrentUrlMetadata();
+                // const metadata = this.router.getCurrentUrlMetadata();
                 this.eventManager.addEventListener("onContentUpdate", scheduleUpdate);
             },
             onDispose: () => this.eventManager.removeEventListener("onContentUpdate", scheduleUpdate)
