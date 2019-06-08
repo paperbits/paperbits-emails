@@ -2,7 +2,7 @@ import * as ko from "knockout";
 import template from "./emailHost.html";
 import { LayoutViewModelBinder, LayoutViewModel } from "../../../layout/ko";
 import { Component, OnMounted } from "@paperbits/common/ko/decorators";
-import { IRouteHandler } from "@paperbits/common/routing";
+import { RouteHandler } from "@paperbits/common/routing";
 import { IEventManager } from "@paperbits/common/events";
 import { IViewManager, ViewManagerMode } from "@paperbits/common/ui";
 
@@ -18,7 +18,7 @@ export class EmailHost {
 
     constructor(
         private readonly emailLayoutViewModelBinder: LayoutViewModelBinder,
-        private readonly routeHandler: IRouteHandler,
+        private readonly routeHandler: RouteHandler,
         private readonly eventManager: IEventManager,
         private readonly viewManager: IViewManager
     ) {

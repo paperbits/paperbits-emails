@@ -7,7 +7,7 @@
 
 import template from "./emailDetails.html";
 import { EmailService } from "../../../emailService";
-import { IRouteHandler } from "@paperbits/common/routing";
+import { RouteHandler } from "@paperbits/common/routing";
 import { IEventManager } from "@paperbits/common/events";
 import { IViewManager } from "@paperbits/common/ui";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
@@ -28,7 +28,7 @@ export class EmailDetailsWorkshop {
 
     constructor(
         private readonly emailService: EmailService,
-        private readonly routeHandler: IRouteHandler,
+        private readonly routeHandler: RouteHandler,
         private readonly eventManager: IEventManager,
         private readonly viewManager: IViewManager
     ) {
