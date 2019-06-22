@@ -53,7 +53,7 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
         }
 
         // if (model.styles) {
-        //     viewModel.styles(await this.styleCompiler.getClassNamesByStyleConfigAsync2(model.styles));
+        //     viewModel.styles(await this.styleCompiler.getStyleModelAsync(model.styles));
         // }
 
         const binding: IWidgetBinding<ColumnModel> = {
