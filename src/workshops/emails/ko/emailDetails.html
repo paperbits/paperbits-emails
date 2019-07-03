@@ -2,19 +2,19 @@
     <fieldset class="flex-item flex-item-grow form" data-bind="scrollable: {}">
 
         <div class="form-group">
-            <label class="form-label">Title</label>
+            <label for="title" class="form-label">Title</label>
             <div class="input-group">
-                <input type="text" class="form-control" data-bind="textInput: emailItem.title, validationElement: emailItem.title" placeholder="e.g. Confirm subscription"
+                <input type="text" id="title" class="form-control" data-bind="textInput: emailItem.title, validationElement: emailItem.title" placeholder="e.g. Confirm subscription"
                     maxlength="256" />
                 <button class="btn btn-danger input-group-btn" type="button" data-bind="validationMessageToggle: emailItem.title">!</button>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="form-label">
+            <label for="description" class="form-label">
                 Description
             </label>
-            <textarea class="form-control" data-bind="textInput: emailItem.description" maxlength="256"></textarea>
+            <textarea id="description" class="form-control" data-bind="textInput: emailItem.description" maxlength="256"></textarea>
         </div>
     </fieldset>
 
