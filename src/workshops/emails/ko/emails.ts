@@ -8,12 +8,11 @@
 import * as ko from "knockout";
 import template from "./emails.html";
 import { Router } from "@paperbits/common/routing";
-import { IViewManager } from "@paperbits/common/ui";
+import { IViewManager, IView } from "@paperbits/common/ui";
 import { Keys } from "@paperbits/common/keyboard";
 import { Component } from "@paperbits/common/ko/decorators";
 import { EmailItem } from "./emailItem";
 import { EmailService } from "../../../emailService";
-import { LayoutViewModelBinder } from "../../../layout/ko";
 
 @Component({
     selector: "emails",
@@ -32,8 +31,7 @@ export class EmailsWorkshop {
     constructor(
         private readonly emailService: EmailService,
         private readonly router: Router,
-        private readonly viewManager: IViewManager,
-        private readonly emailLayoutViewModelBinder: LayoutViewModelBinder,
+        private readonly viewManager: IViewManager
     ) {
         // rebinding...
         this.searchEmails = this.searchEmails.bind(this);
@@ -71,12 +69,21 @@ export class EmailsWorkshop {
     public selectEmail(emailItem: EmailItem): void {
         this.selectedEmail(emailItem);
         this.viewManager.setHost({ name: "email-host" });
-        this.viewManager.openViewAsWorkshop("Email", "email-details-workshop", {
-            emailItem: emailItem,
-            onDeleteCallback: () => {
-                this.searchEmails();
+
+        const view: IView = {
+            heading: "Email template",
+            component: {
+                name: "email-details-workshop",
+                params: {
+                    emailItem: emailItem,
+                    onDeleteCallback: () => {
+                        this.searchEmails();
+                    }
+                }
             }
-        });
+        };
+
+        this.viewManager.openViewAsWorkshop(view);
     }
 
     public async addEmail(): Promise<void> {

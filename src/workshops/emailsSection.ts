@@ -1,13 +1,20 @@
-import { IToolButton, IViewManager } from "@paperbits/common/ui";
+import { IToolButton, IViewManager, IView } from "@paperbits/common/ui";
 
 export class EmailsWorkshopSection implements IToolButton {
-    public iconClass: string = "paperbits-icon paperbits-at-sign";
-    public title: string = "Email templates";
+    public readonly iconClass: string = "paperbits-icon paperbits-at-sign";
+    public readonly title: string = "Email templates";
 
     constructor(private readonly viewManager: IViewManager) { }
 
     public onActivate(): void {
         this.viewManager.clearJourney();
-        this.viewManager.openViewAsWorkshop(this.title, "emails"); // TODO: Specify IComponent rather than just name.
+
+        const view: IView = {
+            heading: this.title,
+            helpText: "Manage your email templates.",
+            component: { name: "emails" }
+        };
+
+        this.viewManager.openViewAsWorkshop(view);
     }
 }
