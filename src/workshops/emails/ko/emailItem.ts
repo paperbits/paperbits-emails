@@ -25,7 +25,6 @@ export class EmailItem {
     public title: ko.Observable<string>;
     public description: ko.Observable<string>;
     public keywords: ko.Observable<string>;
-    public hasFocus: ko.Observable<boolean>;
 
     public anchors: AnchorItem[];
 
@@ -36,7 +35,6 @@ export class EmailItem {
         this.permalinkUrl = ko.observable<string>();
         this.title = ko.observable<string>(email.title);
         this.description = ko.observable<string>(email.description);
-        this.hasFocus = ko.observable<boolean>(false);
         this.anchors = [];
     }
 
