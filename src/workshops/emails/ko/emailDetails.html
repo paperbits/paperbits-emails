@@ -1,10 +1,10 @@
 <div class="flex-container flex-container-column fit">
-    <fieldset class="flex-item flex-item-grow form" data-bind="scrollable: {}">
+    <fieldset class="flex-item flex-item-grow form" data-bind="scrollable: true">
 
         <div class="form-group">
             <label for="title" class="form-label">Title</label>
             <div class="input-group">
-                <input type="text" id="title" class="form-control" data-bind="textInput: emailItem.title, validationElement: emailItem.title, focus: 'auto'" placeholder="e.g. Confirm subscription"
+                <input type="text" id="title" class="form-control" data-bind="textInput: emailItem.title, validationElement: emailItem.title, focus: true" placeholder="e.g. Confirm subscription"
                     maxlength="256" />
                 <button class="btn btn-danger input-group-btn" type="button" data-bind="validationMessageToggle: emailItem.title">!</button>
             </div>

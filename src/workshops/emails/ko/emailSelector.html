@@ -3,7 +3,7 @@
 <!--/ko-->
 
 <div class="flex-container flex-container-column list-container">
-    <div class="flex-item flex-item-grow list" data-bind="foreach: emails, scrollable: {}">
+    <div class="flex-item flex-item-grow list" data-bind="foreach: emails, scrollable: true">
         <div class="list-item" data-bind="css: { selected: hasFocus }">
             <i class="paperbits-icon paperbits-single-content-03"></i>
             <a href="#" class="list-item-label" data-bind="click: $component.selectEmail, text: title, hasFocus: hasFocus, event: { keydown: $component.keydown }"></a>
