@@ -1,8 +1,13 @@
 <div class="flex-container flex-container-column fit">
     <fieldset class="flex-item form">
         <div class="form-group">
-            <input class="form-control" type="search" data-bind="textInput: searchPattern, valueUpdate: 'keyup', focus: true"
-                placeholder="Search email templates..." aria-label="Search email templates" />
+            <input class="form-control" type="search" role="searchbox"
+                data-bind="textInput: searchPattern, valueUpdate: 'keyup', focus: true"
+                placeholder="Search email templates..." aria-label="Search email templates"
+                aria-controls="searchResult" />
+            <p id="searchResult" class="text-hide" role="region" aria-live="polite"
+                data-bind="text: `Email templates found: ${emails().length}`">
+            </p>
         </div>
     </fieldset>
 
@@ -24,8 +29,10 @@
     <spinner></spinner>
     <!--/ko-->
 
-    <div class="flex-item flex-item-grow list" role="list" data-bind="foreach: { data: emails, as: 'email' }, scrollable: true">
-        <a href="#" role="listitem" class="list-item" data-bind="css: { selected: email === $component.selectedEmail() }, click: $component.selectEmail, event: { keydown: $component.onKeyDown }">
+    <div class="flex-item flex-item-grow list" role="list"
+        data-bind="foreach: { data: emails, as: 'email' }, scrollable: true">
+        <a href="#" role="listitem" class="list-item"
+            data-bind="css: { selected: email === $component.selectedEmail() }, click: $component.selectEmail, event: { keydown: $component.onKeyDown }">
             <i class="paperbits-icon paperbits-at-sign"></i>
             <span data-bind="text: email.title"></span>
         </a>
