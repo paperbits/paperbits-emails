@@ -66,7 +66,7 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
             handler: ColumnHandlers,
             applyChanges: (changes) => {
                 Object.assign(model, changes);
-                this.modelToViewModel(model, viewModel);
+                this.modelToViewModel(model, viewModel, bindingContext);
                 this.eventManager.dispatchEvent("onContentUpdate");
             }
         };

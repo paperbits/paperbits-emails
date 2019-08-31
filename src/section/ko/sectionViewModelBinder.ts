@@ -59,7 +59,7 @@ export class SectionViewModelBinder implements ViewModelBinder<SectionModel, Sec
             editor: "email-layout-section-editor",
             handler: SectionHandlers,
             applyChanges: () => {
-                this.modelToViewModel(model, viewModel);
+                this.modelToViewModel(model, viewModel, bindingContext);
                 this.eventManager.dispatchEvent("onContentUpdate");
             }
         };

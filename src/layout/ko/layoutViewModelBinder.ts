@@ -59,7 +59,7 @@ export class LayoutViewModelBinder {
             model: model,
             provides: ["static"],
             applyChanges: () => {
-                this.modelToViewModel(model, viewModel);
+                this.modelToViewModel(model, viewModel, bindingContext);
                 this.eventManager.dispatchEvent("onContentUpdate");
             },
             onCreate: () => {
