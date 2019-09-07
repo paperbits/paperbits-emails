@@ -62,7 +62,7 @@ export class SectionHandlers {
                     this.viewManager.clearContextualEditors();
                 }
             },
-            selectionCommands: [{
+            selectCommands: [{
                 tooltip: "Edit section",
                 iconClass: "paperbits-edit-72",
                 position: "top right",
