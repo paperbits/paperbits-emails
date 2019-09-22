@@ -64,9 +64,8 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
             model: model,
             editor: "email-layout-column-editor",
             handler: ColumnHandlers,
-            applyChanges: (changes) => {
-                Object.assign(model, changes);
-                this.modelToViewModel(model, viewModel, bindingContext);
+            applyChanges: async (changes) => {
+                await this.modelToViewModel(model, viewModel, bindingContext);
                 this.eventManager.dispatchEvent("onContentUpdate");
             }
         };

@@ -55,8 +55,8 @@ export class RowViewModelBinder implements ViewModelBinder<RowModel, RowViewMode
             readonly: bindingContext ? bindingContext.readonly : false,
             model: model,
             handler: RowHandlers,
-            applyChanges: () => {
-                this.modelToViewModel(model, viewModel, bindingContext);
+            applyChanges: async () => {
+                await this.modelToViewModel(model, viewModel, bindingContext);
                 this.eventManager.dispatchEvent("onContentUpdate");
             }
         };

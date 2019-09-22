@@ -58,15 +58,10 @@ export class LayoutViewModelBinder {
             readonly: bindingContext ? bindingContext.readonly : false,
             model: model,
             provides: ["static"],
-            applyChanges: () => {
-                this.modelToViewModel(model, viewModel, bindingContext);
+            applyChanges: async () => {
+                await this.modelToViewModel(model, viewModel, bindingContext);
                 this.eventManager.dispatchEvent("onContentUpdate");
-            },
-            onCreate: () => {
-                // const metadata = this.router.getCurrentUrlMetadata();
-                this.eventManager.addEventListener("onContentUpdate", scheduleUpdate);
-            },
-            onDispose: () => this.eventManager.removeEventListener("onContentUpdate", scheduleUpdate)
+            }
         };
 
         viewModel["widgetBinding"] = binding;

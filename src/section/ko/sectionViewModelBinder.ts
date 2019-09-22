@@ -58,8 +58,8 @@ export class SectionViewModelBinder implements ViewModelBinder<SectionModel, Sec
             flow: "block",
             editor: "email-layout-section-editor",
             handler: SectionHandlers,
-            applyChanges: () => {
-                this.modelToViewModel(model, viewModel, bindingContext);
+            applyChanges: async () => {
+                await this.modelToViewModel(model, viewModel, bindingContext);
                 this.eventManager.dispatchEvent("onContentUpdate");
             }
         };
