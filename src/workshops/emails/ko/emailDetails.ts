@@ -8,7 +8,7 @@
 import template from "./emailDetails.html";
 import { EmailService } from "../../../emailService";
 import { Router } from "@paperbits/common/routing";
-import { EventManager } from "@paperbits/common/events";
+import { IEventManager } from "@paperbits/common/events";
 import { IViewManager } from "@paperbits/common/ui";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { EmailItem } from "./emailItem";
@@ -29,7 +29,7 @@ export class EmailDetailsWorkshop {
     constructor(
         private readonly emailService: EmailService,
         private readonly router: Router,
-        private readonly eventManager: EventManager,
+        private readonly eventManager: IEventManager,
         private readonly viewManager: IViewManager
     ) {
         // rebinding...
