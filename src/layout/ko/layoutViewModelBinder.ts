@@ -9,7 +9,7 @@ import { LayoutViewModel } from "./layoutViewModel";
 import { LayoutModel } from "../layoutModel";
 import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelector";
 import { IWidgetBinding } from "@paperbits/common/editing";
-import { IEventManager } from "@paperbits/common/events";
+import { EventManager } from "@paperbits/common/events";
 import { ModelBinderSelector } from "@paperbits/common/widgets";
 import { EmailService } from "../../emailService";
 import { LayoutModelBinder } from "../../layout";
@@ -19,7 +19,7 @@ import { Bag } from "@paperbits/common";
 export class LayoutViewModelBinder {
     constructor(
         private readonly viewModelBinderSelector: ViewModelBinderSelector,
-        private readonly eventManager: IEventManager,
+        private readonly eventManager: EventManager,
         private readonly emailService: EmailService,
         private readonly modelBinderSelector: ModelBinderSelector,
         private readonly emailLayoutModelBinder: LayoutModelBinder,

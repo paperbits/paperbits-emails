@@ -3,7 +3,7 @@ import template from "./emailHost.html";
 import { LayoutViewModelBinder, LayoutViewModel } from "../../../layout/ko";
 import { Component, OnMounted } from "@paperbits/common/ko/decorators";
 import { Router } from "@paperbits/common/routing";
-import { IEventManager } from "@paperbits/common/events";
+import { EventManager } from "@paperbits/common/events";
 import { IViewManager, ViewManagerMode } from "@paperbits/common/ui";
 
 
@@ -19,7 +19,7 @@ export class EmailHost {
     constructor(
         private readonly emailLayoutViewModelBinder: LayoutViewModelBinder,
         private readonly router: Router,
-        private readonly eventManager: IEventManager,
+        private readonly eventManager: EventManager,
         private readonly viewManager: IViewManager
     ) {
         this.layoutViewModel = ko.observable();
