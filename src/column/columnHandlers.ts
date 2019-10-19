@@ -1,11 +1,11 @@
 import { IWidgetHandler, WidgetContext } from "@paperbits/common/editing";
 import { DragSession } from "@paperbits/common/ui/draggables";
-import { IContextCommandSet, IViewManager } from "@paperbits/common/ui";
+import { IContextCommandSet, ViewManager } from "@paperbits/common/ui";
 import { WidgetModel } from "@paperbits/common/widgets";
 
 
 export class ColumnHandlers implements IWidgetHandler {
-    constructor(private readonly viewManager: IViewManager) { }
+    constructor(private readonly viewManager: ViewManager) { }
 
     public onDragOver(dragSession: DragSession): boolean {
         return dragSession.type === "widget";

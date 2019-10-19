@@ -1,4 +1,4 @@
-import { IContextCommandSet, IView, IViewManager } from "@paperbits/common/ui";
+import { IContextCommandSet, View, ViewManager } from "@paperbits/common/ui";
 import { DragSession } from "@paperbits/common/ui/draggables";
 import { WidgetContext } from "@paperbits/common/editing";
 import { SectionModel } from "./sectionModel";
@@ -6,7 +6,7 @@ import { RowModel } from "../row/rowModel";
 
 
 export class SectionHandlers {
-    constructor(private readonly viewManager: IViewManager) { }
+    constructor(private readonly viewManager: ViewManager) { }
 
     public onDragOver(dragSession: DragSession): boolean {
         return dragSession.type === "row";
@@ -75,7 +75,7 @@ export class SectionHandlers {
                 position: "top right",
                 color: "#2b87da",
                 callback: () => {
-                    const view: IView = {
+                    const view: View = {
                         heading: "Add to library",
                         component: {
                             name: "add-block-dialog",

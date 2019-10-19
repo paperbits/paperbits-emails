@@ -8,7 +8,7 @@
 import * as ko from "knockout";
 import template from "./emails.html";
 import { Router } from "@paperbits/common/routing";
-import { IViewManager, IView } from "@paperbits/common/ui";
+import { ViewManager, View } from "@paperbits/common/ui";
 import { Keys } from "@paperbits/common/keyboard";
 import { Component } from "@paperbits/common/ko/decorators";
 import { EmailItem } from "./emailItem";
@@ -31,7 +31,7 @@ export class EmailsWorkshop {
     constructor(
         private readonly emailService: EmailService,
         private readonly router: Router,
-        private readonly viewManager: IViewManager
+        private readonly viewManager: ViewManager
     ) {
         // rebinding...
         this.searchEmails = this.searchEmails.bind(this);
@@ -70,7 +70,7 @@ export class EmailsWorkshop {
         this.selectedEmail(emailItem);
         this.viewManager.setHost({ name: "email-host" });
 
-        const view: IView = {
+        const view: View = {
             heading: "Email template",
             component: {
                 name: "email-details-workshop",
