@@ -10,9 +10,10 @@ import template from "./emails.html";
 import { Router } from "@paperbits/common/routing";
 import { ViewManager, View } from "@paperbits/common/ui";
 import { Keys } from "@paperbits/common/keyboard";
-import { Component } from "@paperbits/common/ko/decorators";
+import { Component, OnMounted } from "@paperbits/common/ko/decorators";
 import { EmailItem } from "./emailItem";
 import { EmailService } from "../../../emailService";
+import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 
 @Component({
     selector: "emails",
@@ -20,50 +21,39 @@ import { EmailService } from "../../../emailService";
     injectable: "emailsWorkshop"
 })
 export class EmailsWorkshop {
-    private searchTimeout: any;
-
     public readonly searchPattern: ko.Observable<string>;
     public readonly emails: ko.ObservableArray<EmailItem>;
     public readonly working: ko.Observable<boolean>;
     public readonly selectedEmail: ko.Observable<EmailItem>;
-
 
     constructor(
         private readonly emailService: EmailService,
         private readonly router: Router,
         private readonly viewManager: ViewManager
     ) {
-        // rebinding...
-        this.searchEmails = this.searchEmails.bind(this);
-        this.addEmail = this.addEmail.bind(this);
-        this.selectEmail = this.selectEmail.bind(this);
-        this.onKeyDown = this.onKeyDown.bind(this);
-
-        // setting up...
-        this.emails = ko.observableArray<EmailItem>();
-        this.selectedEmail = ko.observable<EmailItem>();
-        this.searchPattern = ko.observable<string>("");
-        this.searchPattern.subscribe(this.searchEmails);
-        this.working = ko.observable(true);
-
-        this.searchEmails();
+        this.emails = ko.observableArray();
+        this.selectedEmail = ko.observable();
+        this.searchPattern = ko.observable("");
+        this.working = ko.observable();
     }
 
-    private async launchSearch(searchPattern: string = ""): Promise<void> {
+    @OnMounted()
+    public async initialize(): Promise<void> {
+        await this.searchEmails();
+
+        this.searchPattern
+            .extend(ChangeRateLimit)
+            .subscribe(this.searchEmails);
+    }
+
+    private async searchEmails(searchPattern: string = ""): Promise<void> {
         this.working(true);
+
         const emails = await this.emailService.search(searchPattern);
         const emailItems = emails.map(email => new EmailItem(email));
-
         this.emails(emailItems);
+
         this.working(false);
-    }
-
-    public async searchEmails(searchPattern: string = ""): Promise<void> {
-        clearTimeout(this.searchTimeout);
-
-        this.searchTimeout = setTimeout(() => {
-            this.launchSearch(searchPattern);
-        }, 600);
     }
 
     public selectEmail(emailItem: EmailItem): void {

@@ -8,10 +8,11 @@
 import * as ko from "knockout";
 import template from "./emailSelector.html";
 import { IResourceSelector } from "@paperbits/common/ui";
+import { Component, Event, Param, OnMounted } from "@paperbits/common/ko/decorators";
+import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 import { EmailItem } from "./emailItem";
 import { EmailContract } from "../../../emailContract";
 import { EmailService } from "../../../emailService";
-import { Component, Event, Param } from "@paperbits/common/ko/decorators";
 
 @Component({
     selector: "email-selector",
@@ -23,29 +24,26 @@ export class EmailSelector implements IResourceSelector<EmailContract> {
     public readonly emails: ko.ObservableArray<EmailItem>;
     public readonly working: ko.Observable<boolean>;
 
+    constructor(private readonly emailService: EmailService) {
+        this.emails = ko.observableArray();
+        this.selectedEmailTemplate = ko.observable();
+        this.searchPattern = ko.observable();
+        this.working = ko.observable();
+    }
+
     @Param()
     public selectedEmailTemplate: ko.Observable<EmailItem>;
 
     @Event()
     public onSelect: (email: EmailContract) => void;
 
-    constructor(private readonly emailService: EmailService) {
-        this.selectEmail = this.selectEmail.bind(this);
+    @OnMounted()
+    public async initialize(): Promise<void> {
+        await this.searchEmails();
 
-        this.emails = ko.observableArray<EmailItem>();
-        this.selectedEmailTemplate = ko.observable<EmailItem>();
-        this.searchPattern = ko.observable<string>();
-        this.searchPattern.subscribe(this.searchEmails);
-        this.working = ko.observable(true);
-
-        // setting up...
-        this.emails = ko.observableArray<EmailItem>();
-        this.selectedEmailTemplate = ko.observable<EmailItem>();
-        this.searchPattern = ko.observable<string>();
-        this.searchPattern.subscribe(this.searchEmails);
-        this.working = ko.observable(true);
-
-        this.searchEmails();
+        this.searchPattern
+            .extend(ChangeRateLimit)
+            .subscribe(this.searchEmails);
     }
 
     public async searchEmails(searchPattern: string = ""): Promise<void> {
