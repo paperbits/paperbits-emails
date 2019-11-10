@@ -31,9 +31,8 @@ export class LayoutViewModelBinder {
         let savingTimeout;
 
         const updateContent = async (): Promise<void> => {
-            const emailContent = await this.emailService.getEmailTemplateContent(emailTemplateKey);
-
             const contentContract = {
+                type: "email-layout",
                 nodes: []
             };
 
@@ -42,9 +41,7 @@ export class LayoutViewModelBinder {
                 contentContract.nodes.push(modelBinder.modelToContract(section));
             });
 
-            Object.assign(emailContent, contentContract);
-
-            await this.emailService.updateEmailTemplateContent(emailTemplateKey, emailContent);
+            await this.emailService.updateEmailTemplateContent(emailTemplateKey, contentContract);
         };
 
         const scheduleUpdate = async (): Promise<void> => {
@@ -61,7 +58,10 @@ export class LayoutViewModelBinder {
             applyChanges: async () => {
                 await this.modelToViewModel(model, viewModel, bindingContext);
                 this.eventManager.dispatchEvent("onContentUpdate");
-            }
+            },
+            onCreate: () => {
+                this.eventManager.addEventListener("onContentUpdate", scheduleUpdate);
+            },
         };
 
         viewModel["widgetBinding"] = binding;
