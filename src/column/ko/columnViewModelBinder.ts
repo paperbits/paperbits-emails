@@ -14,14 +14,14 @@ import { PlaceholderViewModel } from "@paperbits/core/placeholder/ko";
 import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelector";
 import { ColumnHandlers } from "../columnHandlers";
 import { EventManager } from "@paperbits/common/events";
-import { IStyleCompiler } from "@paperbits/common/styles";
+import { StyleCompiler } from "@paperbits/common/styles";
 import { Bag } from "@paperbits/common";
 
 export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, ColumnViewModel> {
     constructor(
         private readonly viewModelBinderSelector: ViewModelBinderSelector,
         private readonly eventManager: EventManager,
-        private readonly styleCompiler: IStyleCompiler
+        private readonly styleCompiler: StyleCompiler
     ) { }
 
     public async modelToViewModel(model: ColumnModel, viewModel?: ColumnViewModel, bindingContext?: Bag<any>): Promise<ColumnViewModel> {

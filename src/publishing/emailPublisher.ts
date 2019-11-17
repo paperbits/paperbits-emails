@@ -132,7 +132,7 @@ export class EmailPublisher implements IPublisher {
         const permalinkBaseUrl = settings.permalinkBaseUrl;
         const mediaBaseUrl = settings.mediaBaseUrl;
 
-        const css = await this.styleCompiler.compile();
+        const css = await this.styleCompiler.compileCss();
 
         for (const emailTemplate of emailTemplates) {
             const result = await this.renderEmailTemplate(emailTemplate, stylesString + " " + css, permalinkBaseUrl, mediaBaseUrl);

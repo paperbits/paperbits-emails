@@ -13,14 +13,14 @@ import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelec
 import { SectionHandlers } from "../sectionHandlers";
 import { SectionModel } from "../sectionModel";
 import { EventManager } from "@paperbits/common/events";
-import { IStyleCompiler } from "@paperbits/common/styles";
+import { StyleCompiler } from "@paperbits/common/styles";
 import { Bag } from "@paperbits/common";
 
 export class SectionViewModelBinder implements ViewModelBinder<SectionModel, SectionViewModel> {
     constructor(
         private readonly viewModelBinderSelector: ViewModelBinderSelector,
         private readonly eventManager: EventManager,
-        private readonly styleCompiler: IStyleCompiler
+        private readonly styleCompiler: StyleCompiler
     ) { }
 
     public async modelToViewModel(model: SectionModel, viewModel?: SectionViewModel, bindingContext?: Bag<any>): Promise<SectionViewModel> {
