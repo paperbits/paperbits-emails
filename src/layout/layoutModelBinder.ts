@@ -36,6 +36,7 @@ export class LayoutModelBinder {
 
     public async contractToModel(emailContract: EmailContract, bindingContext?: Bag<any>): Promise<LayoutModel> {
         const layoutModel = new LayoutModel();
+        layoutModel.key = emailContract.key;
         layoutModel.title = emailContract.title;
         layoutModel.description = emailContract.description;
 
