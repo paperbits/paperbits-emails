@@ -17,7 +17,7 @@ import { IBlobStorage } from "@paperbits/common/persistence";
 import { ISettingsProvider } from "@paperbits/common/configuration";
 import { LayoutViewModelBinder } from "../layout/ko";
 import { createDocument } from "@paperbits/core/ko/knockout-rendering";
-import { StyleCompiler } from "@paperbits/styles";
+import { StyleCompiler } from "@paperbits/common/styles";
 
 export class EmailPublisher implements IPublisher {
     constructor(
