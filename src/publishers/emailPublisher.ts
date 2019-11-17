@@ -17,7 +17,7 @@ import { IBlobStorage } from "@paperbits/common/persistence";
 import { ISettingsProvider } from "@paperbits/common/configuration";
 import { LayoutViewModelBinder } from "../layout/ko";
 import { createDocument } from "@paperbits/core/ko/knockout-rendering";
-import { StyleCompiler } from "@paperbits/styles";
+import { StyleCompiler } from "@paperbits/common/styles";
 
 export class EmailPublisher implements IPublisher {
     constructor(
@@ -31,7 +31,7 @@ export class EmailPublisher implements IPublisher {
         this.renderEmailTemplate = this.renderEmailTemplate.bind(this);
     }
 
-    private readFileAsString(filepath): Promise<string> {
+    private readFileAsString(filepath: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             fs.readFile(filepath, "utf8", (error, content) => {
                 if (error) {
