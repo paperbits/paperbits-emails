@@ -7,7 +7,7 @@
 
 import { WidgetModel } from "@paperbits/common/widgets";
 import { BackgroundModel } from "@paperbits/common/widgets/background";
-import { StyleContract } from "@paperbits/common/styles/styleConfig";
+import { StyleContract } from "@paperbits/common/styles";
 
 export class SectionModel {
     public widgets: WidgetModel[];
