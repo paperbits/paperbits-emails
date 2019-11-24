@@ -6,12 +6,13 @@
  */
 
 import { WidgetModel } from "@paperbits/common/widgets";
+import { LocalStyles } from "@paperbits/common/styles";
 
 export class ColumnModel implements WidgetModel {
     public widgets: WidgetModel[];
     public size: string;
     public alignment: string;
-    public styles: Object;
+    public styles: LocalStyles;
 
     constructor() {
         this.widgets = [];
