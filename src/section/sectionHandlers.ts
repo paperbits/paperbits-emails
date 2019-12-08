@@ -8,21 +8,8 @@ import { RowModel } from "../row/rowModel";
 export class SectionHandlers {
     constructor(private readonly viewManager: ViewManager) { }
 
-    public onDragOver(dragSession: DragSession): boolean {
-        return dragSession.type === "row";
-    }
-
-    public onDragDrop(dragSession: DragSession): void {
-        switch (dragSession.type) {
-            case "row":
-                dragSession.targetBinding.model.widgets.splice(dragSession.insertIndex, 0, dragSession.sourceModel);
-                break;
-
-            default:
-                throw new Error(`Unknown type: ${dragSession.type}`);
-        }
-        dragSession.targetBinding.applyChanges();
-        dragSession.sourceParentBinding.applyChanges();
+    public canAccept(dragSession: DragSession): boolean {
+        return dragSession.sourceBinding.name === "row";
     }
 
     public getContextualEditor(context: WidgetContext): IContextCommandSet {
