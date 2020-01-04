@@ -16,8 +16,7 @@ import { EmailItem } from "./emailItem";
 
 @Component({
     selector: "email-details-workshop",
-    template: template,
-    injectable: "emailDetailsWorkshop"
+    template: template
 })
 export class EmailDetailsWorkshop {
     @Param()

@@ -17,8 +17,7 @@ import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 
 @Component({
     selector: "emails",
-    template: template,
-    injectable: "emailsWorkshop"
+    template: template
 })
 export class EmailsWorkshop {
     public readonly searchPattern: ko.Observable<string>;

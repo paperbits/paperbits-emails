@@ -13,8 +13,7 @@ import { ColumnModel } from "../columnModel";
 
 @Component({
     selector: "email-layout-column-editor",
-    template: template,
-    injectable: "emailColumnEditor"
+    template: template
 })
 export class ColumnEditor {
     public readonly verticalAlignment: ko.Observable<string>;

@@ -7,11 +7,9 @@ import { EventManager } from "@paperbits/common/events";
 import { ViewManager, ViewManagerMode } from "@paperbits/common/ui";
 
 
-
 @Component({
     selector: "email-host",
-    template: template,
-    injectable: "emailHost"
+    template: template
 })
 export class EmailHost {
     public readonly layoutViewModel: ko.Observable<LayoutViewModel>;

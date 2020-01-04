@@ -14,8 +14,7 @@ import { StyleModel } from "@paperbits/common/styles";
 
 @Component({
     selector: "email-layout-section",
-    template: template,
-    injectable: "emailSection"
+    template: template
 })
 export class SectionViewModel implements WidgetViewModel {
     public widgets: ko.ObservableArray<WidgetViewModel>;

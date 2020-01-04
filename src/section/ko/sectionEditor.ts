@@ -14,8 +14,7 @@ import { SectionModel } from "../sectionModel";
 
 @Component({
     selector: "email-layout-section-editor",
-    template: template,
-    injectable: "sectionEditor"
+    template: template
 })
 export class SectionEditor {
     public readonly layout: ko.Observable<string>;

@@ -16,8 +16,7 @@ import { EmailService } from "../../../emailService";
 
 @Component({
     selector: "email-selector",
-    template: template,
-    injectable: "emailSelector"
+    template: template
 })
 export class EmailSelector implements IResourceSelector<EmailContract> {
     public readonly searchPattern: ko.Observable<string>;

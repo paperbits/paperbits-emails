@@ -22,8 +22,7 @@ export interface ColumnSizeCfg {
 
 @Component({
     selector: "email-row-layout-selector",
-    template: template,
-    injectable: "emailRowLayoutSelector"
+    template: template
 })
 export class RowLayoutSelector implements IResourceSelector<RowModel> {
     public readonly rowConfigs: ColumnSizeCfg[][] = [

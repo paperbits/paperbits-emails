@@ -14,8 +14,7 @@ import { SectionModel } from "../sectionModel";
 
 @Component({
     selector: "email-layout-section-layout-selector",
-    template: template,
-    injectable: "emailSectionLayoutSelector"
+    template: template
 })
 export class SectionLayoutSelector implements IResourceSelector<SectionModel> {
     @Event()
