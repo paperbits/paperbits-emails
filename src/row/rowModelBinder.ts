@@ -11,9 +11,7 @@ import { RowModel } from "./rowModel";
 import { ModelBinderSelector } from "@paperbits/common/widgets";
 
 export class RowModelBinder {
-    constructor(private readonly modelBinderSelector: ModelBinderSelector) {
-        this.contractToModel = this.contractToModel.bind(this);
-    }
+    constructor(private readonly modelBinderSelector: ModelBinderSelector) { }
 
     public canHandleContract(contract: Contract): boolean {
         return contract.type === "email-layout-row";
