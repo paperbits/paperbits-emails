@@ -78,4 +78,8 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
     public canHandleModel(model: ColumnModel): boolean {
         return model instanceof ColumnModel;
     }
+
+    public canHandleViewModel(viewModel: ColumnViewModel): boolean {
+        return viewModel instanceof ColumnViewModel;
+    }
 }

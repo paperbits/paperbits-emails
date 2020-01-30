@@ -69,4 +69,8 @@ export class RowViewModelBinder implements ViewModelBinder<RowModel, RowViewMode
     public canHandleModel(model: RowModel): boolean {
         return model instanceof RowModel;
     }
+
+    public canHandleViewModel(viewModel: RowViewModel): boolean {
+        return viewModel instanceof RowViewModel;
+    }
 }

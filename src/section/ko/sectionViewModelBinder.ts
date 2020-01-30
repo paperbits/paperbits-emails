@@ -72,4 +72,8 @@ export class SectionViewModelBinder implements ViewModelBinder<SectionModel, Sec
     public canHandleModel(model: SectionModel): boolean {
         return model instanceof SectionModel;
     }
+
+    public canHandleViewModel(viewModel: SectionViewModel): boolean {
+        return viewModel instanceof SectionViewModel;
+    }
 }
