@@ -47,7 +47,7 @@ export class SectionViewModelBinder implements ViewModelBinder<SectionModel, Sec
         viewModel.snapTo(model.snap);
 
         if (model.styles) {
-            viewModel.styles(await this.styleCompiler.getStyleModelAsync(model.styles));
+            viewModel.styles(await this.styleCompiler.getStyleModelAsync(model.styles, bindingContext));
         }
 
         const binding: IWidgetBinding<SectionModel> = {
