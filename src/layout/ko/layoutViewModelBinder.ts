@@ -92,8 +92,8 @@ export class LayoutViewModelBinder {
 
     public async getLayoutViewModel(emailTemplateKey: string, bindingContext?: Bag<any>): Promise<any> {
         const emailTemplateContract = await this.emailService.getEmailTemplateByKey(emailTemplateKey);
-        const layoutModel = await this.emailLayoutModelBinder.contractToModel(emailTemplateContract);
-        const layoutViewModel = await this.modelToViewModel(layoutModel);
+        const layoutModel = await this.emailLayoutModelBinder.contractToModel(emailTemplateContract, bindingContext);
+        const layoutViewModel = await this.modelToViewModel(layoutModel, null, bindingContext);
 
         if (!layoutViewModel["widgetBinding"]) {
             this.createBinding(layoutModel, layoutViewModel, emailTemplateKey, bindingContext);

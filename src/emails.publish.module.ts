@@ -1,5 +1,4 @@
 import { EmailPublisher } from "./publishing/emailPublisher";
-
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
 
 export class EmailsPublishModule implements IInjectorModule {

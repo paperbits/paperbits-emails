@@ -17,7 +17,7 @@ import { IBlobStorage } from "@paperbits/common/persistence";
 import { ISettingsProvider } from "@paperbits/common/configuration";
 import { LayoutViewModelBinder } from "../layout/ko";
 import { createDocument } from "@paperbits/core/ko/knockout-rendering";
-import { StyleCompiler } from "@paperbits/common/styles";
+import { StyleCompiler, StyleManager } from "@paperbits/common/styles";
 
 export class EmailPublisher implements IPublisher {
     constructor(
@@ -79,8 +79,16 @@ export class EmailPublisher implements IPublisher {
     private async renderEmailTemplate(emailTemplate: EmailContract, stylesString: string, permalinkBaseUrl: string, mediaBaseUrl: string): Promise<{ name, bytes }> {
         console.log(`Publishing email template ${emailTemplate.title}...`);
 
+        const styleManager = new StyleManager();
+        const styleSheet = await this.styleCompiler.getStyleSheet();
+        styleManager.setStyleSheet(styleSheet);
+
+        const bindingContext = {
+            styleManager: styleManager
+        };
+
         const templateDocument = createDocument();
-        const layoutViewModel = await this.emailLayoutViewModelBinder.getLayoutViewModel(emailTemplate.key);
+        const layoutViewModel = await this.emailLayoutViewModelBinder.getLayoutViewModel(emailTemplate.key, bindingContext);
         ko.applyBindingsToNode(templateDocument.body, { widget: layoutViewModel }, null);
 
         const resourceUri = `${Utils.slugify(emailTemplate.title)}.html`;

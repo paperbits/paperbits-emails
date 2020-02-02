@@ -5,6 +5,9 @@ import { Component, OnMounted } from "@paperbits/common/ko/decorators";
 import { Router } from "@paperbits/common/routing";
 import { EventManager } from "@paperbits/common/events";
 import { ViewManager, ViewManagerMode } from "@paperbits/common/ui";
+import { EmailService } from "../../../emailService";
+import { Contract } from "@paperbits/common";
+import { StyleManager, StyleCompiler } from "@paperbits/common/styles";
 
 
 @Component({
@@ -17,12 +20,14 @@ export class EmailHost {
     constructor(
         private readonly emailLayoutViewModelBinder: LayoutViewModelBinder,
         private readonly router: Router,
+        private readonly emailService: EmailService,
         private readonly eventManager: EventManager,
-        private readonly viewManager: ViewManager
+        private readonly viewManager: ViewManager,
+        private readonly styleCompiler: StyleCompiler
     ) {
         this.layoutViewModel = ko.observable();
         this.eventManager.addEventListener("onDataPush", () => this.onDataPush());
-        this.eventManager.addEventListener("onEmailTemplateSelect", (key: string) => this.onEmailTemplateSelect(key));
+        this.eventManager.addEventListener("onEmailTemplateSelect", (key: string) => this.refreshContent(key));
     }
 
     @OnMounted()
@@ -36,12 +41,20 @@ export class EmailHost {
         }
     }
 
-    private async onEmailTemplateSelect(key: string): Promise<void> {
-        const layoutViewModel = await this.emailLayoutViewModelBinder.getLayoutViewModel(key);
+    private async refreshContent(key: string): Promise<void> {
+        const styleManager = new StyleManager(this.eventManager);
+        const styleSheet = await this.styleCompiler.getStyleSheet();
+        styleManager.setStyleSheet(styleSheet);
+
+        const bindingContext = {
+            styleManager: styleManager
+        };
+
+        const layoutViewModel = await this.emailLayoutViewModelBinder.getLayoutViewModel(key, bindingContext);
         this.layoutViewModel(layoutViewModel);
     }
 
     public dispose(): void {
-        this.router.removeRouteChangeListener(this.onEmailTemplateSelect);
+        this.router.removeRouteChangeListener(this.refreshContent);
     }
 }
