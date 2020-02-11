@@ -47,10 +47,12 @@ export class EmailHost {
         styleManager.setStyleSheet(styleSheet);
 
         const bindingContext = {
-            styleManager: styleManager
+            styleManager: styleManager,
+            routeKind: "page"
         };
 
         const layoutViewModel = await this.emailLayoutViewModelBinder.getLayoutViewModel(key, bindingContext);
+        layoutViewModel["widgetBinding"].provides = ["html", "email"];
         this.layoutViewModel(layoutViewModel);
     }
 

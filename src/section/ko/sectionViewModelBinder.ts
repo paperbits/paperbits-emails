@@ -55,6 +55,7 @@ export class SectionViewModelBinder implements ViewModelBinder<SectionModel, Sec
             displayName: "Section",
             readonly: bindingContext ? bindingContext.readonly : false,
             model: model,
+            draggable: true,
             flow: "block",
             editor: "email-layout-section-editor",
             handler: SectionHandlers,
