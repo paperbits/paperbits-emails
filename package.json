@@ -1,6 +1,6 @@
 {
     "name": "@paperbits/emails",
-    "version": "0.1.277",
+    "version": "0.1.278",
     "description": "Paperbits components for building email templates.",
     "author": "Paperbits",
     "license": "Commercial",
@@ -15,9 +15,9 @@
         "url": "https://github.com/paperbits/paperbits-emails/issues"
     },
     "dependencies": {
-        "@paperbits/core": "0.1.277",
-        "@paperbits/common": "0.1.277",
-        "@paperbits/styles": "0.1.277",
+        "@paperbits/core": "0.1.278",
+        "@paperbits/common": "0.1.278",
+        "@paperbits/styles": "0.1.278",
         "knockout": "^3.5.1",
         "knockout.validation": "^2.0.4",
         "inline-css": "^2.5.0",
