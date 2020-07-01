@@ -15,7 +15,7 @@ export class SectionHandlers {
     public getContextualEditor(context: WidgetContext): IContextCommandSet {
         const sectionContextualEditor: IContextCommandSet = {
             color: "#2b87da",
-            hoverCommand: {
+            hoverCommands: [{
                 position: context.half,
                 tooltip: "Add section",
                 color: "#2b87da",
@@ -38,7 +38,7 @@ export class SectionHandlers {
                         }
                     }
                 }
-            },
+            }],
             deleteCommand: {
                 tooltip: "Delete section",
                 color: "#2b87da",
@@ -78,7 +78,7 @@ export class SectionHandlers {
 
 
         if (context.model.widgets.length === 0) {
-            sectionContextualEditor.hoverCommand = {
+            sectionContextualEditor.hoverCommands.push({
                 position: "center",
                 tooltip: "Add row",
                 color: "#29c4a9",
@@ -93,7 +93,7 @@ export class SectionHandlers {
                         }
                     }
                 }
-            };
+            });
         }
 
         return sectionContextualEditor;

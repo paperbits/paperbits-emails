@@ -9,7 +9,7 @@ export class RowHandlers implements IWidgetHandler {
     public getContextualEditor(context: WidgetContext): IContextCommandSet {
         return {
             color: "#29c4a9",
-            hoverCommand: {
+            hoverCommands: [{
                 color: "#29c4a9",
                 position: context.half,
                 tooltip: "Add row",
@@ -30,7 +30,7 @@ export class RowHandlers implements IWidgetHandler {
                         }
                     }
                 },
-            },
+            }],
             selectCommands: null,
             deleteCommand: {
                 tooltip: "Delete row",
