@@ -18,6 +18,7 @@ import { ISettingsProvider } from "@paperbits/common/configuration";
 import { LayoutViewModelBinder } from "../layout/ko";
 import { createDocument } from "@paperbits/core/ko/knockout-rendering";
 import { StyleCompiler, StyleManager } from "@paperbits/common/styles";
+import { Logger } from "@paperbits/common/logging";
 
 export class EmailPublisher implements IPublisher {
     constructor(
@@ -25,7 +26,8 @@ export class EmailPublisher implements IPublisher {
         private readonly styleCompiler: StyleCompiler,
         private readonly outputBlobStorage: IBlobStorage,
         private readonly settingsProvider: ISettingsProvider,
-        private readonly emailLayoutViewModelBinder: LayoutViewModelBinder
+        private readonly emailLayoutViewModelBinder: LayoutViewModelBinder,
+        private readonly logger: Logger
     ) {
         this.publish = this.publish.bind(this);
         this.renderEmailTemplate = this.renderEmailTemplate.bind(this);
@@ -77,7 +79,7 @@ export class EmailPublisher implements IPublisher {
     }
 
     private async renderEmailTemplate(emailTemplate: EmailContract, stylesString: string, permalinkBaseUrl: string, mediaBaseUrl: string): Promise<{ name, bytes }> {
-        console.log(`Publishing email template ${emailTemplate.title}...`);
+        this.logger.trackEvent("Publishing", { message: `Publishing email template ${emailTemplate.title}...` });
 
         const styleManager = new StyleManager();
         const styleSheet = await this.styleCompiler.getStyleSheet();
