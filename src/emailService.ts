@@ -32,6 +32,11 @@ export class EmailService {
             .orderBy("title");
 
         const result = await this.objectStorage.searchObjects<EmailContract>(emailTemplatesPath, query);
+
+        if (!result) {
+            return [];
+        }
+
         return Object.values(result);
     }
 
