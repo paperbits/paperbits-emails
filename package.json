@@ -32,7 +32,6 @@
         "specificity": "^0.4.1"
     },
     "devDependencies": {
-        "@types/knockout": "^3.4.66",
         "@types/knockout.mapping": "^2.0.35",
         "@types/knockout.validation": "0.0.37"
     }
