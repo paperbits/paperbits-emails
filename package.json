@@ -18,6 +18,7 @@
         "@paperbits/core": "0.1.318",
         "@paperbits/common": "0.1.318",
         "@paperbits/styles": "0.1.318",
+        "await-parallel-limit": "^2.1.0",
         "knockout": "^3.5.1",
         "knockout.validation": "^2.0.4",
         "inline-css": "^2.5.0",

@@ -9,11 +9,12 @@ import * as ko from "knockout";
 import * as Utils from "@paperbits/common/utils";
 import * as fs from "fs";
 import * as path from "path";
+import parallel from "await-parallel-limit";
 import { process } from "./inlineContent";
 import { IPublisher } from "@paperbits/common/publishing";
 import { EmailService } from "../emailService";
 import { EmailContract } from "../emailContract";
-import { IBlobStorage } from "@paperbits/common/persistence";
+import { IBlobStorage, Query, Page } from "@paperbits/common/persistence";
 import { ISettingsProvider } from "@paperbits/common/configuration";
 import { LayoutViewModelBinder } from "../layout/ko";
 import { createDocument } from "@paperbits/core/ko/knockout-rendering";
@@ -78,7 +79,7 @@ export class EmailPublisher implements IPublisher {
         });
     }
 
-    private async renderEmailTemplate(emailTemplate: EmailContract, stylesString: string, permalinkBaseUrl: string, mediaBaseUrl: string): Promise<{ name, bytes }> {
+    private async renderEmailTemplate(emailTemplate: EmailContract, stylesString: string, permalinkBaseUrl: string, mediaBaseUrl: string): Promise<void> {
         this.logger.trackEvent("Publishing", { message: `Publishing email template ${emailTemplate.title}...` });
 
         const styleManager = new StyleManager();
@@ -131,22 +132,33 @@ export class EmailPublisher implements IPublisher {
 
         const contentBytes = Utils.stringToUnit8Array(document.documentElement.outerHTML);
 
-        return { name: resourceUri, bytes: contentBytes };
+        await this.outputBlobStorage.uploadBlob(`/email-templates/${resourceUri}`, contentBytes);
     }
 
     public async publish(): Promise<void> {
-        const emailTemplates = await this.emailService.search("");
         const stylesPath = path.resolve(__dirname, "assets/styles/theme.css");
         const stylesString = await this.readFileAsString(stylesPath);
         const settings = await this.settingsProvider.getSetting<any>("emailTemplates");
         const permalinkBaseUrl = settings.permalinkBaseUrl;
         const mediaBaseUrl = settings.mediaBaseUrl;
-
         const css = await this.styleCompiler.compileCss();
 
-        for (const emailTemplate of emailTemplates) {
-            const result = await this.renderEmailTemplate(emailTemplate, stylesString + " " + css, permalinkBaseUrl, mediaBaseUrl);
-            await this.outputBlobStorage.uploadBlob(`/email-templates/${result.name}`, result.bytes);
+        let pagesOfResults: Page<EmailContract[]>;
+        let nextPageQuery: Query<EmailContract> = Query.from<EmailContract>();
+
+        do {
+            const tasks = [];
+            pagesOfResults = await this.emailService.search2(nextPageQuery);
+            nextPageQuery = pagesOfResults.nextPage;
+
+            const emailTemplates = pagesOfResults.value;
+
+            for (const emailTemplate of emailTemplates) {
+                tasks.push(() => this.renderEmailTemplate(emailTemplate, stylesString + " " + css, permalinkBaseUrl, mediaBaseUrl));
+            }
+
+            await parallel(tasks, 10);
         }
+        while (nextPageQuery);
     }
 }
