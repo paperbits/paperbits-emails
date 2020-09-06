@@ -6,9 +6,9 @@
  */
 
 import * as Utils from "@paperbits/common/utils";
-import { IObjectStorage, Query, Operator } from "@paperbits/common/persistence";
+import { IObjectStorage, Query, Operator, Page } from "@paperbits/common/persistence";
 import { IBlockService } from "@paperbits/common/blocks";
-import { Contract } from "@paperbits/common";
+import { Contract, Bag } from "@paperbits/common";
 import { EmailContract } from "./emailContract";
 
 const emailTemplatesPath = "emailTemplates";
@@ -38,6 +38,30 @@ export class EmailService {
         }
 
         return Object.values(result);
+    }
+
+    public async search2(query: Query<EmailContract>): Promise<Page<EmailContract[]>> {
+        if (!query) {
+            throw new Error(`Parameter "query" not specified.`);
+        }
+
+        const resultPage: Page<EmailContract[]> = { value: [] };
+
+        const pageOfResults = await this.objectStorage.searchObjects<Bag<EmailContract>>(emailTemplatesPath, query);
+
+        if (!pageOfResults) {
+            return resultPage;
+        }
+
+        const results = pageOfResults.value;
+        const emails = Object.values(results);
+        resultPage.value = emails;
+
+        resultPage.nextPage = pageOfResults.nextPage
+            ? resultPage.nextPage = query.getNextPageQuery()
+            : null;
+
+        return resultPage;
     }
 
     public async deleteEmailTemplate(emailTemplate: EmailContract): Promise<void> {
