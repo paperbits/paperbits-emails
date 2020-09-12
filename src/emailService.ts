@@ -40,22 +40,21 @@ export class EmailService {
         return Object.values(result);
     }
 
-    public async search2(query: Query<EmailContract>): Promise<Page<EmailContract[]>> {
+    public async search2(query: Query<EmailContract>): Promise<Page<EmailContract>> {
         if (!query) {
             throw new Error(`Parameter "query" not specified.`);
         }
 
-        const resultPage: Page<EmailContract[]> = { value: [] };
+        const resultPage: Page<EmailContract> = { value: [] };
 
-        const pageOfResults = await this.objectStorage.searchObjects<Bag<EmailContract>>(emailTemplatesPath, query);
+        const pageOfResults = await this.objectStorage.searchObjects<EmailContract>(emailTemplatesPath, query);
 
         if (!pageOfResults) {
             return resultPage;
         }
 
         const results = pageOfResults.value;
-        const emails = Object.values(results);
-        resultPage.value = emails;
+        resultPage.value = results;
 
         resultPage.nextPage = pageOfResults.nextPage
             ? resultPage.nextPage = query.getNextPageQuery()
