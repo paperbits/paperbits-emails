@@ -143,22 +143,26 @@ export class EmailPublisher implements IPublisher {
         const mediaBaseUrl = settings.mediaBaseUrl;
         const css = await this.styleCompiler.compileCss();
 
-        let pagesOfResults: Page<EmailContract[]>;
-        let nextPageQuery: Query<EmailContract> = Query.from<EmailContract>();
+        const query: Query<EmailContract> = Query.from<EmailContract>();
+        let pagesOfResults = await this.emailService.search(query);
 
         do {
             const tasks = [];
-            pagesOfResults = await this.emailService.search2(nextPageQuery);
-            nextPageQuery = pagesOfResults.nextPage;
-
             const emailTemplates = pagesOfResults.value;
 
             for (const emailTemplate of emailTemplates) {
                 tasks.push(() => this.renderEmailTemplate(emailTemplate, stylesString + " " + css, permalinkBaseUrl, mediaBaseUrl));
             }
 
-            await parallel(tasks, 10);
+            await parallel(tasks, 7);
+
+            if (pagesOfResults.takeNext) {
+                pagesOfResults = await pagesOfResults.takeNext();
+            }
+            else {
+                pagesOfResults = null;
+            }
         }
-        while (nextPageQuery);
+        while (pagesOfResults);
     }
 }

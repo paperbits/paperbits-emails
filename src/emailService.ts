@@ -25,42 +25,35 @@ export class EmailService {
         return this.objectStorage.getObject<EmailContract>(key);
     }
 
-    public async search(pattern: string): Promise<EmailContract[]> {
-        const query = Query
-            .from<EmailContract>()
-            .where("title", Operator.contains, pattern)
-            .orderBy("title");
+    private convertPage(pageOfEmails: Page<EmailContract>): Page<EmailContract> {
+        const resultPage: Page<EmailContract> = {
+            value: pageOfEmails.value,
+            takeNext: async (): Promise<Page<EmailContract>> => {
+                const nextLocalizedPage = await pageOfEmails.takeNext();
+                return this.convertPage(nextLocalizedPage);
+            }
+        };
 
-        const result = await this.objectStorage.searchObjects<EmailContract>(emailTemplatesPath, query);
-
-        if (!result) {
-            return [];
+        if (!pageOfEmails.takeNext) {
+            resultPage.takeNext = null;
         }
 
-        return Object.values(result);
+        return resultPage;
     }
 
-    public async search2(query: Query<EmailContract>): Promise<Page<EmailContract>> {
+    public async search(query: Query<EmailContract>): Promise<Page<EmailContract>> {
         if (!query) {
             throw new Error(`Parameter "query" not specified.`);
         }
 
-        const resultPage: Page<EmailContract> = { value: [] };
-
-        const pageOfResults = await this.objectStorage.searchObjects<EmailContract>(emailTemplatesPath, query);
-
-        if (!pageOfResults) {
-            return resultPage;
+        try {
+            const pageOfResults = await this.objectStorage.searchObjects<EmailContract>(emailTemplatesPath, query);
+            return this.convertPage(pageOfResults);
+          
         }
-
-        const results = pageOfResults.value;
-        resultPage.value = results;
-
-        resultPage.nextPage = pageOfResults.nextPage
-            ? resultPage.nextPage = query.getNextPageQuery()
-            : null;
-
-        return resultPage;
+        catch (error) {
+            throw new Error(`Unable to search media: ${error.stack || error.message}`);
+        }
     }
 
     public async deleteEmailTemplate(emailTemplate: EmailContract): Promise<void> {

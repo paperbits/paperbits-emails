@@ -14,7 +14,7 @@ import { Component, OnMounted } from "@paperbits/common/ko/decorators";
 import { EmailItem } from "./emailItem";
 import { EmailService } from "../../../emailService";
 import { ChangeRateLimit } from "@paperbits/common/ko/consts";
-import { Query, Operator } from "@paperbits/common/persistence";
+import { Query, Operator, Page } from "@paperbits/common/persistence";
 import { EmailContract } from "../../../emailContract";
 
 @Component({
@@ -22,7 +22,7 @@ import { EmailContract } from "../../../emailContract";
     template: template
 })
 export class EmailsWorkshop {
-    private nextPageQuery: Query<EmailContract>;
+    private currentPage: Page<EmailContract>;
 
     public readonly searchPattern: ko.Observable<string>;
     public readonly emails: ko.ObservableArray<EmailItem>;
@@ -60,22 +60,25 @@ export class EmailsWorkshop {
             query.where(`title`, Operator.contains, searchPattern);
         }
 
-        this.nextPageQuery = query;
-        await this.loadNextPage();
+        const pageOfResults = await this.emailService.search(query);
+        this.currentPage = pageOfResults;
+
+        const pageItems = pageOfResults.value.map(email => new EmailItem(email));
+        this.emails.push(...pageItems);
     }
 
     public async loadNextPage(): Promise<void> {
-        if (!this.nextPageQuery || this.working()) {
+        if (!this.currentPage?.takeNext || this.working()) {
+            this.loadNextPage = null;
             return;
         }
 
         this.working(true);
 
-        const pageOfResults = await this.emailService.search2(this.nextPageQuery);
-        this.nextPageQuery = pageOfResults.nextPage;
+        this.currentPage = await this.currentPage.takeNext();
 
-        const emailItems = pageOfResults.value.map(page => new EmailItem(page));
-        this.emails.push(...emailItems);
+        const pageItems = this.currentPage.value.map(page => new EmailItem(page));
+        this.emails.push(...pageItems);
 
         this.working(false);
     }
