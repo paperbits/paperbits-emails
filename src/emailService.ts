@@ -6,9 +6,9 @@
  */
 
 import * as Utils from "@paperbits/common/utils";
-import { IObjectStorage, Query, Operator } from "@paperbits/common/persistence";
+import { IObjectStorage, Query, Operator, Page } from "@paperbits/common/persistence";
 import { IBlockService } from "@paperbits/common/blocks";
-import { Contract } from "@paperbits/common";
+import { Contract, Bag } from "@paperbits/common";
 import { EmailContract } from "./emailContract";
 
 const emailTemplatesPath = "emailTemplates";
@@ -25,19 +25,35 @@ export class EmailService {
         return this.objectStorage.getObject<EmailContract>(key);
     }
 
-    public async search(pattern: string): Promise<EmailContract[]> {
-        const query = Query
-            .from<EmailContract>()
-            .where("title", Operator.contains, pattern)
-            .orderBy("title");
+    private convertPage(pageOfEmails: Page<EmailContract>): Page<EmailContract> {
+        const resultPage: Page<EmailContract> = {
+            value: pageOfEmails.value,
+            takeNext: async (): Promise<Page<EmailContract>> => {
+                const nextLocalizedPage = await pageOfEmails.takeNext();
+                return this.convertPage(nextLocalizedPage);
+            }
+        };
 
-        const result = await this.objectStorage.searchObjects<EmailContract>(emailTemplatesPath, query);
-
-        if (!result) {
-            return [];
+        if (!pageOfEmails.takeNext) {
+            resultPage.takeNext = null;
         }
 
-        return Object.values(result);
+        return resultPage;
+    }
+
+    public async search(query: Query<EmailContract>): Promise<Page<EmailContract>> {
+        if (!query) {
+            throw new Error(`Parameter "query" not specified.`);
+        }
+
+        try {
+            const pageOfResults = await this.objectStorage.searchObjects<EmailContract>(emailTemplatesPath, query);
+            return this.convertPage(pageOfResults);
+          
+        }
+        catch (error) {
+            throw new Error(`Unable to search media: ${error.stack || error.message}`);
+        }
     }
 
     public async deleteEmailTemplate(emailTemplate: EmailContract): Promise<void> {

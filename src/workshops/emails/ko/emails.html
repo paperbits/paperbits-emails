@@ -25,17 +25,20 @@
 
     <!-- /ko -->
 
-    <!--ko if: $component.working()-->
-    <spinner></spinner>
-    <!--/ko-->
-
-    <div class="flex flex-column flex-item flex-item-grow" role="list"
-        data-bind="foreach: { data: emails, as: 'email' }, scrollable: true">
+    <div class="flex flex-column flex-item flex-item-grow" role="list" data-bind="scrollable: true">
+        <!-- ko foreach: { data: emails, as: 'email' } -->
         <a href="#" role="listitem" class="list-item"
             data-bind="css: { selected: email === $component.selectedEmail() }, click: $component.selectEmail, event: { keydown: $component.onKeyDown }">
             <i class="paperbits-icon paperbits-at-sign"></i>
             <span data-bind="text: email.title"></span>
         </a>
+        <!-- /ko -->
+        <!--ko if: $component.working()-->
+        <spinner></spinner>
+        <!--/ko-->
+        <!-- ko ifnot: $component.working -->
+        <div class="list-edge" data-bind="whenInView: $component.loadNextPage"></div>
+        <!-- /ko -->
     </div>
 
     <div class="flex-item btn-group">

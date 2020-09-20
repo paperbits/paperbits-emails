@@ -14,12 +14,15 @@ import { Component, OnMounted } from "@paperbits/common/ko/decorators";
 import { EmailItem } from "./emailItem";
 import { EmailService } from "../../../emailService";
 import { ChangeRateLimit } from "@paperbits/common/ko/consts";
+import { Query, Operator, Page } from "@paperbits/common/persistence";
+import { EmailContract } from "../../../emailContract";
 
 @Component({
     selector: "emails",
     template: template
 })
 export class EmailsWorkshop {
+    private currentPage: Page<EmailContract>;
     public readonly searchPattern: ko.Observable<string>;
     public readonly emails: ko.ObservableArray<EmailItem>;
     public readonly working: ko.Observable<boolean>;
@@ -33,7 +36,7 @@ export class EmailsWorkshop {
         this.emails = ko.observableArray();
         this.selectedEmail = ko.observable();
         this.searchPattern = ko.observable("");
-        this.working = ko.observable();
+        this.working = ko.observable(false);
     }
 
     @OnMounted()
@@ -45,12 +48,39 @@ export class EmailsWorkshop {
             .subscribe(this.searchEmails);
     }
 
-    private async searchEmails(searchPattern: string = ""): Promise<void> {
+    public async searchEmails(searchPattern: string = ""): Promise<void> {
+        this.working(true);
+        this.emails([]);
+
+        const query = Query
+            .from<EmailContract>()
+            .orderBy(`title`);
+
+        if (searchPattern) {
+            query.where(`title`, Operator.contains, searchPattern);
+        }
+
+        const pageOfResults = await this.emailService.search(query);
+        this.currentPage = pageOfResults;
+
+        const pageItems = pageOfResults.value.map(email => new EmailItem(email));
+        this.emails.push(...pageItems);
+        
+        this.working(false);
+    }
+
+    public async loadNextPage(): Promise<void> {
+        if (!this.currentPage?.takeNext || this.working()) {
+            this.loadNextPage = null;
+            return;
+        }
+
         this.working(true);
 
-        const emails = await this.emailService.search(searchPattern);
-        const emailItems = emails.map(email => new EmailItem(email));
-        this.emails(emailItems);
+        this.currentPage = await this.currentPage.takeNext();
+
+        const pageItems = this.currentPage.value.map(page => new EmailItem(page));
+        this.emails.push(...pageItems);
 
         this.working(false);
     }
