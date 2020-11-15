@@ -11,30 +11,34 @@ import * as fs from "fs";
 import * as path from "path";
 import parallel from "await-parallel-limit";
 import { process } from "./inlineContent";
-import { IPublisher } from "@paperbits/common/publishing";
+import { HtmlPageOptimizer, IPublisher } from "@paperbits/common/publishing";
 import { EmailService } from "../emailService";
 import { EmailContract } from "../emailContract";
 import { IBlobStorage, Query, Page } from "@paperbits/common/persistence";
 import { ISettingsProvider } from "@paperbits/common/configuration";
 import { LayoutViewModelBinder } from "../layout/ko";
 import { createDocument } from "@paperbits/core/ko/knockout-rendering";
-import { StyleCompiler, StyleManager } from "@paperbits/common/styles";
+import { StyleCompiler, StyleManager, StyleSheet } from "@paperbits/common/styles";
 import { Logger } from "@paperbits/common/logging";
+import { LocalStyleBuilder } from "@paperbits/styles";
+import { JssCompiler } from "@paperbits/styles/jssCompiler";
 
 export class EmailPublisher implements IPublisher {
+    private localStyleBuilder: LocalStyleBuilder;
+
     constructor(
         private readonly emailService: EmailService,
         private readonly styleCompiler: StyleCompiler,
         private readonly outputBlobStorage: IBlobStorage,
         private readonly settingsProvider: ISettingsProvider,
         private readonly emailLayoutViewModelBinder: LayoutViewModelBinder,
-        private readonly logger: Logger
+        private readonly logger: Logger,
+        private readonly htmlPageOptimizer: HtmlPageOptimizer
     ) {
-        this.publish = this.publish.bind(this);
-        this.renderEmailTemplate = this.renderEmailTemplate.bind(this);
+        this.localStyleBuilder = new LocalStyleBuilder(this.outputBlobStorage);
     }
 
-    private readFileAsString(filepath: string): Promise<string> {
+    private readFile(filepath: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             fs.readFile(filepath, "utf8", (error, content) => {
                 if (error) {
@@ -79,12 +83,11 @@ export class EmailPublisher implements IPublisher {
         });
     }
 
-    private async renderEmailTemplate(emailTemplate: EmailContract, stylesString: string, permalinkBaseUrl: string, mediaBaseUrl: string): Promise<void> {
+    private async renderEmailTemplate(emailTemplate: EmailContract, globalStyleSheet: StyleSheet, permalinkBaseUrl: string, mediaBaseUrl: string): Promise<void> {
         this.logger.trackEvent("Publishing", { message: `Publishing email template ${emailTemplate.title}...` });
 
         const styleManager = new StyleManager();
-        const styleSheet = await this.styleCompiler.getStyleSheet();
-        styleManager.setStyleSheet(styleSheet);
+        styleManager.setStyleSheet(globalStyleSheet);
 
         const bindingContext = {
             styleManager: styleManager
@@ -93,31 +96,30 @@ export class EmailPublisher implements IPublisher {
         const templateDocument = createDocument();
         const layoutViewModel = await this.emailLayoutViewModelBinder.getLayoutViewModel(emailTemplate.key, bindingContext);
         ko.applyBindingsToNode(templateDocument.body, { widget: layoutViewModel }, null);
+        await Utils.delay(400);
 
         const resourceUri = `${Utils.slugify(emailTemplate.title)}.html`;
 
         let htmlContent: string;
+        const styleSheets = styleManager.getAllStyleSheets();
+        const compiler = new JssCompiler();
 
-        const buildContentPromise = new Promise<void>(async (resolve, reject) => {
-            setTimeout(() => {
-                this.replacePermalinks(templateDocument.body, permalinkBaseUrl);
-                this.replaceSources(templateDocument.body, mediaBaseUrl);
+        const stylesPath = path.resolve(__dirname, "assets/styles/theme.css");
+        let css = await this.readFile(stylesPath);
 
-                const regexpComment = /\<![ \r\n\t]*(--([^\-]|[\r\n]|-[^\-])*--[ \r\n\t]*)\>/gm;
-                const regexpDataBind = /\s?data-bind="([\S\s]*?)"/gm;
-
-                const styleElement: HTMLStyleElement = templateDocument.createElement("style");
-                styleElement.innerHTML = stylesString;
-                templateDocument.body.appendChild(styleElement);
-
-                htmlContent = templateDocument.documentElement.outerHTML;
-                htmlContent = htmlContent.replace(regexpComment, "");
-                htmlContent = htmlContent.replace(regexpDataBind, "");
-                resolve();
-            }, 1000);
+        styleSheets.forEach(styleSheet => {
+            css += " " + compiler.compile(styleSheet);
         });
 
-        await buildContentPromise;
+        const customStyleElement: HTMLStyleElement = templateDocument.createElement("style");
+        customStyleElement.setAttribute("type", "text/css");
+        customStyleElement.textContent = css.replace(/\n/g, "").replace(/\s\s+/g, " ");
+
+        templateDocument.head.appendChild(customStyleElement);
+
+        this.replacePermalinks(templateDocument.body, permalinkBaseUrl);
+        this.replaceSources(templateDocument.body, mediaBaseUrl);
+        htmlContent = templateDocument.documentElement.outerHTML;
 
         htmlContent = await process(htmlContent, {
             baseUrl: mediaBaseUrl,
@@ -128,7 +130,9 @@ export class EmailPublisher implements IPublisher {
             applyLinkTags: true
         });
 
-        document.body.innerHTML = htmlContent;
+        const optimizedHtmlContent = await this.htmlPageOptimizer.optimize(htmlContent);
+
+        document.body.innerHTML = optimizedHtmlContent;
 
         const contentBytes = Utils.stringToUnit8Array(document.documentElement.outerHTML);
 
@@ -136,12 +140,14 @@ export class EmailPublisher implements IPublisher {
     }
 
     public async publish(): Promise<void> {
-        const stylesPath = path.resolve(__dirname, "assets/styles/theme.css");
-        const stylesString = await this.readFileAsString(stylesPath);
         const settings = await this.settingsProvider.getSetting<any>("emailTemplates");
         const permalinkBaseUrl = settings.permalinkBaseUrl;
         const mediaBaseUrl = settings.mediaBaseUrl;
-        const css = await this.styleCompiler.compileCss();
+
+        const globalStyleSheet = await this.styleCompiler.getStyleSheet();
+
+        // Building global styles
+        this.localStyleBuilder.buildGlobalStyle(globalStyleSheet);
 
         const query: Query<EmailContract> = Query.from<EmailContract>();
         let pagesOfResults = await this.emailService.search(query);
@@ -151,7 +157,7 @@ export class EmailPublisher implements IPublisher {
             const emailTemplates = pagesOfResults.value;
 
             for (const emailTemplate of emailTemplates) {
-                tasks.push(() => this.renderEmailTemplate(emailTemplate, stylesString + " " + css, permalinkBaseUrl, mediaBaseUrl));
+                tasks.push(() => this.renderEmailTemplate(emailTemplate, globalStyleSheet, permalinkBaseUrl, mediaBaseUrl));
             }
 
             await parallel(tasks, 7);

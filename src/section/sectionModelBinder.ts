@@ -21,60 +21,30 @@ export class SectionModelBinder implements IModelBinder<SectionModel> {
         return model instanceof SectionModel;
     }
 
-    constructor(
-        private readonly modelBinderSelector: ModelBinderSelector,
-        private readonly backgroundModelBinder: BackgroundModelBinder) {
+    constructor(private readonly modelBinderSelector: ModelBinderSelector) { }
 
-        this.contractToModel = this.contractToModel.bind(this);
-    }
+    public async contractToModel(contract: SectionContract, bindingContext?: Bag<any>): Promise<SectionModel> {
+        const model = new SectionModel();
 
-    public async contractToModel(sectionContract: SectionContract, bindingContext?: Bag<any>): Promise<SectionModel> {
-        const sectionModel = new SectionModel();
+        contract.nodes = contract.nodes || [];
+        model.styles = contract.styles || {};
 
-        sectionContract.nodes = sectionContract.nodes || [];
-        sectionModel.container = sectionContract.layout;
-        sectionModel.padding = sectionContract.padding;
-        sectionModel.snap = sectionContract.snapping;
-        sectionModel.height = sectionContract.height;
-
-        if (sectionContract.background) {
-            sectionModel.background = await this.backgroundModelBinder.contractToModel(sectionContract.background);
-        }
-
-        const modelPromises = sectionContract.nodes.map(async (contract: Contract) => {
+        const modelPromises = contract.nodes.map(async (contract: Contract) => {
             const modelBinder = this.modelBinderSelector.getModelBinderByContract<any>(contract);
             return await modelBinder.contractToModel(contract, bindingContext);
         });
 
-        sectionModel.widgets = await Promise.all<WidgetModel>(modelPromises);
+        model.widgets = await Promise.all<any>(modelPromises);
 
-        return sectionModel;
+        return model;
     }
 
     public modelToContract(sectionModel: SectionModel): Contract {
         const sectionContract: SectionContract = {
             type: "email-layout-section",
-            nodes: [],
-            layout: sectionModel.container,
-            padding: sectionModel.padding,
-            snapping: sectionModel.snap,
-            height: sectionModel.height
+            styles: sectionModel.styles,
+            nodes: []
         };
-
-        if (sectionModel.background) {
-            sectionContract.background = {
-                color: sectionModel.background.colorKey,
-                size: sectionModel.background.size,
-                position: sectionModel.background.position
-            };
-
-            if (sectionModel.background.sourceType === "picture") {
-                sectionContract.background.picture = {
-                    sourceKey: sectionModel.background.sourceKey,
-                    repeat: sectionModel.background.repeat
-                };
-            }
-        }
 
         sectionModel.widgets.forEach(widgetModel => {
             const modelBinder = this.modelBinderSelector.getModelBinderByModel(widgetModel);
