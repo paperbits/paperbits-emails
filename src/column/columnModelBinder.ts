@@ -10,6 +10,7 @@ import { ColumnContract } from "./columnContract";
 import { ModelBinderSelector } from "@paperbits/common/widgets";
 import { IModelBinder } from "@paperbits/common/editing";
 import { Contract, Bag } from "@paperbits/common";
+import { canSplit } from "prosemirror-transform";
 
 
 export class ColumnModelBinder implements IModelBinder<ColumnModel> {
@@ -31,6 +32,8 @@ export class ColumnModelBinder implements IModelBinder<ColumnModel> {
         if (contract.size) {
             columnModel.size = contract.size;
         }
+
+        console.log(contract);
 
         if (contract.alignment) {
             columnModel.alignment = contract.alignment;
