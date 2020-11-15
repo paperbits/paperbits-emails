@@ -6,25 +6,7 @@
  */
 
 import { Contract } from "@paperbits/common";
-import { BackgroundContract } from "@paperbits/common/ui";
 
 export interface SectionContract extends Contract {
-    background?: BackgroundContract;
-
-    /**
-     *  Layout types: container, full width.
-     */
-    layout?: string;
-
-    /**
-     * by content, screen size
-     */
-    height?: string;
-
-    /**
-     * Possible values: top, bottom.
-     */
-    snapping: string;
-
-    padding: string;
+    styles?: any;
 }

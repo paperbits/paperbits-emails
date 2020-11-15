@@ -1,6 +1,7 @@
 import { IWidgetHandler, WidgetContext } from "@paperbits/common/editing";
 import { IContextCommandSet, ViewManager } from "@paperbits/common/ui";
 import { RowModel } from "../row/rowModel";
+import { SectionModel } from "../section/sectionModel";
 
 
 export class RowHandlers implements IWidgetHandler {
@@ -31,7 +32,15 @@ export class RowHandlers implements IWidgetHandler {
                     }
                 },
             }],
-            selectCommands: null,
+            selectCommands: [{
+                tooltip: "Switch to parent",
+                iconClass: "paperbits-enlarge-vertical",
+                position: "top right",
+                color: "#29c4a9",
+                callback: () => {
+                    context.switchToParent(SectionModel);
+                }             
+            }],
             deleteCommand: {
                 tooltip: "Delete row",
                 color: "#29c4a9",

@@ -6,7 +6,10 @@ ko.bindingHandlers["tableCell"] = {
 
         const horizontalAlign = config.horizontalAlign;
         const verticalAlign = config.verticalAlign;
+        const size = config.size();
 
-        ko.applyBindingsToNode(element, { attr: { align: horizontalAlign, valign: verticalAlign } }, null);
+        const width = size * 100 / 12;
+
+        ko.applyBindingsToNode(element, { attr: { width: `${width}%`, align: horizontalAlign, valign: verticalAlign } }, null);
     }
 };

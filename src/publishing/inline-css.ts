@@ -68,7 +68,7 @@ export class StyleInliner {
         }
     }
 
-    public static inlineCss(html: string, css?: string, options?: InlinerOptions) {
+    public static inlineCss(html: string, css?: string, options?: InlinerOptions): string {
         const opts = options || {};
         let rules;
         let editedElements = [];
@@ -107,7 +107,6 @@ export class StyleInliner {
         const decodeEntities = (_html: string): string => {
             return decodeCodeBlocks(_html);
         };
-
 
         // Taking listed set of options from opts object.
         const $ = cheerio.load(encodeEntities(html), pick(opts, [
@@ -167,8 +166,6 @@ export class StyleInliner {
                 StyleInliner.setTableAttrs(el, $);
             });
         }
-
-        
 
         return decodeEntities($.html());
     }
@@ -263,7 +260,7 @@ export class StyleInliner {
         return await this.readFileAsString(decodeURIComponent(href));
     }
 
-    public static getStylesheetList(sourceHtml: string, options: InlinerOptions) {
+    public static getStylesheetList(sourceHtml: string, options: InlinerOptions): any {
         const results: any = {};
         const codeBlocks = {
             EJS: { start: "<%", end: "%>" },
