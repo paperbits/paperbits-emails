@@ -42,6 +42,7 @@ export class EmailHost {
     }
 
     private async refreshContent(key: string): Promise<void> {
+        this.viewManager.setShutter();
         const styleManager = new StyleManager(this.eventManager);
         const styleSheet = await this.styleCompiler.getStyleSheet();
         styleManager.setStyleSheet(styleSheet);
@@ -54,6 +55,7 @@ export class EmailHost {
         const layoutViewModel = await this.emailLayoutViewModelBinder.getLayoutViewModel(key, bindingContext);
         layoutViewModel["widgetBinding"].provides = ["html", "email"];
         this.layoutViewModel(layoutViewModel);
+        this.viewManager.removeShutter();
     }
 
     public dispose(): void {

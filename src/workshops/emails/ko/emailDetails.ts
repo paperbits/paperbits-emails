@@ -30,12 +30,7 @@ export class EmailDetailsWorkshop {
         private readonly router: Router,
         private readonly eventManager: EventManager,
         private readonly viewManager: ViewManager
-    ) {
-        // rebinding...
-        this.onMounted = this.onMounted.bind(this);
-        this.deleteEmail = this.deleteEmail.bind(this);
-        this.updateEmail = this.updateEmail.bind(this);
-    }
+    ) { }
 
     @OnMounted()
     public async onMounted(): Promise<void> {
@@ -64,6 +59,6 @@ export class EmailDetailsWorkshop {
             this.onDeleteCallback();
         }
 
-        this.router.navigateTo("/");
+        this.viewManager.setHost({ name: "page-host" }); // Returning to editing current page.
     }
 }
