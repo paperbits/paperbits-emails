@@ -60,7 +60,7 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
             name: "column",
             displayName: "Column",
             readonly: bindingContext ? bindingContext.readonly : false,
-            flow: "inline",
+            flow: "none",
             model: model,
             draggable: false,
             editor: "email-layout-column-editor",
