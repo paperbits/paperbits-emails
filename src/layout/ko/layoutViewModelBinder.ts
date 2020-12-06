@@ -54,7 +54,6 @@ export class LayoutViewModelBinder {
             displayName: "Layout",
             readonly: bindingContext ? bindingContext.readonly : false,
             model: model,
-            flow: "none",
             draggable: false,
             applyChanges: async () => {
                 await this.modelToViewModel(model, viewModel, bindingContext);
