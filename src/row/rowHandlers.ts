@@ -38,7 +38,7 @@ export class RowHandlers implements IWidgetHandler {
                 position: "top right",
                 color: "#29c4a9",
                 callback: () => {
-                    context.switchToParent(SectionModel);
+                    context.switchToParent();
                 }             
             }],
             deleteCommand: {

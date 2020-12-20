@@ -30,7 +30,7 @@ export class ColumnHandlers implements IWidgetHandler {
                 position: "top right",
                 color: "#4c5866",
                 callback: () => {
-                    context.switchToParent(RowModel);
+                    context.switchToParent();
                 }
             }]
         };
