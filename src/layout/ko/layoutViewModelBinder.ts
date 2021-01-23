@@ -49,7 +49,7 @@ export class LayoutViewModelBinder {
             savingTimeout = setTimeout(updateContent, 600);
         };
 
-        const binding: IWidgetBinding<LayoutModel> = {
+        const binding: IWidgetBinding<LayoutModel, LayoutViewModel> = {
             name: "email-layout",
             displayName: "Layout",
             readonly: bindingContext ? bindingContext.readonly : false,

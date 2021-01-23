@@ -49,7 +49,7 @@ export class EmailHost {
 
         const bindingContext = {
             styleManager: styleManager,
-            routeKind: "page"
+            contentType: "page"
         };
 
         const layoutViewModel = await this.emailLayoutViewModelBinder.getLayoutViewModel(key, bindingContext);

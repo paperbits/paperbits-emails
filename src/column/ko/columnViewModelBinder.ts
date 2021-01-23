@@ -56,7 +56,7 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
         //     viewModel.styles(await this.styleCompiler.getStyleModelAsync(model.styles, bindingContext?.styleManager));
         // }
 
-        const binding: IWidgetBinding<ColumnModel> = {
+        const binding: IWidgetBinding<ColumnModel, ColumnViewModel> = {
             name: "column",
             displayName: "Column",
             readonly: bindingContext ? bindingContext.readonly : false,
@@ -64,7 +64,7 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
             draggable: false,
             editor: "email-layout-column-editor",
             handler: ColumnHandlers,
-            applyChanges: async (changes) => {
+            applyChanges: async () => {
                 await this.modelToViewModel(model, viewModel, bindingContext);
                 this.eventManager.dispatchEvent("onContentUpdate");
             }

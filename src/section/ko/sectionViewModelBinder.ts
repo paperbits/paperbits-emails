@@ -50,7 +50,7 @@ export class SectionViewModelBinder implements ViewModelBinder<SectionModel, Sec
             viewModel.styles(await this.styleCompiler.getStyleModelAsync(model.styles, bindingContext?.styleManager));
         }
 
-        const binding: IWidgetBinding<SectionModel> = {
+        const binding: IWidgetBinding<SectionModel, SectionViewModel> = {
             name: "section",
             displayName: "Section",
             readonly: bindingContext ? bindingContext.readonly : false,
