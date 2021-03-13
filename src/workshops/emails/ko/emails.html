@@ -29,7 +29,7 @@
         <!-- ko foreach: { data: emails, as: 'email' } -->
         <a href="#" role="listitem" class="list-item"
             data-bind="css: { selected: email === $component.selectedEmail() }, click: $component.selectEmail, event: { keydown: $component.onKeyDown }">
-            <i class="paperbits-icon paperbits-at-sign"></i>
+            <i aria-hidden="true" class="paperbits-icon paperbits-at-sign"></i>
             <span data-bind="text: email.title"></span>
         </a>
         <!-- /ko -->
@@ -43,7 +43,7 @@
 
     <div class="flex-item btn-group">
         <button class="btn btn-default" data-bind="click: addEmail">
-            <i class="paperbits-icon paperbits-simple-add"></i>
+            <i aria-hidden="true" class="paperbits-icon paperbits-simple-add"></i>
             Add email
         </button>
     </div>

@@ -5,12 +5,12 @@
 <div class="flex flex-column list">
     <div class="flex-item flex-item-grow list" data-bind="foreach: emails, scrollable: true">
         <div class="list-item" data-bind="css: { selected: hasFocus }">
-            <i class="paperbits-icon paperbits-single-content-03"></i>
+            <i aria-hidden="true" class="paperbits-icon paperbits-single-content-03"></i>
             <a href="#" class="list-item-label" data-bind="click: $component.selectEmail, text: title, hasFocus: hasFocus, event: { keydown: $component.keydown }"></a>
             <div class="list-item-children" data-bind="foreach: anchors">
                 <div class="list-item" data-bind="css: { selected: hasFocus }">
                     <a href="#" class="list-item-label" data-bind="click: $component.selectAnchor, hasFocus: hasFocus, event: { keydown: $component.keydown }">
-                        <i class="paperbits-icon paperbits-anchor"></i>
+                        <i aria-hidden="true" class="paperbits-icon paperbits-anchor"></i>
                         <span data-bind="text: shortTitle"></span>
                     </a>
                 </div>
