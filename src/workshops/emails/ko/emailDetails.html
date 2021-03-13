@@ -6,7 +6,7 @@
             <div class="input-group">
                 <input type="text" id="title" class="form-control"
                     data-bind="textInput: emailItem.title, validationElement: emailItem.title, focus: true"
-                    placeholder="e.g. Confirm subscription" maxlength="256" />
+                    placeholder="e.g. Confirm subscription" maxlength="256" aria-required="true" />
                 <button class="btn btn-danger input-group-btn" type="button"
                     data-bind="validationMessageToggle: emailItem.title">!</button>
             </div>
