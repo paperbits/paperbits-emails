@@ -6,7 +6,6 @@ import { Router } from "@paperbits/common/routing";
 import { EventManager } from "@paperbits/common/events";
 import { ViewManager, ViewManagerMode } from "@paperbits/common/ui";
 import { EmailService } from "../../../emailService";
-import { Contract } from "@paperbits/common";
 import { StyleManager, StyleCompiler } from "@paperbits/common/styles";
 
 
@@ -20,7 +19,6 @@ export class EmailHost {
     constructor(
         private readonly emailLayoutViewModelBinder: LayoutViewModelBinder,
         private readonly router: Router,
-        private readonly emailService: EmailService,
         private readonly eventManager: EventManager,
         private readonly viewManager: ViewManager,
         private readonly styleCompiler: StyleCompiler
