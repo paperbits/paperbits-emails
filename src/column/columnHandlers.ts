@@ -38,6 +38,7 @@ export class ColumnHandlers implements IWidgetHandler {
         if (context.model.widgets.length === 0) {
             columnContextualEditor.hoverCommands.push({
                 color: "#607d8b",
+                iconClass: "paperbits-simple-add",
                 position: "center",
                 tooltip: "Add widget",
                 component: {
