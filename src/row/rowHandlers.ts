@@ -12,7 +12,7 @@ export class RowHandlers implements IWidgetHandler {
             color: "#29c4a9",
             hoverCommands: [{
                 color: "#29c4a9",
-                iconClass: "paperbits-simple-add",
+                iconClass: "paperbits-icon paperbits-simple-add",
                 position: context.half,
                 tooltip: "Add row",
                 component: {
@@ -35,7 +35,7 @@ export class RowHandlers implements IWidgetHandler {
             }],
             selectCommands: [{
                 tooltip: "Switch to parent",
-                iconClass: "paperbits-enlarge-vertical",
+                iconClass: "paperbits-icon paperbits-enlarge-vertical",
                 position: "top right",
                 color: "#29c4a9",
                 callback: () => {
