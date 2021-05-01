@@ -7,7 +7,7 @@ import { SectionModel } from "../section/sectionModel";
 export class RowHandlers implements IWidgetHandler {
     constructor(private readonly viewManager: ViewManager) { }
 
-    public getContextualEditor(context: WidgetContext): IContextCommandSet {
+    public getContextCommands(context: WidgetContext): IContextCommandSet {
         return {
             color: "#29c4a9",
             hoverCommands: [{

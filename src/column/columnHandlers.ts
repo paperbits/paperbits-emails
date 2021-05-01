@@ -12,7 +12,7 @@ export class ColumnHandlers implements IWidgetHandler {
         return !["section", "row", "column"].includes(dragSession.sourceBinding.name);
     }
 
-    public getContextualEditor(context: WidgetContext): IContextCommandSet {
+    public getContextCommands(context: WidgetContext): IContextCommandSet {
         const columnContextualEditor: IContextCommandSet = {
             color: "#4c5866",
             hoverCommands: [],

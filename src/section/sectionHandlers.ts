@@ -12,7 +12,7 @@ export class SectionHandlers {
         return dragSession.sourceBinding.name === "row";
     }
 
-    public getContextualEditor(context: WidgetContext): IContextCommandSet {
+    public getContextCommands(context: WidgetContext): IContextCommandSet {
         const sectionContextualEditor: IContextCommandSet = {
             color: "#2b87da",
             hoverCommands: [{
