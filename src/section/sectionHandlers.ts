@@ -35,7 +35,7 @@ export class SectionHandlers {
                             context.parentModel.widgets.splice(index, 0, newSectionModel);
                             context.parentBinding.applyChanges();
 
-                            this.viewManager.clearContextualEditors();
+                            this.viewManager.clearContextualCommands();
                         }
                     }
                 }
@@ -47,7 +47,7 @@ export class SectionHandlers {
                     context.parentModel.widgets.remove(context.model);
                     context.parentBinding.applyChanges();
 
-                    this.viewManager.clearContextualEditors();
+                    this.viewManager.clearContextualCommands();
                 }
             },
             selectCommands: [{
@@ -91,7 +91,7 @@ export class SectionHandlers {
                             context.model.widgets.push(newRowModel);
                             context.binding.applyChanges();
 
-                            this.viewManager.clearContextualEditors();
+                            this.viewManager.clearContextualCommands();
                         }
                     }
                 }

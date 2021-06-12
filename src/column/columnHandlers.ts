@@ -48,7 +48,7 @@ export class ColumnHandlers implements IWidgetHandler {
                         onSelect: (widget: WidgetModel) => {
                             context.model.widgets.push(widget);
                             context.binding.applyChanges();
-                            this.viewManager.clearContextualEditors();
+                            this.viewManager.clearContextualCommands();
                         }
                     }
                 }

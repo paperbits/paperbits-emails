@@ -28,7 +28,7 @@ export class RowHandlers implements IWidgetHandler {
                             context.parentModel.widgets.splice(index, 0, newRowModel);
                             context.parentBinding.applyChanges();
 
-                            this.viewManager.clearContextualEditors();
+                            this.viewManager.clearContextualCommands();
                         }
                     }
                 },
@@ -49,7 +49,7 @@ export class RowHandlers implements IWidgetHandler {
                     context.parentModel.widgets.remove(context.model);
                     context.parentBinding.applyChanges();
 
-                    this.viewManager.clearContextualEditors();
+                    this.viewManager.clearContextualCommands();
                 }
             }
         };
