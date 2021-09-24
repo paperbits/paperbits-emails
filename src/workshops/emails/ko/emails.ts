@@ -9,7 +9,7 @@ import * as ko from "knockout";
 import template from "./emails.html";
 import { Router } from "@paperbits/common/routing";
 import { ViewManager, View } from "@paperbits/common/ui";
-import { Keys } from "@paperbits/common/keyboard";
+import { KeyCodes } from "@paperbits/common/keyboard";
 import { Component, OnMounted } from "@paperbits/common/ko/decorators";
 import { EmailItem } from "./emailItem";
 import { EmailService } from "../../../emailService";
@@ -127,7 +127,7 @@ export class EmailsWorkshop {
     }
 
     public onKeyDown(item: EmailItem, event: KeyboardEvent): boolean {
-        if (event.keyCode === Keys.Delete) {
+        if (event.keyCode === KeyCodes.Delete) {
             this.deleteSelectedEmail();
         }
         return true;

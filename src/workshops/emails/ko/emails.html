@@ -25,9 +25,9 @@
 
     <!-- /ko -->
 
-    <div class="flex flex-column flex-item flex-item-grow" role="list" data-bind="scrollable: true">
+    <div class="flex flex-column flex-item flex-item-grow" role="listbox" data-bind="scrollable: true, listbox: {}">
         <!-- ko foreach: { data: emails, as: 'email' } -->
-        <a href="#" role="listitem" class="list-item"
+        <a role="option" class="list-item"
             data-bind="css: { selected: email === $component.selectedEmail() }, click: $component.selectEmail, event: { keydown: $component.onKeyDown }">
             <i aria-hidden="true" class="paperbits-icon paperbits-at-sign"></i>
             <span data-bind="text: email.title"></span>
