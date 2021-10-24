@@ -10,7 +10,7 @@ import * as Objects from "@paperbits/common/objects";
 import template from "./sectionEditor.html";
 import { Component, OnMounted, Param, Event } from "@paperbits/common/ko/decorators";
 import { SectionModel } from "../sectionModel";
-import { BackgroundStylePluginConfig } from "@paperbits/styles/contracts";
+import { BackgroundStylePluginConfig } from "@paperbits/styles/plugins";
 import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 
 @Component({
