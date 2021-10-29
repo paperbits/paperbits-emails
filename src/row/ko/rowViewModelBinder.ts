@@ -12,7 +12,7 @@ import { RowModel } from "../rowModel";
 import { PlaceholderViewModel } from "@paperbits/core/placeholder/ko";
 import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelector";
 import { RowHandlers } from "../rowHandlers";
-import { EventManager } from "@paperbits/common/events";
+import { EventManager, Events } from "@paperbits/common/events";
 import { Bag } from "@paperbits/common";
 
 export class RowViewModelBinder implements ViewModelBinder<RowModel, RowViewModel> {
@@ -58,7 +58,7 @@ export class RowViewModelBinder implements ViewModelBinder<RowModel, RowViewMode
             handler: RowHandlers,
             applyChanges: async () => {
                 await this.modelToViewModel(model, viewModel, bindingContext);
-                this.eventManager.dispatchEvent("onContentUpdate");
+                this.eventManager.dispatchEvent(Events.ContentUpdate);
             }
         };
 

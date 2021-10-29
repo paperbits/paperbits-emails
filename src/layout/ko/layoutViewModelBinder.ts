@@ -9,7 +9,7 @@ import { LayoutViewModel } from "./layoutViewModel";
 import { LayoutModel } from "../layoutModel";
 import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelector";
 import { IWidgetBinding } from "@paperbits/common/editing";
-import { EventManager } from "@paperbits/common/events";
+import { EventManager, Events } from "@paperbits/common/events";
 import { ModelBinderSelector } from "@paperbits/common/widgets";
 import { EmailService } from "../../emailService";
 import { LayoutModelBinder } from "../../layout";
@@ -57,10 +57,10 @@ export class LayoutViewModelBinder {
             draggable: false,
             applyChanges: async () => {
                 await this.modelToViewModel(model, viewModel, bindingContext);
-                this.eventManager.dispatchEvent("onContentUpdate");
+                this.eventManager.dispatchEvent(Events.ContentUpdate);
             },
             onCreate: () => {
-                this.eventManager.addEventListener("onContentUpdate", scheduleUpdate);
+                this.eventManager.addEventListener(Events.ContentUpdate, scheduleUpdate);
             },
         };
 

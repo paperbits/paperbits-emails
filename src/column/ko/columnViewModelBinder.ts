@@ -13,7 +13,7 @@ import { ColumnModel } from "../columnModel";
 import { PlaceholderViewModel } from "@paperbits/core/placeholder/ko";
 import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelector";
 import { ColumnHandlers } from "../columnHandlers";
-import { EventManager } from "@paperbits/common/events";
+import { EventManager, Events } from "@paperbits/common/events";
 import { StyleCompiler } from "@paperbits/common/styles";
 import { Bag } from "@paperbits/common";
 
@@ -66,7 +66,7 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
             handler: ColumnHandlers,
             applyChanges: async () => {
                 await this.modelToViewModel(model, viewModel, bindingContext);
-                this.eventManager.dispatchEvent("onContentUpdate");
+                this.eventManager.dispatchEvent(Events.ContentUpdate);
             }
         };
 
