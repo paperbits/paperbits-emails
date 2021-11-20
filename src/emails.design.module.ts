@@ -12,7 +12,7 @@ import { EmailDetailsWorkshop, EmailSelector, EmailHost } from "./workshops/emai
 import { RowEditorModule } from "./row/ko/rowEditor.module";
 import { ColumnEditorModule } from "./column/ko/columnEditor.module";
 import { SectionEditorModule } from "./section/ko/sectionEditor.module";
-import { EmailsWorkshopSection } from "./workshops/emailsSection";
+import { EmailsToolButton } from "./workshops/emailsToolButton";
 
 
 export class EmailsDesignModule implements IInjectorModule {
@@ -25,6 +25,6 @@ export class EmailsDesignModule implements IInjectorModule {
         injector.bindModule(new RowEditorModule());
         injector.bindModule(new ColumnEditorModule());
         injector.bindModule(new SectionEditorModule());
-        injector.bindToCollection("workshopSections", EmailsWorkshopSection);
+        injector.bindToCollection("workshopSections", EmailsToolButton);
     }
 }
