@@ -22,7 +22,7 @@ import { CssExtractionResult } from "./cssExtractionResult";
 
 
 
-cheerio.prototype.resetAttr = function (attribute) {
+cheerio["prototype"].resetAttr = function (attribute) {
     if (!this.attr(attribute)) {
         this.attr(attribute, 0);
     }
@@ -411,8 +411,8 @@ export class StyleInliner {
 
             if (options.removeStyleTags) {
                 if (options.preserveMediaQueries) {
-                    mediaQueries = mediaQueryText(element.childNodes[0].nodeValue);
-                    element.childNodes[0].nodeValue = mediaQueries;
+                    mediaQueries = mediaQueryText(element.childNodes[0]["nodeValue"]);
+                    element.childNodes[0]["nodeValue"] = mediaQueries;
                 }
 
                 if (!mediaQueries) {
