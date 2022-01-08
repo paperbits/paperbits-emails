@@ -11,13 +11,12 @@ import * as fs from "fs";
 import * as path from "path";
 import parallel from "await-parallel-limit";
 import { process } from "./inlineContent";
-import { HtmlPageOptimizer, IPublisher } from "@paperbits/common/publishing";
+import { HtmlDocumentProvider, HtmlPageOptimizer, IPublisher } from "@paperbits/common/publishing";
 import { EmailService } from "../emailService";
 import { EmailContract } from "../emailContract";
 import { IBlobStorage, Query, Page } from "@paperbits/common/persistence";
 import { ISettingsProvider } from "@paperbits/common/configuration";
 import { LayoutViewModelBinder } from "../layout/ko";
-import { createDocument } from "@paperbits/core/ko/knockout-rendering";
 import { StyleCompiler, StyleManager, StyleSheet } from "@paperbits/common/styles";
 import { Logger } from "@paperbits/common/logging";
 import { LocalStyleBuilder } from "@paperbits/styles";
@@ -33,6 +32,7 @@ export class EmailPublisher implements IPublisher {
         private readonly settingsProvider: ISettingsProvider,
         private readonly emailLayoutViewModelBinder: LayoutViewModelBinder,
         private readonly logger: Logger,
+        private readonly htmlDocumentProvider: HtmlDocumentProvider,
         private readonly htmlPageOptimizer: HtmlPageOptimizer
     ) {
         this.localStyleBuilder = new LocalStyleBuilder(this.outputBlobStorage);
@@ -93,7 +93,7 @@ export class EmailPublisher implements IPublisher {
             styleManager: styleManager
         };
 
-        const templateDocument = createDocument();
+        const templateDocument = this.htmlDocumentProvider.createDocument();
         const layoutViewModel = await this.emailLayoutViewModelBinder.getLayoutViewModel(emailTemplate.key, bindingContext);
         ko.applyBindingsToNode(templateDocument.body, { widget: layoutViewModel }, null);
         await Utils.delay(400);
