@@ -18,13 +18,14 @@ export class ColumnHandlers implements IWidgetHandler {
             hoverCommands: [],
             deleteCommand: null,
             selectCommands: [{
-                tooltip: "Edit column",
-                iconClass: "paperbits-icon paperbits-edit-72",
+                controlType: "toolbox-button",
+                tooltip: "Column settings",
                 position: "top right",
                 color: "#4c5866",
                 callback: () => this.viewManager.openWidgetEditor(context.binding)
             },
             {
+                controlType: "toolbox-button",
                 tooltip: "Switch to parent",
                 iconClass: "paperbits-icon paperbits-enlarge-vertical",
                 position: "top right",
@@ -37,6 +38,7 @@ export class ColumnHandlers implements IWidgetHandler {
 
         if (context.model.widgets.length === 0) {
             columnContextualEditor.hoverCommands.push({
+                controlType: "toolbox-button",
                 color: "#607d8b",
                 iconClass: "paperbits-icon paperbits-simple-add",
                 position: "center",
