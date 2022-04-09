@@ -54,7 +54,7 @@ export class SectionHandlers {
             },
             selectCommands: [{
                 controlType: "toolbox-button",
-                tooltip: "Section settings",
+                displayName: "Section settings",
                 position: "top right",
                 color: "#2b87da",
                 callback: () => this.viewManager.openWidgetEditor(context.binding)
