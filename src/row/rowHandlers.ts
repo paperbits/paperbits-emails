@@ -11,6 +11,7 @@ export class RowHandlers implements IWidgetHandler {
         return {
             color: "#29c4a9",
             hoverCommands: [{
+                controlType: "toolbox-button",
                 color: "#29c4a9",
                 iconClass: "paperbits-icon paperbits-simple-add",
                 position: context.half,
@@ -34,6 +35,7 @@ export class RowHandlers implements IWidgetHandler {
                 },
             }],
             selectCommands: [{
+                controlType: "toolbox-button",
                 tooltip: "Switch to parent",
                 iconClass: "paperbits-icon paperbits-enlarge-vertical",
                 position: "top right",
@@ -43,6 +45,7 @@ export class RowHandlers implements IWidgetHandler {
                 }             
             }],
             deleteCommand: {
+                controlType: "toolbox-button",
                 tooltip: "Delete row",
                 color: "#29c4a9",
                 callback: () => {
