@@ -52,7 +52,7 @@ export class RowViewModelBinder implements ViewModelBinder<RowModel, RowViewMode
         const binding: IWidgetBinding<RowModel, RowViewModel> = {
             name: "email-layout-row",
             displayName: "Row",
-            readonly: bindingContext ? bindingContext.readonly : false,
+            layer: bindingContext?.layer,
             model: model,
             draggable: false,
             handler: RowHandlers,

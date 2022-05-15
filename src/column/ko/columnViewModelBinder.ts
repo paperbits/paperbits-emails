@@ -59,7 +59,7 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
         const binding: IWidgetBinding<ColumnModel, ColumnViewModel> = {
             name: "column",
             displayName: "Column",
-            readonly: bindingContext ? bindingContext.readonly : false,
+            layer: bindingContext?.layer,
             model: model,
             draggable: false,
             editor: "email-layout-column-editor",

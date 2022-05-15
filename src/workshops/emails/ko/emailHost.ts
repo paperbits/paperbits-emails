@@ -45,8 +45,11 @@ export class EmailHost {
         const styleSheet = await this.styleCompiler.getStyleSheet();
         styleManager.setStyleSheet(styleSheet);
 
+        this.viewManager.setActiveLayer("content");
+
         const bindingContext = {
             styleManager: styleManager,
+            layer: "content",
             contentType: "page"
         };
 

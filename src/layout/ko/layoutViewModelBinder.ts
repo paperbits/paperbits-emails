@@ -52,7 +52,7 @@ export class LayoutViewModelBinder {
         const binding: IWidgetBinding<LayoutModel, LayoutViewModel> = {
             name: "email-layout",
             displayName: "Layout",
-            readonly: bindingContext ? bindingContext.readonly : false,
+            layer: bindingContext?.layer,
             model: model,
             draggable: false,
             applyChanges: async () => {
