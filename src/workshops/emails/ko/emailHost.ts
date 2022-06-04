@@ -50,7 +50,7 @@ export class EmailHost {
         const bindingContext = {
             styleManager: styleManager,
             layer: "content",
-            contentType: "page"
+            activeLayer: "page"
         };
 
         const layoutViewModel = await this.emailLayoutViewModelBinder.getLayoutViewModel(key, bindingContext);
