@@ -72,7 +72,7 @@ export class SectionHandlers {
                             name: "add-block-dialog",
                             params: context.model
                         },
-                        resize: "vertically horizontally"
+                        resizing: "vertically horizontally"
                     };
 
                     this.viewManager.openViewAsPopup(view);
