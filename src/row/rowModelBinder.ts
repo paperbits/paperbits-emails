@@ -8,10 +8,16 @@
 import { Contract, Bag } from "@paperbits/common";
 import { RowContract } from "./rowContract";
 import { RowModel } from "./rowModel";
-import { ModelBinderSelector } from "@paperbits/common/widgets";
+import { IWidgetService, ModelBinderSelector } from "@paperbits/common/widgets";
+import { ContainerModelBinder, IModelBinder } from "@paperbits/common/editing";
 
-export class RowModelBinder {
-    constructor(private readonly modelBinderSelector: ModelBinderSelector) { }
+export class RowModelBinder extends ContainerModelBinder implements IModelBinder<RowModel> {
+    constructor(
+        protected readonly widgetService: IWidgetService,
+        protected modelBinderSelector: ModelBinderSelector
+    ) {
+        super(widgetService, modelBinderSelector);
+    }
 
     public canHandleContract(contract: Contract): boolean {
         return contract.type === "email-layout-row";
@@ -48,40 +54,26 @@ export class RowModelBinder {
             }
         }
 
-        if (!contract.nodes) {
-            contract.nodes = [];
-        }
-
-        const modelPromises = contract.nodes.map(async (contract: Contract) => {
-            const modelBinder = this.modelBinderSelector.getModelBinderByContract(contract);
-            return await modelBinder.contractToModel(contract, bindingContext);
-        });
-
-        rowModel.widgets = await Promise.all<any>(modelPromises);
+        rowModel.widgets = await this.getChildModels(contract.nodes, bindingContext);
 
         return rowModel;
     }
 
-    public modelToContract(rowModel: RowModel): Contract {
+    public modelToContract(model: RowModel): Contract {
         const rowConfig: RowContract = {
             type: "email-layout-row",
-            nodes: []
+            nodes: this.getChildContracts(model.widgets),
         };
 
         rowConfig.align = {};
-        rowConfig.align.sm = rowModel.alignSm;
-        rowConfig.align.md = rowModel.alignMd;
-        rowConfig.align.lg = rowModel.alignLg;
+        rowConfig.align.sm = model.alignSm;
+        rowConfig.align.md = model.alignMd;
+        rowConfig.align.lg = model.alignLg;
 
         rowConfig.justify = {};
-        rowConfig.justify.sm = rowModel.justifySm;
-        rowConfig.justify.md = rowModel.justifyMd;
-        rowConfig.justify.lg = rowModel.justifyLg;
-
-        rowModel.widgets.forEach(widgetModel => {
-            const modelBinder = this.modelBinderSelector.getModelBinderByModel(widgetModel);
-            rowConfig.nodes.push(modelBinder.modelToContract(widgetModel));
-        });
+        rowConfig.justify.sm = model.justifySm;
+        rowConfig.justify.md = model.justifyMd;
+        rowConfig.justify.lg = model.justifyLg;
 
         return rowConfig;
     }

@@ -38,10 +38,6 @@ export class ColumnModelBinder extends ContainerModelBinder implements IModelBin
             columnModel.alignment = contract.alignment;
         }
 
-        if (!contract.nodes) {
-            contract.nodes = [];
-        }
-
         columnModel.widgets = await this.getChildModels(contract.nodes, bindingContext);
 
         return columnModel;
