@@ -20,14 +20,14 @@
  import { CssExtractionResult } from "./cssExtractionResult";
  
  
- const resetAttr = function ($el: cheerio.Cheerio<cheerio.Node>, attribute: any): void {
+ const resetAttr = function ($el: cheerio.Cheerio<cheerio.AnyNode>, attribute: any): void {
      if (!$el.attr(attribute)) {
          this.attr(attribute, 0);
      }
  };
  
  export class StyleInliner {
-     public static applyStylesAsProps($el: cheerio.Cheerio<cheerio.Node>, styleToAttrMap: any): void {
+     public static applyStylesAsProps($el: cheerio.Cheerio<cheerio.AnyNode>, styleToAttrMap: any): void {
          let style;
          let styleVal;
  
@@ -41,13 +41,13 @@
          }
      }
  
-     public static batchApplyStylesAsProps($el: cheerio.Cheerio<cheerio.Node>, sel: string, $: cheerio.CheerioAPI): void {
+     public static batchApplyStylesAsProps($el: cheerio.Cheerio<cheerio.AnyNode>, sel: string, $: cheerio.CheerioAPI): void {
          $el.find(sel).each((i, childEl) => {
              StyleInliner.applyStylesAsProps($(childEl), tableStyleAttrMap[sel]);
          });
      }
  
-     public static setTableAttrs(element: cheerio.Node, $: cheerio.CheerioAPI): void {
+     public static setTableAttrs(element: cheerio.AnyNode, $: cheerio.CheerioAPI): void {
          let selector: string;
          const $el = $(element);
  

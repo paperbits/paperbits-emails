@@ -4,17 +4,19 @@
  *
  * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license/commercial.
  */
-import * as Utils from "@paperbits/common/utils";
 import { ColumnModel } from "./columnModel";
 import { ColumnContract } from "./columnContract";
-import { ModelBinderSelector } from "@paperbits/common/widgets";
-import { IModelBinder } from "@paperbits/common/editing";
+import { IWidgetService, ModelBinderSelector } from "@paperbits/common/widgets";
+import { IModelBinder, ContainerModelBinder } from "@paperbits/common/editing";
 import { Contract, Bag } from "@paperbits/common";
 
 
-export class ColumnModelBinder implements IModelBinder<ColumnModel> {
-    constructor(private readonly modelBinderSelector: ModelBinderSelector) {
-        this.contractToModel = this.contractToModel.bind(this);
+export class ColumnModelBinder extends ContainerModelBinder implements IModelBinder<ColumnModel> {
+    constructor(
+        protected readonly widgetService: IWidgetService,
+        protected readonly modelBinderSelector: ModelBinderSelector
+    ) {
+        super(widgetService, modelBinderSelector);
     }
 
     public canHandleContract(contract: Contract): boolean {
@@ -40,12 +42,7 @@ export class ColumnModelBinder implements IModelBinder<ColumnModel> {
             contract.nodes = [];
         }
 
-        const modelPromises = contract.nodes.map(async (contract: Contract) => {
-            const modelBinder = this.modelBinderSelector.getModelBinderByContract(contract);
-            return modelBinder.contractToModel(contract, bindingContext);
-        });
-
-        columnModel.widgets = await Promise.all<any>(modelPromises);
+        columnModel.widgets = await this.getChildModels(contract.nodes, bindingContext);
 
         return columnModel;
     }
@@ -53,17 +50,10 @@ export class ColumnModelBinder implements IModelBinder<ColumnModel> {
     public modelToContract(model: ColumnModel): Contract {
         const contract: ColumnContract = {
             type: "email-layout-column",
-            nodes: []
+            nodes: this.getChildContracts(model.widgets),
+            size: model.size,
+            alignment: model.alignment
         };
-
-        contract.size = model.size;
-        contract.alignment = model.alignment;
-      
-
-        model.widgets.forEach(widgetModel => {
-            const modelBinder = this.modelBinderSelector.getModelBinderByModel(widgetModel);
-            contract.nodes.push(modelBinder.modelToContract(widgetModel));
-        });
 
         return contract;
     }

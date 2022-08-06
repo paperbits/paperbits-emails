@@ -5,9 +5,8 @@
  * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license/commercial.
  */
 
-import * as Utils from "@paperbits/common/utils";
 import { ColumnViewModel } from "./columnViewModel";
-import { ViewModelBinder } from "@paperbits/common/widgets";
+import { IWidgetService, ViewModelBinder } from "@paperbits/common/widgets";
 import { IWidgetBinding } from "@paperbits/common/editing";
 import { ColumnModel } from "../columnModel";
 import { PlaceholderViewModel } from "@paperbits/core/placeholder/ko";
@@ -21,7 +20,7 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
     constructor(
         private readonly viewModelBinderSelector: ViewModelBinderSelector,
         private readonly eventManager: EventManager,
-        private readonly styleCompiler: StyleCompiler
+        private readonly widgetService: IWidgetService
     ) { }
 
     public async modelToViewModel(model: ColumnModel, viewModel?: ColumnViewModel, bindingContext?: Bag<any>): Promise<ColumnViewModel> {
@@ -29,32 +28,27 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
             viewModel = new ColumnViewModel();
         }
 
-        const viewModels = [];
+        const promises = model.widgets.map(widgetModel => {
+            const definition = this.widgetService.getWidgetDefinitionForModel(widgetModel);
 
-        for (const widgetModel of model.widgets) {
+            if (definition) {
+                const bindingPromise = this.widgetService.createWidgetBinding(definition, widgetModel, bindingContext);
+                return bindingPromise;
+            }
+
+            // legacy binding resolution
             const widgetViewModelBinder = this.viewModelBinderSelector.getViewModelBinderByModel(widgetModel);
-            const widgetViewModel = await widgetViewModelBinder.modelToViewModel(widgetModel, null, bindingContext);
+            const bindingPromise = widgetViewModelBinder.modelToViewModel(widgetModel, null, bindingContext);
+            return bindingPromise;
+        });
 
-            viewModels.push(widgetViewModel);
+        const widgetViewModels = await Promise.all(promises);
+
+        if (widgetViewModels.length === 0) {
+            widgetViewModels.push(new PlaceholderViewModel("Column"));
         }
 
-        if (viewModels.length === 0) {
-            viewModels.push(new PlaceholderViewModel("Column"));
-        }
-
-        viewModel.widgets(viewModels);
-
-        if (model.size) {
-            viewModel.size(model.size);
-        }
-
-        if (model.alignment) {
-            viewModel.alignment(model.alignment);
-        }
-
-        // if (model.styles) {
-        //     viewModel.styles(await this.styleCompiler.getStyleModelAsync(model.styles, bindingContext?.styleManager));
-        // }
+        viewModel.widgets(widgetViewModels);
 
         const binding: IWidgetBinding<ColumnModel, ColumnViewModel> = {
             name: "column",
