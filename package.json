@@ -15,17 +15,17 @@
         "url": "https://github.com/paperbits/paperbits-emails/issues"
     },
     "dependencies": {
-        "@paperbits/core": "0.1.538",
         "@paperbits/common": "0.1.538",
+        "@paperbits/core": "0.1.538",
         "@paperbits/styles": "0.1.538",
-        "knockout": "^3.5.1",
-        "knockout.validation": "^2.0.4",
-        "inline-css": "^4.0.1",
-        "cheerio": "^0.22.0",
+        "cheerio": "^1.0.0-rc.12",
         "css-rules": "^1.1.0",
         "cssom": "^0.5.0",
         "extend": "^3.0.2",
         "flatten": "^1.0.3",
+        "inline-css": "^4.0.1",
+        "knockout": "^3.5.1",
+        "knockout.validation": "^2.0.4",
         "object.pick": "^1.3.0",
         "slick": "^1.12.2",
         "specificity": "^0.4.1"

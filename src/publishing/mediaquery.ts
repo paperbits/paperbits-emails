@@ -12,7 +12,7 @@ import * as tmp from "cssom/lib/CSSFontFaceRule";
 
 const CSSFontFaceRule = tmp.CSSFontFaceRule;
 
-export function mediaQueryText(css) {
+export function mediaQueryText(css: string): string {
     const rules = cssom.parse(css).cssRules || [];
     const queries = [];
     let queryString;
@@ -24,11 +24,11 @@ export function mediaQueryText(css) {
 
     rules.forEach((query) => {
         /* CSS types
-		  STYLE: 1,
-		  IMPORT: 3,
-		  MEDIA: 4,
-		  FONT_FACE: 5,
-		 */
+          STYLE: 1,
+          IMPORT: 3,
+          MEDIA: 4,
+          FONT_FACE: 5,
+         */
 
         if (query.type === cssom.CSSMediaRule.prototype.type) {
             queryString = [];
