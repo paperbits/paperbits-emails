@@ -12,19 +12,18 @@ import * as path from "path";
 import parallel from "await-parallel-limit";
 import { process } from "./inlineContent";
 import { HtmlDocumentProvider, HtmlPageOptimizer, IPublisher } from "@paperbits/common/publishing";
+import { MimeTypes } from "@paperbits/common";
+import { Attributes } from "@paperbits/common/html";
 import { EmailService } from "../emailService";
 import { EmailContract } from "../emailContract";
-import { IBlobStorage, Query, Page } from "@paperbits/common/persistence";
+import { IBlobStorage, Query } from "@paperbits/common/persistence";
 import { ISettingsProvider } from "@paperbits/common/configuration";
 import { LayoutViewModelBinder } from "../layout/ko";
 import { StyleCompiler, StyleManager, StyleSheet } from "@paperbits/common/styles";
 import { Logger } from "@paperbits/common/logging";
-import { LocalStyleBuilder } from "@paperbits/styles";
 import { JssCompiler } from "@paperbits/styles/jssCompiler";
 
 export class EmailPublisher implements IPublisher {
-    private localStyleBuilder: LocalStyleBuilder;
-
     constructor(
         private readonly emailService: EmailService,
         private readonly styleCompiler: StyleCompiler,
@@ -34,9 +33,7 @@ export class EmailPublisher implements IPublisher {
         private readonly logger: Logger,
         private readonly htmlDocumentProvider: HtmlDocumentProvider,
         private readonly htmlPageOptimizer: HtmlPageOptimizer
-    ) {
-        this.localStyleBuilder = new LocalStyleBuilder(this.outputBlobStorage);
-    }
+    ) { }
 
     private readFile(filepath: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
@@ -112,7 +109,7 @@ export class EmailPublisher implements IPublisher {
         });
 
         const customStyleElement: HTMLStyleElement = templateDocument.createElement("style");
-        customStyleElement.setAttribute("type", "text/css");
+        customStyleElement.setAttribute(Attributes.Type, MimeTypes.textCss);
         customStyleElement.textContent = css.replace(/\n/g, "").replace(/\s\s+/g, " ");
 
         templateDocument.head.appendChild(customStyleElement);
@@ -145,9 +142,6 @@ export class EmailPublisher implements IPublisher {
         const mediaBaseUrl = settings.mediaBaseUrl;
 
         const globalStyleSheet = await this.styleCompiler.getStyleSheet();
-
-        // Building global styles
-        this.localStyleBuilder.buildGlobalStyle(globalStyleSheet);
 
         const query: Query<EmailContract> = Query.from<EmailContract>();
         let pagesOfResults = await this.emailService.search(query);
