@@ -9,11 +9,10 @@ import { ColumnViewModel } from "./columnViewModel";
 import { IWidgetService, ViewModelBinder } from "@paperbits/common/widgets";
 import { IWidgetBinding } from "@paperbits/common/editing";
 import { ColumnModel } from "../columnModel";
-import { PlaceholderViewModel } from "@paperbits/core/placeholder/ko";
+import { Placeholder } from "@paperbits/core/placeholder/ko";
 import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelector";
 import { ColumnHandlers } from "../columnHandlers";
 import { EventManager, Events } from "@paperbits/common/events";
-import { StyleCompiler } from "@paperbits/common/styles";
 import { Bag } from "@paperbits/common";
 
 export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, ColumnViewModel> {
@@ -45,7 +44,7 @@ export class ColumnViewModelBinder implements ViewModelBinder<ColumnModel, Colum
         const widgetViewModels = await Promise.all(promises);
 
         if (widgetViewModels.length === 0) {
-            widgetViewModels.push(new PlaceholderViewModel("Column"));
+            widgetViewModels.push(new Placeholder("Column"));
         }
 
         viewModel.widgets(widgetViewModels);

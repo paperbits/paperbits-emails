@@ -8,7 +8,7 @@
 import { SectionViewModel } from "./sectionViewModel";
 import { ViewModelBinder } from "@paperbits/common/widgets";
 import { IWidgetBinding } from "@paperbits/common/editing";
-import { PlaceholderViewModel } from "@paperbits/core/placeholder/ko";
+import { Placeholder } from "@paperbits/core/placeholder/ko";
 import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelector";
 import { SectionHandlers } from "../sectionHandlers";
 import { SectionModel } from "../sectionModel";
@@ -36,7 +36,7 @@ export class SectionViewModelBinder implements ViewModelBinder<SectionModel, Sec
         const viewModels = await Promise.all<any>(promises);
 
         if (viewModels.length === 0) {
-            viewModels.push(<any>new PlaceholderViewModel("Section"));
+            viewModels.push(<any>new Placeholder("Section"));
         }
 
         viewModel.widgets(viewModels);
