@@ -8,20 +8,19 @@
 import { LayoutViewModel } from "./layoutViewModel";
 import { LayoutModel } from "../layoutModel";
 import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelector";
-import { IWidgetBinding } from "@paperbits/common/editing";
+import { ContainerModelBinder, IWidgetBinding } from "@paperbits/common/editing";
 import { EventManager, Events } from "@paperbits/common/events";
-import { ModelBinderSelector } from "@paperbits/common/widgets";
 import { EmailService } from "../../emailService";
 import { LayoutModelBinder } from "../../layout";
 import { Bag } from "@paperbits/common";
-// import { EmailContract } from "../emailContract";
+
 
 export class LayoutViewModelBinder {
     constructor(
         private readonly viewModelBinderSelector: ViewModelBinderSelector,
         private readonly eventManager: EventManager,
         private readonly emailService: EmailService,
-        private readonly modelBinderSelector: ModelBinderSelector,
+        private readonly containerModelBinder: ContainerModelBinder,
         private readonly emailLayoutModelBinder: LayoutModelBinder,
     ) {
         this.getLayoutViewModel = this.getLayoutViewModel.bind(this);
@@ -33,13 +32,8 @@ export class LayoutViewModelBinder {
         const updateContent = async (): Promise<void> => {
             const contentContract = {
                 type: "email-layout",
-                nodes: []
+                nodes: this.containerModelBinder.getChildContracts(model.widgets)
             };
-
-            model.widgets.forEach(section => {
-                const modelBinder = this.modelBinderSelector.getModelBinderByModel(section);
-                contentContract.nodes.push(modelBinder.modelToContract(section));
-            });
 
             await this.emailService.updateEmailTemplateContent(emailTemplateKey, contentContract);
         };

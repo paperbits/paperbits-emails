@@ -5,16 +5,17 @@
  * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license/commercial.
  */
 
-import { ModelBinderSelector } from "@paperbits/common/widgets";
 import { LayoutModel } from "./layoutModel";
 import { Contract, Bag } from "@paperbits/common";
 import { EmailService } from "../emailService";
 import { EmailContract } from "../emailContract";
+import { ContainerModelBinder } from "@paperbits/common/editing";
 
 export class LayoutModelBinder {
     constructor(
         private readonly emailService: EmailService,
-        private readonly modelBinderSelector: ModelBinderSelector) {
+        private readonly containerModelBinder: ContainerModelBinder
+    ) {
 
         // rebinding...
         this.contractToModel = this.contractToModel.bind(this);
@@ -41,14 +42,7 @@ export class LayoutModelBinder {
         layoutModel.description = emailContract.description;
 
         const layoutContent = await this.emailService.getEmailTemplateContent(emailContract.key);
-
-        const modelPromises = layoutContent.nodes.map(async (contract: Contract) => {
-            const modelBinder = this.modelBinderSelector.getModelBinderByContract(contract);
-            return await modelBinder.contractToModel(contract, bindingContext);
-        });
-
-        const widgetModels = await Promise.all<any>(modelPromises);
-        layoutModel.widgets = widgetModels;
+        layoutModel.widgets = await this.containerModelBinder.getChildModels(layoutContent.nodes, bindingContext);
 
         return layoutModel;
     }
@@ -56,12 +50,8 @@ export class LayoutModelBinder {
     public modelToContract(layoutModel: LayoutModel): Contract {
         const layoutConfig: Contract = {
             type: "email-layout",
-            nodes: []
+            nodes: this.containerModelBinder.getChildContracts(layoutModel.widgets)
         };
-        layoutModel.widgets.forEach(model => {
-            const modelBinder = this.modelBinderSelector.getModelBinderByModel(model);
-            layoutConfig.nodes.push(modelBinder.modelToContract(model));
-        });
 
         return layoutConfig;
     }

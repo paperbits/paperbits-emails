@@ -7,10 +7,8 @@
 
 import { SectionContract } from "./sectionContract";
 import { SectionModel } from "./sectionModel";
-import { IModelBinder } from "@paperbits/common/editing";
-import { BackgroundModelBinder } from "@paperbits/common/widgets/background";
+import { ContainerModelBinder, IModelBinder } from "@paperbits/common/editing";
 import { Contract, Bag } from "@paperbits/common";
-import { ModelBinderSelector, WidgetModel } from "@paperbits/common/widgets";
 
 export class SectionModelBinder implements IModelBinder<SectionModel> {
     public canHandleContract(contract: Contract): boolean {
@@ -21,20 +19,14 @@ export class SectionModelBinder implements IModelBinder<SectionModel> {
         return model instanceof SectionModel;
     }
 
-    constructor(private readonly modelBinderSelector: ModelBinderSelector) { }
+    constructor(private readonly containerModelBinder: ContainerModelBinder) { }
 
     public async contractToModel(contract: SectionContract, bindingContext?: Bag<any>): Promise<SectionModel> {
         const model = new SectionModel();
 
         contract.nodes = contract.nodes || [];
         model.styles = contract.styles || {};
-
-        const modelPromises = contract.nodes.map(async (contract: Contract) => {
-            const modelBinder = this.modelBinderSelector.getModelBinderByContract<any>(contract);
-            return await modelBinder.contractToModel(contract, bindingContext);
-        });
-
-        model.widgets = await Promise.all<any>(modelPromises);
+        model.widgets = await this.containerModelBinder.getChildModels(contract.nodes, bindingContext);
 
         return model;
     }
@@ -43,13 +35,8 @@ export class SectionModelBinder implements IModelBinder<SectionModel> {
         const sectionContract: SectionContract = {
             type: "email-layout-section",
             styles: sectionModel.styles,
-            nodes: []
+            nodes: this.containerModelBinder.getChildContracts(sectionModel.widgets)
         };
-
-        sectionModel.widgets.forEach(widgetModel => {
-            const modelBinder = this.modelBinderSelector.getModelBinderByModel(widgetModel);
-            sectionContract.nodes.push(modelBinder.modelToContract(widgetModel));
-        });
 
         return sectionContract;
     }
