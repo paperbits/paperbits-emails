@@ -7,11 +7,11 @@
 import { ColumnModel } from "./columnModel";
 import { ColumnContract } from "./columnContract";
 import { IWidgetService, ModelBinderSelector } from "@paperbits/common/widgets";
-import { IModelBinder, ContainerModelBinder } from "@paperbits/common/editing";
+import { IModelBinder, CollectionModelBinder } from "@paperbits/common/editing";
 import { Contract, Bag } from "@paperbits/common";
 
 
-export class ColumnModelBinder extends ContainerModelBinder implements IModelBinder<ColumnModel> {
+export class ColumnModelBinder extends CollectionModelBinder implements IModelBinder<ColumnModel> {
     constructor(
         protected readonly widgetService: IWidgetService,
         protected readonly modelBinderSelector: ModelBinderSelector

@@ -8,7 +8,7 @@
 import { LayoutViewModel } from "./layoutViewModel";
 import { LayoutModel } from "../layoutModel";
 import { ViewModelBinderSelector } from "@paperbits/core/ko/viewModelBinderSelector";
-import { ContainerModelBinder, IWidgetBinding } from "@paperbits/common/editing";
+import { CollectionModelBinder, IWidgetBinding } from "@paperbits/common/editing";
 import { EventManager, Events } from "@paperbits/common/events";
 import { EmailService } from "../../emailService";
 import { LayoutModelBinder } from "../../layout";
@@ -20,7 +20,7 @@ export class LayoutViewModelBinder {
         private readonly viewModelBinderSelector: ViewModelBinderSelector,
         private readonly eventManager: EventManager,
         private readonly emailService: EmailService,
-        private readonly containerModelBinder: ContainerModelBinder,
+        private readonly containerModelBinder: CollectionModelBinder,
         private readonly emailLayoutModelBinder: LayoutModelBinder,
     ) {
         this.getLayoutViewModel = this.getLayoutViewModel.bind(this);

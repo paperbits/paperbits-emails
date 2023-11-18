@@ -7,7 +7,7 @@
 
 import { SectionContract } from "./sectionContract";
 import { SectionModel } from "./sectionModel";
-import { ContainerModelBinder, IModelBinder } from "@paperbits/common/editing";
+import { CollectionModelBinder, IModelBinder } from "@paperbits/common/editing";
 import { Contract, Bag } from "@paperbits/common";
 
 export class SectionModelBinder implements IModelBinder<SectionModel> {
@@ -19,7 +19,7 @@ export class SectionModelBinder implements IModelBinder<SectionModel> {
         return model instanceof SectionModel;
     }
 
-    constructor(private readonly containerModelBinder: ContainerModelBinder) { }
+    constructor(private readonly containerModelBinder: CollectionModelBinder) { }
 
     public async contractToModel(contract: SectionContract, bindingContext?: Bag<any>): Promise<SectionModel> {
         const model = new SectionModel();

@@ -9,12 +9,12 @@ import { LayoutModel } from "./layoutModel";
 import { Contract, Bag } from "@paperbits/common";
 import { EmailService } from "../emailService";
 import { EmailContract } from "../emailContract";
-import { ContainerModelBinder } from "@paperbits/common/editing";
+import { CollectionModelBinder } from "@paperbits/common/editing";
 
 export class LayoutModelBinder {
     constructor(
         private readonly emailService: EmailService,
-        private readonly containerModelBinder: ContainerModelBinder
+        private readonly containerModelBinder: CollectionModelBinder
     ) {
 
         // rebinding...
