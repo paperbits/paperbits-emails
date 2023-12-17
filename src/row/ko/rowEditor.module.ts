@@ -13,6 +13,6 @@ import { RowHandlers } from "../rowHandlers";
 export class RowEditorModule implements IInjectorModule {
     public register(injector: IInjector): void {
         injector.bind("emailRowLayoutSelector", RowLayoutSelector);
-        injector.bindToCollection<IWidgetHandler>("widgetHandlers", RowHandlers, "emailRowHandler");
+        injector.bindToCollection("widgetHandlers", RowHandlers, "emailRowHandler");
     }
 }

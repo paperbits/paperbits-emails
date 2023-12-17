@@ -4,7 +4,7 @@ import { RowModel } from "../row/rowModel";
 import { switchToParentCommand } from "@paperbits/common/ui/commands";
 
 
-export class RowHandlers implements IWidgetHandler {
+export class RowHandlers implements IWidgetHandler<RowModel> {
     constructor(private readonly viewManager: ViewManager) { }
 
     public getContextCommands(context: WidgetContext): IContextCommandSet {

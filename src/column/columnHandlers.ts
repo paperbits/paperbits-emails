@@ -3,9 +3,10 @@ import { DragSession } from "@paperbits/common/ui/draggables";
 import { IContextCommandSet, ViewManager } from "@paperbits/common/ui";
 import { WidgetModel } from "@paperbits/common/widgets";
 import { splitter, switchToParentCommand } from "@paperbits/common/ui/commands";
+import { ColumnModel } from "./columnModel";
 
 
-export class ColumnHandlers implements IWidgetHandler {
+export class ColumnHandlers implements IWidgetHandler<ColumnModel> {
     constructor(private readonly viewManager: ViewManager) { }
 
     public canAccept(dragSession: DragSession): boolean {

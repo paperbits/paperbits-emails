@@ -13,6 +13,6 @@ import { ColumnEditor } from "./columnEditor";
 export class ColumnEditorModule implements IInjectorModule {
     public register(injector: IInjector): void {        
         injector.bind("emailColumnEditor", ColumnEditor);
-        injector.bindToCollection<IWidgetHandler>("widgetHandlers", ColumnHandlers, "emailColumnHandler");
+        injector.bindToCollection("widgetHandlers", ColumnHandlers, "emailColumnHandler");
     }
 }
